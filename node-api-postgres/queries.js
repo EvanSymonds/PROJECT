@@ -29,7 +29,7 @@ const getFileById = (request, response) => {
 }
 
 const storeFile = (request, response) => {
-  console.log(request)
+  console.log(request.files)
 
   file = typeof request.body
 

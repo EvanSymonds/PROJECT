@@ -1,13 +1,13 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const fileUpload = require("express-fileupload")
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
+const morgan = require('morgan');
 const db = require("./queries")
 const app = express()
 const port = 3000
 
 app.use(bodyParser.json({limit: "50mb"}))
+app.use(morgan('dev'));
 app.use(
   bodyParser.urlencoded({
     limit: "50mb",
@@ -29,4 +29,4 @@ app.listen(port, () => {
 
 app.get("/files", db.getFiles)
 app.get("/files/:id", db.getFileById)
-app.post("/files", upload.array(), db.storeFile)
+app.post("/files", db.storeFile)
