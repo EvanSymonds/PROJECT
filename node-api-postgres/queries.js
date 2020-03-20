@@ -1,4 +1,5 @@
 const Pool = require("pg").Pool
+const { Readable } = require('stream');
 const pool = new Pool({
   user: "evan",
   host: "localhost",
@@ -28,8 +29,14 @@ const getFileById = (request, response) => {
 }
 
 const storeFile = (request, response) => {
-  console.log(request)
-  response.status(200)
+  pool.query("SELECT lo_create(0)",
+  (error, results) => {
+    console.log(results)
+    if (error) {
+      throw error
+    }
+    response.status(200).json()
+  })
 }
 
 module.exports = {
