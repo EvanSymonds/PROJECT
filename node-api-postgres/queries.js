@@ -29,15 +29,23 @@ const getFileById = (request, response) => {
 }
 
 const storeFile = (request, response) => {
-  pool.query("SELECT lo_create(0)",
-  (error, results) => {
-    console.log(results)
+  console.log(request)
+
+  file = typeof request.body
+
+  console.log(file)
+  response.status(200)
+}
+
+/*const storeFile = (request, response) => {
+  pool.query("SELECT lo_import()", (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).json()
+    response.status(200)
   })
 }
+*/
 
 module.exports = {
   getFiles,
