@@ -1,5 +1,4 @@
 const Pool = require("pg").Pool
-const { Readable } = require('stream');
 const pool = new Pool({
   user: "evan",
   host: "localhost",
