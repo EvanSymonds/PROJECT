@@ -33,5 +33,5 @@ app.post("/files", (request, response) => {
         return;
     }
 
-  db.storeFile(request, response, request.files.file)
+  db.storeFile(request, response)
 })
