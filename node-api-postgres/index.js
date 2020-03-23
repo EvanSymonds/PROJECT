@@ -27,19 +27,11 @@ app.listen(port, () => {
 app.get("/files", db.getFiles)
 app.get("/files/:id", db.getFileById)
 app.post("/files", (request, response) => {
-  var file;
-
     if(!request.files)
     {
-        response.send("File was not found");
+        response.status(400).send("File was not found");
         return;
     }
 
-    file = request.files.FormFieldName;  // here is the field name of the form
-
-    response.send("File Uploaded");
-    console.log(request.files.file.tempFilePath)
-    path = request.files.file.tempFilePath.replace(`\`, )
-
-  db.storeFile(request, response, path)
+  db.storeFile(request, response, request.files.file)
 })

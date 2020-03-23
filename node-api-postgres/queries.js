@@ -1,4 +1,5 @@
 const Pool = require("pg").Pool
+const fsExtra = require('fs-extra')
 const pool = new Pool({
   user: "evan",
   host: "localhost",
@@ -27,14 +28,20 @@ const getFileById = (request, response) => {
   })
 }
 
-const storeFile = (request, response, path) => {
-  pool.query("SELECT lo_import($1)", [path], (error, results) => {
+const storeFile = (request, response) => {
+  img_name = request.files.file.name
+  file_type = img_name.substr(img_name.length - 3)
+
+  path = (__dirname + request.files.file.tempFilePath).replace(/\\/g, "/")
+
+  pool.query("INSERT INTO files (file_id, file_type, img_name) VALUES (lo_from_bytea(0, $1), $2, $3)", [path, file_type, img_name], (error, results) => {
     if (error) {
       throw error
+    } else{
+      fsExtra.emptyDirSync("./Temp_storage")
+      response.status(200).json(results)
     }
-    response.status(200)
   })
-  response.status(200)
 }
 
 module.exports = {
