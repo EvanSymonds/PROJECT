@@ -1,4 +1,5 @@
 const Pool = require("pg").Pool
+const fsExtra = require('fs-extra')
 const fs = require('fs')
 const pool = new Pool({
   user: "evan",
@@ -31,7 +32,7 @@ const getFileById = (request, response) => {
       }
       var data = (results.rows[0].lo_get)
 
-      fs.writeFile("./Temp_storage/test.docx", data, (error) => {
+      fs.writeFile("./Temp_storage/Cube.f3d", data, (error) => {
         if (error) {
           throw error
         }
@@ -52,24 +53,30 @@ const storeFile = async (request, response) => {
   path = (__dirname + "/" + request.files.file.tempFilePath).replace(/\\/g, "/")
   console.log(path)
   await getFileContents(path).then((data) => {
-
     pool.query("INSERT INTO files (file_id, file_type, img_name) VALUES (lo_from_bytea(0, $1), $2, $3)", [data, file_type, img_name], (error, results) => {
       if (error) {
         throw error
       } else{
-        fsExtra.emptyDirSync("./Temp_storage")
+        //fsExtra.emptyDirSync("./Temp_storage")
         response.status(200).json(results)
       }
     })
+  })
+  .catch((error) => {
+console.log(error)
   })
 
 }
 
 function getFileContents(path){
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(fs.readFileSync(path))
-    }, 20000)
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (error, data) => {
+      if (data == null){
+        reject(new Error({error: "File failed to upload"}))
+      } else {
+        resolve(data)
+      }
+    })
   })
 }
 
