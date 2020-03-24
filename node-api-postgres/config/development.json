@@ -1,0 +1,9 @@
+{
+  "name": "PROJECT - development",
+  "database": {
+    "user": "evan",
+    "host": "localhost",
+    "database": "project",
+    "port": 5432
+  }
+}
