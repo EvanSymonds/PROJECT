@@ -30,7 +30,7 @@ router.post("/signup", async(request, response) => {
 
   await bcrypt.genSalt(10).then(async (salt) => {
     await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
-      await user_api.storeUser(username, hashed, request.body.email).then((result) => {
+      await user_api.create(username, hashed, request.body.email).then((result) => {
         response.status(200).json(result);
       })
     })

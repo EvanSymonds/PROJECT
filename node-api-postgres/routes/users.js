@@ -11,8 +11,12 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.get("/", async (request, response) => {
-  await user_api.getUsers().then((users) => {
-    response.status(200).json(users);
+  await user_api.getUsers().then((error, users) => {
+    if (error) {
+      response.status(400).json(error);
+    } else {
+      response.status(200).json(users);
+    }
   })
 })
 
@@ -27,7 +31,16 @@ router.get("/:id", async (request, response) => {
 })
 
 router.post("/:id", async (request, response) => {
-  const username = request.body.username + "#" + randomize("0", 4);
+  const username = request.body.username
+  await user_api.getUserById(parseInt(request.params.id)).then((error, user) => {
+    if (error) {
+      response.status(400).json(error);
+    } else {
+      if (user.username.substring(0, user.username.length - 5) != username){
+        username = request.body.username + "#" + randomize("0", 4);
+      }
+    }
+  })
 
   debug(username);
 

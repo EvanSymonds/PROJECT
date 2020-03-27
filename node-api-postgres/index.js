@@ -1,7 +1,6 @@
 const config = require("config");
 const bodyParser = require("body-parser");
 const file_api = require("./APIs/file_api");
-const user_api = require("./APIs/user_api");
 const fileupload = require("express-fileupload");
 const express = require("express");
 const app = express();
@@ -25,10 +24,12 @@ app.use(bodyParser.urlencoded({
 //Routes
 const login = require("./routes/login");
 const users = require("./routes/users");
+const projects = require("./routes/projects");
 
 //Routing
 app.use("/login", login);
-app.use("/users", users)
+app.use("/users", users);
+app.use("/projects", projects);
 
 //File API
 app.get("/files", file_api.getFiles);

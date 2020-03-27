@@ -63,7 +63,7 @@ const getUserByCredential = (value) => {
   })
 }
 
-const storeUser = (username, password, email) => {
+const createUser = (username, password, email) => {
   //Stores a user in the users table
 
   debug(username, password, email);
@@ -118,7 +118,7 @@ module.exports = {
   getUsers,
   getUserById,
   getUserByCredential,
-  storeUser,
+  createUser,
   updateUser,
   deleteUser
 }
