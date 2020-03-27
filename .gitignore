@@ -1,8 +1,11 @@
 # Ignore node_modules folders
-node_modules
+/node-api-postgres/node_modules
 
 # Ignore temporary storage folder
-Temp_storage
+/node-api-postgres/Temp_storage
 
 #Environment variables file
-.env
+/node-api-postgres/.env
+
+#Client side node_modules folder
+/node-api-postgres/client/node_modules
