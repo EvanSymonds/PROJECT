@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const project_api = require("../APIs/project_api");
+const Joi = require("joi");
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");
@@ -29,21 +30,43 @@ router.get("/:id", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  await project_api.createProject(request.body.project_name, request.body.is_public).then((error, results) => {
+  const schema = {
+    project_name: Joi.string().alphanum().min(3).max(25).required(),
+    is_public: Joi.boolean().alphanum().required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      response.status(200).json(results);
+      await project_api.createProject(request.body.project_name, request.body.is_public).then((error, results) => {
+        if (error) {
+          response.status(400).json(error);
+        } else {
+          response.status(200).json(results);
+        }
+      })
     }
   })
 })
 
 router.post("/:id", async (request, response) => {
-  await project_api.updateProject(parseInt(request.params.id), request.body.project_name, request.body.is_public).then((error, results) => {
+  const schema = {
+    project_name: Joi.string().alphanum().min(3).max(25).required(),
+    is_public: Joi.boolean().alphanum().required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      response.status(200).json(results);
+      await project_api.updateProject(parseInt(request.params.id), request.body.project_name, request.body.is_public).then((error, results) => {
+        if (error) {
+          response.status(400).json(error);
+        } else {
+          response.status(200).json(results);
+        }
+      })
     }
   })
 })

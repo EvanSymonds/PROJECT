@@ -1,5 +1,5 @@
-const config = require("config");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
 const file_api = require("./APIs/file_api");
 const fileupload = require("express-fileupload");
 const express = require("express");
@@ -7,7 +7,8 @@ const app = express();
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
-  const dotenv = require('dotenv').config({path:"./.env"})
+  require('dotenv').config({path:"./.env"})
+  require("config");
 }
 
 app.use(fileupload({
@@ -20,16 +21,19 @@ app.use(bodyParser.urlencoded({
     parameterLimit: 1000000,
   })
 )
+app.use(helmet());
 
 //Routes
 const login = require("./routes/login");
 const users = require("./routes/users");
 const projects = require("./routes/projects");
+const roles = require("./routes/roles");
 
 //Routing
 app.use("/login", login);
 app.use("/users", users);
 app.use("/projects", projects);
+app.use("/roles", roles);
 
 //File API
 app.get("/files", file_api.getFiles);
