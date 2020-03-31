@@ -1,30 +1,45 @@
 import React, { useState } from "react";
+import { useTheme } from '@material-ui/core/styles';
 import Dropzone from 'react-dropzone';
 import Button from "../basics/button";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/styles";
 
 const DropzoneComponent = (props) => {
+
   const useStyles = makeStyles((theme) => ({
     root: {
-      color: theme.palette.secondary.main
+      color: theme.palette.secondary.main,
+    },
+    disabled: {
+      color: theme.palette.secondary.light
     }
   }))
 
-  const onDrop = (e) => {
-    return(e)
+  const classes = useStyles()
+  const theme = useTheme()
+
+  const getColor = () => {
+    if (props.disabled === false) {
+      return classes.root
+    } else {
+      return classes.disabled
+    }
   }
 
-  const classes = useStyles()
+  const handleChange = (e) => {
+    props.onDrop(e.target.files)
+  }
 
   return (
     <div>
       <Dropzone 
         className="circle"
-        onDrop={onDrop}
+        onDrop={props.onDrop}
+        disabled={props.disabled}
         multiple={false}>
           {({getRootProps, getInputProps}) => (
             <div {...getRootProps()} 
-            className={classes.root}
+            className={getColor()}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -34,17 +49,20 @@ const DropzoneComponent = (props) => {
               height: 150,
               borderRadius: 75,
               borderWidth: 2,
-              borderStyle: 'dashed'
+              borderStyle: 'dashed',
+              margin: "30px"
             }}>
               <div>
-                <input id="icon-button-file" type="file"
+                <input disabled={props.disabled} onChange={handleChange} id="icon-button-file" type="file"
                  style={{ display: "none" }}/>
                 <label
                   htmlFor="icon-button-file">
-                  <Button type="icon" color ="secondary" icon="CloudUpload" size="large" aria-label="upload picture" component="span"/>
+                    <ThemeProvider theme={theme}>
+                      <Button disabled={props.disabled} type="icon" icon="GetApp" size="large" aria-label="upload picture" component="span" />
+                    </ThemeProvider>
                 </label>
               </div>
-              <div>
+              <div className={getColor()}>
                 Upload files
               </div>
             </div>
