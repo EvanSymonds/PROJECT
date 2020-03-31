@@ -87,12 +87,11 @@ const storeFile = async (file_name, project_id, path) => {
   //Stores a file in the files table
 
   return new Promise( async (resolve, reject) => {
-    file_type = file_name.split(".");
-    file_type = file_type[file_type.length - 1];
-
-    path = (path).replace(/\\/g, "/");
 
     await getFileContents(path).then((data) => {
+      file_type = file_name.split(".");
+      file_type = file_type[file_type.length - 1];
+
       pool.query("INSERT INTO files (file_data_id, file_type, file_name, project_id) VALUES (lo_from_bytea(0, $1), $2, $3, $4)", [data, file_type, file_name, project_id], (error, results) => {
         if (error) {
           dbDebugger("Error: ", error);
