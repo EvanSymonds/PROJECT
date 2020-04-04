@@ -16,8 +16,8 @@ let corsOptions = {
 }
 
 app.use(fileupload({
-  useTempFiles: true,
-  tempFileDir: "./Temp_storage/"
+  useTempFiles: false,
+  //tempFileDir: "./Temp_storage/"
 }));
 app.use(bodyParser.urlencoded({
     limit: "50mb",

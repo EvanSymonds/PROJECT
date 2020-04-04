@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios"
 import Dropzone from "../basics/dropzone"
-import UploadItem from "./uploadItem"
 import Button from "../basics/button"
 import Card from "@material-ui/core/card"
-import { CloudUpload } from "@material-ui/icons"
+import ProgressBar from "../basics/progressBar"
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import Typography from "@material-ui/core/Typography"
 import { useTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from "@material-ui/core/styles"
 
@@ -12,6 +13,39 @@ const FileUpload = (props) => {
   const [files, setFiles] = useState([])
   const [maxFiles, setMaxFiles] = useState(false)
   const [uploadProgress, setUploadProgress] = useState({})
+
+  const renderCompleteIcon = () => {
+    if (props.complete === true) {
+      return <CheckCircleOutlineIcon color="secondary"/>
+    }
+  }
+
+  const renderUploadItems = (fileName, progress, i, complete) => {
+    return (
+      <React.Fragment key={i}>
+        <div style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}>
+          <div style={{
+            float: "left",
+            width: "250px"
+          }}>
+            <Typography noWrap>
+              {fileName}
+            </Typography>
+            <div style={{
+              width: "250px"
+            }}>
+              <ProgressBar progress={progress}/>
+            </div>
+          </div>
+          {complete ? <CheckCircleOutlineIcon color="secondary"/> : null}
+        </div>
+      </React.Fragment>
+    )
+  }
 
   const onDrop = (e) => {
     if (files.length === 3) {
@@ -93,7 +127,7 @@ const FileUpload = (props) => {
           marginBottom: "30px",
           marginTop: "20px",
         }}>
-          {files.map((file, i) => <UploadItem key={i} progress={uploadProgress[i] ? uploadProgress[i].percentage : 0} fileName={file.name} complete={uploadProgress[i] ? (uploadProgress[i].percentage === 100 ? true : false) : false}/>)}
+          {files.map((file, i) => renderUploadItems(file.name, uploadProgress[i] ? uploadProgress[i].percentage : 0, i,  uploadProgress[i] ? (uploadProgress[i].percentage === 100 ? true : false) : false))}
         </div>
         
         <div style={{

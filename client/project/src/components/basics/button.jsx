@@ -75,9 +75,12 @@ const Button = (props) => {
   const style = type[props.type]
 
   return(
-    <React.Fragment>
+    <div style={{
+      display: "flex",
+      flexDirection: "row",
+    }} >
       {style.button}
-    </React.Fragment>
+    </div>
   )
 
 }

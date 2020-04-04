@@ -5,6 +5,7 @@ const fsDebugger = require("debug")("app:fs");
 //Configuration
 const config = require("config");
 
+
 //Pool allows express to communicate with PostgreSQL database
 const Pool = require("pg").Pool;
 const pool = new Pool({
@@ -50,6 +51,22 @@ const getFiles = () => {
   })
 }
 
+const getFileInfoByProject = (project_id) => {
+  //Gets all files from the files table
+  
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM files WHERE project_id = $1", [project_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error)
+      } else {
+        dbDebugger("Files retrieved");
+        resolve(results)
+      }
+    })
+  })
+}
+
 const getFileById = (file_id) => {
   //Gets a single file from the files table
 
@@ -64,33 +81,36 @@ const getFileById = (file_id) => {
 
       var file = results.rows;
 
-      pool.query("SELECT lo_get($1)", [file[0].file_data_id], (error, results) => {
+      pool.query("SELECT lo_get($1)", [file[0].file_data_id], async (error, results) => {
         if (error){
           dbDebugger("Error: ", error);
           reject(error)
         } else {
           dbDebugger("File data retrieved");
         }
+        dbDebugger(results)
+        const data = (results.rows[0].lo_get);
 
-        var data = (results.rows[0].lo_get);
-
-        resolve({
-          file,
-          data
+        const path = "./Temp_storage/" + file[0].file_name 
+        fs.writeFile(path, data, () => {
+          resolve({
+            file,
+            data,
+            path
+          })
         })
       })
     })
   })
 }
 
-const storeFile = async (file_name, project_id, path) => {
+const storeFile = async (data, file_name, project_id, path) => {
   //Stores a file in the files table
 
   return new Promise( async (resolve, reject) => {
 
-    await getFileContents(path).then((data) => {
       file_type = file_name.split(".");
-      file_type = file_type[file_type.length - 1];
+      file_type = file_type[file_type.length - 1].toLowerCase();
 
       pool.query("INSERT INTO files (file_data_id, file_type, file_name, project_id) VALUES (lo_from_bytea(0, $1), $2, $3, $4)", [data, file_type, file_name, project_id], (error, results) => {
         if (error) {
@@ -98,15 +118,11 @@ const storeFile = async (file_name, project_id, path) => {
           reject(error)
         } else{
           dbDebugger("File uploaded to database")
-          fsExtra.emptyDirSync("./Temp_storage");
-          resolve(results)
+          //fsExtra.emptyDir("./Temp_storage", () => {
+            resolve(results)
+          //});
         }
       })
-    })
-    .catch((error) => {
-      fsDebugger("Error: ", error)
-      reject(error)
-    })
   })
 }
 
@@ -127,23 +143,6 @@ const deleteFile = (file_id) => {
   })
 }
 
-function getFileContents(path){
-  //Reads the contents of the temporary file
-
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, (error, data) => {
-      if (error) {
-        fsDebugger(error)
-      }
-      if (data == null){
-        reject(new Error({error: "File failed to upload"}));
-      } else {
-        fsDebugger("File uploaded to temporary storage")
-        resolve(data);
-      }
-    })
-  })
-}
 
 function getFileData(file){
   //Gets just the data of a single file
@@ -161,6 +160,7 @@ function getFileData(file){
 module.exports = {
   getFiles,
   getFileById,
+  getFileInfoByProject,
   storeFile,
   deleteFile
 }

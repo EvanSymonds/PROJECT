@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTheme } from '@material-ui/core/styles';
 import { useDropzone } from 'react-dropzone';
 import Button from "../basics/button";

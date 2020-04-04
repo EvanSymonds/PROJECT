@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
+const fs = require("fs")
+const fsExtra = require("fs-extra")
 const file_api = require("../APIs/file_api")
 
 //Setting up debugging channels
@@ -22,13 +24,43 @@ router.get("/", async (request, response) => {
 })
 
 router.get("/:id", async (request, response) => {
+  await file_api.getFileById(parseInt(request.params.id)).then(async (file, error) => {
+    if (error) {
+      debug("Error: ", error)
+      response.status(400).json(error)
+    } else  {
+      response.download(file.path, file.file[0].file_name, () => {
+        //fsExtra.emptyDirSync("./Temp_storage");
+      })
+    }
+  })
+})
+
+router.get("/download/:id", async (request, response) => {
   await file_api.getFileById(parseInt(request.params.id)).then((file, error) => {
     if (error) {
       debug("Error: ", error)
       response.status(400).json(error)
     } else  {
+      fs.writeFile("./Temp_storage/download", file, () => {
+        response.download("C:/Users/Evan Symonds/PROJECT/node-api-postgres/Temp_storage/download", file.file[0].file_name, (error) => {
+          if (error) {
+            debug(error)
+          }
+        })
+      })
+    }
+  })
+})
+
+router.get("/project/:id", async (request, response) => {
+  await file_api.getFileInfoByProject(parseInt(request.params.id)).then((files, error) => {
+    if (error) {
+      debug("Error: ", error)
+      response.status(400).json(error)
+    } else  {
       debug("File Retrieved")
-      response.status(200).json(file)
+      response.status(200).json(files)
     }
   })
 })
@@ -46,7 +78,7 @@ router.post("/", async (request, response) => {
         debug(error)
         response.status(400).json(error);
       } else {
-        await file_api.storeFile(request.files.file.name, request.body.project_id, request.files.file.tempFilePath).then((results, error) => {
+        await file_api.storeFile(request.files.file.data, request.files.file.name, request.body.project_id, request.files.file.tempFilePath).then((results, error) => {
           if (error) {
             console.log("test")
             debug(error)
