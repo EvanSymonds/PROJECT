@@ -13,12 +13,8 @@ const FileUpload = (props) => {
   const [files, setFiles] = useState([])
   const [maxFiles, setMaxFiles] = useState(false)
   const [uploadProgress, setUploadProgress] = useState({})
-
-  const renderCompleteIcon = () => {
-    if (props.complete === true) {
-      return <CheckCircleOutlineIcon color="secondary"/>
-    }
-  }
+  const [successfullyUploaded, setSuccessfullyUploaded] = useState([])
+  const [uploadable, setUploadable] = useState(true)
 
   const renderUploadItems = (fileName, progress, i, complete) => {
     return (
@@ -56,29 +52,31 @@ const FileUpload = (props) => {
   }
 
   const onUpload = async (e) => {
+
+    setSuccessfullyUploaded(files.map(() => {
+      return false
+    }))
+
     await uploadFiles(2).then((results) => {
+      props.updateParent()
       console.log(results)
     })
   }
 
-  useEffect(() => {
-    files.map((file, i) => {
-      console.log(uploadProgress)
-    })
-  }, [uploadProgress])
-
   const uploadFiles = async (project_id) => {
+
+    setUploadable(false)
 
     return new Promise( async(resolve, reject) => {
 
-      files.map( async (file, i) => {
+      files.forEach(async (file, i) => {
+        setSuccessfullyUploaded([...successfullyUploaded, false])
+
         const config = {
           onUploadProgress: async (progressEvent) => {
             let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
 
             const copy = {...uploadProgress}
-            console.log(copy)
-            console.log(i)
             copy[i] = {
               state: "pending",
               percentage: percentCompleted
@@ -96,12 +94,25 @@ const FileUpload = (props) => {
         await axios.post("http://localhost:3001/files", formData, config).then((response, error) => {
           if (error) {
             reject("Error: ", error)
+            setUploadable(true)
           } else {
-            resolve(response)
+            let successArray = successfullyUploaded
+            successArray[i] = true
+            console.log(successArray)
+            setSuccessfullyUploaded(successArray)
+
+            const isEqualToTrue = (value) => value === true;
+            if (successfullyUploaded.length > 0) {
+              if (successfullyUploaded.every(isEqualToTrue) === true) {
+                props.updateParent()
+              }
+            }
           }
         })
       })
+
     })
+
   }
   
 
@@ -109,7 +120,11 @@ const FileUpload = (props) => {
 
     <ThemeProvider theme={useTheme()}>
       <Card raised={true} style={{
-        margin: "10px",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: "-120px",
+        marginLeft: "-300px",
         borderRadius: 110,
         width: 600,
         display: "flex",
@@ -134,7 +149,7 @@ const FileUpload = (props) => {
           position: "relative",
           left: "50px",
         }}>
-          <Button size="large" type="icon" icon="CloudUpload" color="primary" onClick={onUpload} />
+          <Button size="large" type="icon" icon="CloudUpload" color="primary" onClick={onUpload} disabled={!uploadable}/>
         </div>
       </Card>
     </ThemeProvider>

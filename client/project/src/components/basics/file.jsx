@@ -4,21 +4,33 @@ import Typography from "@material-ui/core/Typography"
 import LayersIcon from '@material-ui/icons/Layers';
 import ImageIcon from '@material-ui/icons/Image';
 import DescriptionIcon from '@material-ui/icons/Description';
+import TheatersIcon from '@material-ui/icons/Theaters';
 import Button from "../basics/button"
 import axios from "axios"
 
 const File = (props) => {
-  const imageFileTypes = ["jpg", "png", "jpeg"]
-  const textFileTypes = ["txt", "docx"]
-  const modelFileTypes = ["stl", "3ds", "f3d"]
+  const fileTypes = [["jpg", "png", "jpeg"],["txt", "docx"],["stl", "3ds", "f3d"],["mp4", "mov", "avi"],["mp3", "wav", "midi"]]
 
   const renderIcon = () => {
-    if (imageFileTypes.indexOf(props.fileType) > -1) {
-      return <ImageIcon fontSize="large" color="secondary" />
-    } else if (textFileTypes.indexOf(props.fileType)> -1) {
-      return <DescriptionIcon fontSize="large" color="secondary" />
-    } else if (modelFileTypes.indexOf(props.fileType) > -1) {
-      return <LayersIcon fontSize="large" color="secondary"/>
+    let fileType = 1
+
+    for (let i=0; i<fileTypes.length; i++) {
+      if (fileTypes[i].indexOf(props.fileType) > -1){
+        fileType = i
+      }
+    }
+
+    switch (fileType){
+      default:
+        return <DescriptionIcon fontSize="large" color="secondary" />
+      case 0:
+        return <ImageIcon fontSize="large" color="secondary" />
+      case 1:
+        return <DescriptionIcon fontSize="large" color="secondary" />
+      case 2:
+        return <LayersIcon fontSize="large" color="secondary"/>
+      case 3:
+        return <TheatersIcon fontSize="large" color="secondary"/>
     }
   }
 
@@ -28,7 +40,7 @@ const File = (props) => {
       if (error) {
         console.log(error)
       } else {
-        console.log(response)
+        props.updateParent(props.fileIndex)
       }
     })
   }
