@@ -94,15 +94,15 @@ router.post("/", async (request, response) => {
 
 router.delete("/:id", async (request, response) => {
   const schema = {
-    file_id: Joi.number().integer().max(100000000).required(),
+    id: Joi.number().integer().max(100000000).required(),
   }
 
-  Joi.validate(request.body, schema, async (error) => {
+  Joi.validate(request.params, schema, async (error) => {
     if (error) {
       debug(error)
       response.status(400).json(error);
     } else {
-      await file_api.deleteFile(parseInt(request.params.id)).then((error, results) => {
+      await file_api.deleteFile(parseInt(request.params.id)).then((results, error) => {
         if (error) {
           debug(error)
           response.status(400).json(error)

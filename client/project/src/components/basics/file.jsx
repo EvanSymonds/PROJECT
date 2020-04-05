@@ -6,7 +6,6 @@ import ImageIcon from '@material-ui/icons/Image';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Button from "../basics/button"
 import axios from "axios"
-import FileDownload from "js-file-download"
 
 const File = (props) => {
   const imageFileTypes = ["jpg", "png", "jpeg"]
@@ -23,11 +22,25 @@ const File = (props) => {
     }
   }
 
-  const onDownload = () => {
-
+  const onDelete = () => {
     const url = "http://localhost:3001/files/" + props.file_id
-    axios.get(url).then((response) => {
-      window.open(url)
+    axios.delete(url).then((response, error) => {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log(response)
+      }
+    })
+  }
+
+  const onDownload = () => {
+    const url = "http://localhost:3001/files/" + props.file_id
+    axios.get(url).then((response, error) => {
+      if (error) {
+        console.log(error)
+      } else {
+        window.open(url)
+      }
     })
   }
 
@@ -46,8 +59,11 @@ const File = (props) => {
           {props.fileType}
         </Typography>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1}>
         <Button type="icon" icon="GetApp" color="secondary" onClick={onDownload}/>
+      </Grid>
+      <Grid item xs={1}>
+        <Button type="icon" icon="Delete" color="secondary" onClick={onDelete}/>
       </Grid>
     </Grid>
   )
