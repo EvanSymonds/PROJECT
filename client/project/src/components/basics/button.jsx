@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/styles";
-import { CloudUpload, Delete, AttachFile, GetApp } from "@material-ui/icons"
+import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz } from "@material-ui/icons"
 
 const returnIcon = (icon, size) => {
 
@@ -14,6 +14,8 @@ const returnIcon = (icon, size) => {
     return <AttachFile fontSize={size}/>
   } else if (icon === "GetApp") {
     return <GetApp fontSize={size}/>
+  } else if (icon === "More") {
+    return <MoreHoriz fontSize={size}/>
   }
 }
 

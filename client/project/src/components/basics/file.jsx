@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
-import LayersIcon from '@material-ui/icons/Layers';
-import ImageIcon from '@material-ui/icons/Image';
-import DescriptionIcon from '@material-ui/icons/Description';
-import TheatersIcon from '@material-ui/icons/Theaters';
+import LayersIcon from '@material-ui/icons/LayersOutlined';
+import ImageIcon from '@material-ui/icons/ImageOutlined';
+import DescriptionIcon from '@material-ui/icons/DescriptionOutlined';
+import TheatersIcon from '@material-ui/icons/TheatersOutlined';
+import Popper from '@material-ui/core/Popper';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from "../basics/button"
 import axios from "axios"
 
 const File = (props) => {
+  const [anchorEl, setAnchorEl] = useState (null)
+
   const fileTypes = [["jpg", "png", "jpeg"],["txt", "docx"],["stl", "3ds", "f3d"],["mp4", "mov", "avi"],["mp3", "wav", "midi"]]
 
   const renderIcon = () => {
@@ -40,9 +45,14 @@ const File = (props) => {
       if (error) {
         console.log(error)
       } else {
+        setAnchorEl(null)
         props.updateParent(props.fileIndex)
       }
     })
+  }
+
+  const onMore = (e) => {
+    setAnchorEl(e.currentTarget)
   }
 
   const onDownload = () => {
@@ -51,9 +61,14 @@ const File = (props) => {
       if (error) {
         console.log(error)
       } else {
+        setAnchorEl(null)
         window.open(url)
       }
     })
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
   }
 
   return (
@@ -61,7 +76,7 @@ const File = (props) => {
       <Grid item xs={1}>
         {renderIcon()}
       </Grid>
-      <Grid item xs={7}>
+      <Grid item xs={8}>
         <Typography>
           {props.fileName}
         </Typography>
@@ -72,10 +87,25 @@ const File = (props) => {
         </Typography>
       </Grid>
       <Grid item xs={1}>
-        <Button type="icon" icon="GetApp" color="secondary" onClick={onDownload}/>
-      </Grid>
-      <Grid item xs={1}>
-        <Button type="icon" icon="Delete" color="secondary" onClick={onDelete}/>
+        <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
+        <Menu
+          anchorEl = {anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          getContentAnchorEl={null}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <MenuItem onClick={onDelete}>Delete</MenuItem>
+          <MenuItem onClick={onDownload}>Download</MenuItem>
+        </Menu>
       </Grid>
     </Grid>
   )

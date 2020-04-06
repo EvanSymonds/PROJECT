@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Card from "@material-ui/core/Card"
+import Divider from '@material-ui/core/Divider';
+import Modal from '@material-ui/core/Modal';
 import FileUpload from "../complex/fileUpload"
 import Button from "../basics/button"
 import File from "../basics/file"
@@ -7,7 +9,7 @@ import axios from "axios"
 
 const FileSystem = (props) => {
   const [files, setFiles] = useState([])
-  const [upload, setUpload] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     getProjectFiles(2)
@@ -40,26 +42,35 @@ const FileSystem = (props) => {
 
   const onAddFile = () => {
     getProjectFiles(2)
-    setTimeout(() => {
-      setUpload(false)
-    }, 500)
   }
 
   const renderFiles = () => {
+    console.log(files)
     return files.map((file, i) => {
-        return <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
+        if (files.length === i + 1){
+          return (
+            <div>
+              <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
+            </div>
+          )
+        } else {
+          return (
+            <div>
+              <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
+              <Divider light key={"divider"+i}/>
+            </div>
+          )
+        }
     })
   }
 
-  const handleUpload = () => {
-    setUpload(true)
-  }
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  const renderUpload = () => {
-    if (upload === true) {
-      return <FileUpload updateParent={onAddFile}/>
-    }
-  }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -72,8 +83,13 @@ const FileSystem = (props) => {
         </div>
 
       </Card>
-      <Button type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleUpload}/>
-      {renderUpload()}
+      <Button type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleOpen}/>
+      <Modal
+        open={open}
+        onClose={handleClose}
+      >
+        <FileUpload updateParent={onAddFile}/>
+      </Modal>
     </React.Fragment>
   )
 
