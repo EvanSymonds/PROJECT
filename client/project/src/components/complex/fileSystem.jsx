@@ -42,6 +42,7 @@ const FileSystem = (props) => {
 
   const onAddFile = () => {
     getProjectFiles(2)
+    
   }
 
   const renderFiles = () => {

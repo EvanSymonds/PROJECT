@@ -28,7 +28,7 @@ const Main = (props) => {
 
   return(
     <ThemeProvider theme={theme}>
-      <div>
+      <div data-test="component-main">
         <FileSystem /> 
       </div>
     </ThemeProvider>    

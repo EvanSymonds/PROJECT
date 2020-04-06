@@ -5,11 +5,13 @@ import LayersIcon from '@material-ui/icons/LayersOutlined';
 import ImageIcon from '@material-ui/icons/ImageOutlined';
 import DescriptionIcon from '@material-ui/icons/DescriptionOutlined';
 import TheatersIcon from '@material-ui/icons/TheatersOutlined';
-import Popper from '@material-ui/core/Popper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "../basics/button"
 import axios from "axios"
+import { GetApp } from "@material-ui/icons";
 
 const File = (props) => {
   const [anchorEl, setAnchorEl] = useState (null)
@@ -103,8 +105,14 @@ const File = (props) => {
             horizontal: 'center',
           }}
         >
-          <MenuItem onClick={onDelete}>Delete</MenuItem>
-          <MenuItem onClick={onDownload}>Download</MenuItem>
+          <MenuItem onClick={onDelete}>
+            <DeleteIcon fontSize="small" color="secondary"/>
+            Delete
+          </MenuItem>
+          <MenuItem onClick={onDownload}>
+            <GetAppIcon fontSize="small" color="secondary"/>
+            Download
+          </MenuItem>
         </Menu>
       </Grid>
     </Grid>
