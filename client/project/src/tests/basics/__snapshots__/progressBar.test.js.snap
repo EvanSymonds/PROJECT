@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Progress bar renders correctly 1`] = `
+<div
+  test-data="component-progressBar"
+>
+  <div
+    style={
+      Object {
+        "borderRadius": "5px",
+        "height": 5,
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      className="makeStyles-root-2"
+      style={
+        Object {
+          "borderRadius": "5px",
+          "height": "100%",
+          "margin": 0,
+          "width": "50%",
+        }
+      }
+    />
+  </div>
+</div>
+`;

@@ -11,7 +11,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "../basics/button"
 import axios from "axios"
-import { GetApp } from "@material-ui/icons";
 
 const File = (props) => {
   const [anchorEl, setAnchorEl] = useState (null)
@@ -74,48 +73,50 @@ const File = (props) => {
   }
 
   return (
-    <Grid container direction="row" justify="center" alignItems="center">
-      <Grid item xs={1}>
-        {renderIcon()}
+    <div data-test="component-file">
+      <Grid container direction="row" justify="center" alignItems="center">
+        <Grid item xs={1}>
+          {renderIcon()}
+        </Grid>
+        <Grid item xs={8}>
+          <Typography>
+            {props.fileName}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography>
+            {props.fileType}
+          </Typography>
+        </Grid>
+        <Grid item xs={1}>
+          <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
+          <Menu
+            anchorEl = {anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            getContentAnchorEl={null}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <MenuItem onClick={onDelete}>
+              <DeleteIcon fontSize="small" color="secondary"/>
+              Delete
+            </MenuItem>
+            <MenuItem onClick={onDownload}>
+              <GetAppIcon fontSize="small" color="secondary"/>
+              Download
+            </MenuItem>
+          </Menu>
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Typography>
-          {props.fileName}
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography>
-          {props.fileType}
-        </Typography>
-      </Grid>
-      <Grid item xs={1}>
-        <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
-        <Menu
-          anchorEl = {anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          getContentAnchorEl={null}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <MenuItem onClick={onDelete}>
-            <DeleteIcon fontSize="small" color="secondary"/>
-            Delete
-          </MenuItem>
-          <MenuItem onClick={onDownload}>
-            <GetAppIcon fontSize="small" color="secondary"/>
-            Download
-          </MenuItem>
-        </Menu>
-      </Grid>
-    </Grid>
+    </div>
   )
 
 }

@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/styles";
-import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz } from "@material-ui/icons"
+import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle } from "@material-ui/icons"
 
-const returnIcon = (icon, size) => {
-
-  if (icon === "CloudUpload") {
-    return <CloudUpload fontSize={size}/>
-  } else if (icon === "Delete") {
-    return <Delete fontSize={size}/>
-  } else if (icon === "AttachFile") {
-    return <AttachFile fontSize={size}/>
-  } else if (icon === "GetApp") {
-    return <GetApp fontSize={size}/>
-  } else if (icon === "More") {
-    return <MoreHoriz fontSize={size}/>
+export const returnIcon = (icon, size) => {
+  switch (icon) {
+    case "CloudUpload":
+      return <CloudUpload fontSize={size}/>
+    case "Delete":
+      return <Delete fontSize={size}/>
+    case "AttachFile":
+      return <AttachFile fontSize={size}/>
+    case "GetApp":
+      return <GetApp fontSize={size}/>
+    case "More":
+      return <MoreHoriz fontSize={size}/>
+    case "Lock":
+      return <Lock fontSize={size}/>
+    case "AccountCircle":
+      return <AccountCircle fontSize={size}/>
   }
 }
 
@@ -77,10 +81,13 @@ const Button = (props) => {
   const style = type[props.type]
 
   return(
-    <div style={{
-      display: "flex",
-      flexDirection: "row",
-    }} >
+    <div
+      data-test='component-button'
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
       {style.button}
     </div>
   )

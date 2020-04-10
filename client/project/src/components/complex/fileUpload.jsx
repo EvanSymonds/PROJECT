@@ -18,7 +18,7 @@ const FileUpload = (props) => {
 
   const renderUploadItems = (fileName, progress, i, complete) => {
     return (
-      <React.Fragment key={i}>
+      <div key={i}>
         <div style={{
             display: "flex",
             flexDirection: "row",
@@ -39,7 +39,7 @@ const FileUpload = (props) => {
           </div>
           {complete ? <CheckCircleOutlineIcon color="secondary"/> : null}
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 
@@ -96,15 +96,17 @@ const FileUpload = (props) => {
             reject("Error: ", error)
             setUploadable(true)
           } else {
-            let successArray = successfullyUploaded
-            successArray[i] = true
-            console.log(successArray)
-            setSuccessfullyUploaded(successArray)
+            if (response.status === 200) {
+              let successArray = successfullyUploaded
+              successArray[i] = true
+              console.log(successArray)
+              setSuccessfullyUploaded(successArray)
 
-            const isEqualToTrue = (value) => value === true;
-            if (successfullyUploaded.length > 0) {
-              if (successfullyUploaded.every(isEqualToTrue) === true) {
-                props.updateParent()
+              const isEqualToTrue = (value) => value === true;
+              if (successfullyUploaded.length > 0) {
+                if (successfullyUploaded.every(isEqualToTrue) === true) {
+                  props.updateParent()
+                }
               }
             }
           }
@@ -117,43 +119,43 @@ const FileUpload = (props) => {
   
 
   return (
-
-    <ThemeProvider theme={useTheme()}>
-      <Card raised={true} style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        marginTop: "-120px",
-        marginLeft: "-300px",
-        borderRadius: 110,
-        width: 600,
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-      }}>
-        <div style={{
-          float: "left",
+    <div data-test="component-fileUpload">
+      <ThemeProvider theme={useTheme()}>
+        <Card raised={true} style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          marginTop: "-120px",
+          marginLeft: "-300px",
+          borderRadius: 110,
+          width: 600,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
         }}>
-          <Dropzone onDrop={onDrop} disabled={maxFiles} />
-        </div>
+          <div style={{
+            float: "left",
+          }}>
+            <Dropzone onDrop={onDrop} disabled={maxFiles} />
+          </div>
 
-        <div style={{
-          width: "250px",
-          marginBottom: "30px",
-          marginTop: "20px",
-        }}>
-          {files.map((file, i) => renderUploadItems(file.name, uploadProgress[i] ? uploadProgress[i].percentage : 0, i,  uploadProgress[i] ? (uploadProgress[i].percentage === 100 ? true : false) : false))}
-        </div>
-        
-        <div style={{
-          position: "relative",
-          left: "50px",
-        }}>
-          <Button size="large" type="icon" icon="CloudUpload" color="primary" onClick={onUpload} disabled={!uploadable}/>
-        </div>
-      </Card>
-    </ThemeProvider>
-
+          <div style={{
+            width: "250px",
+            marginBottom: "30px",
+            marginTop: "20px",
+          }}>
+            {files.map((file, i) => renderUploadItems(file.name, uploadProgress[i] ? uploadProgress[i].percentage : 0, i,  uploadProgress[i] ? (uploadProgress[i].percentage === 100 ? true : false) : false))}
+          </div>
+          
+          <div style={{
+            position: "relative",
+            left: "50px",
+          }}>
+            <Button data-test="component-uploadButton" size="large" type="icon" icon="CloudUpload" color="primary" onClick={onUpload} disabled={!uploadable}/>
+          </div>
+        </Card>
+      </ThemeProvider>
+    </div>
   )
 
 }

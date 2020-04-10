@@ -12,7 +12,7 @@ const ProgressBar = (props) => {
   const classes = useStyles()
 
   return (
-    <React.Fragment>
+    <div test-data="component-progressBar">
       <div style={{
         height: 5,
         width: "100%",
@@ -25,7 +25,7 @@ const ProgressBar = (props) => {
           margin: 0,
         }} />
       </div>
-    </React.Fragment>
+    </div>
   )
 
 }

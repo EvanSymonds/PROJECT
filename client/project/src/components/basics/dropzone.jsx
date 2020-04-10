@@ -36,6 +36,7 @@ const DropzoneComponent = (props) => {
   }
 
   const onDrop = useCallback(files => {
+    console.log(files)
     props.onDrop(files)
   })
 
@@ -66,7 +67,7 @@ const DropzoneComponent = (props) => {
   ]);
 
   return (
-    <div {...getRootProps({style})} 
+    <div data-test="component-dropzone" {...getRootProps({style})} 
     className={getColor()}>
       <div>
         <input disabled={props.disabled} onChange={handleChange} id="icon-button-file" type="file"

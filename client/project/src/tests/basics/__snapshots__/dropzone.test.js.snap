@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders a working dropzone 1`] = `
+<div
+  className="makeStyles-root-39"
+  data-test="component-dropzone"
+  onBlur={[Function]}
+  onClick={[Function]}
+  onDragEnter={[Function]}
+  onDragLeave={[Function]}
+  onDragOver={[Function]}
+  onDrop={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "borderRadius": 75,
+      "borderStyle": "dashed",
+      "borderWidth": 2,
+      "display": "flex",
+      "flexDirection": "column",
+      "height": 150,
+      "justifyContent": "center",
+      "margin": "30px",
+      "width": 150,
+    }
+  }
+  tabIndex={0}
+>
+  <div>
+    <input
+      disabled={false}
+      id="icon-button-file"
+      onChange={[Function]}
+      style={
+        Object {
+          "display": "none",
+        }
+      }
+      type="file"
+    />
+    <label
+      htmlFor="icon-button-file"
+    >
+      <div
+        data-test="component-button"
+        style={
+          Object {
+            "display": "flex",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <span
+          aria-disabled={false}
+          className="MuiButtonBase-root-55 MuiIconButton-root-46 makeStyles-root-42"
+          onBlur={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          <span
+            className="MuiIconButton-label-54"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-58 MuiSvgIcon-fontSizeLarge-66"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+              />
+            </svg>
+          </span>
+        </span>
+      </div>
+    </label>
+  </div>
+  <div
+    className="makeStyles-root-39"
+  >
+    Upload files
+  </div>
+</div>
+`;

@@ -11,13 +11,7 @@ const FileSystem = (props) => {
   const [files, setFiles] = useState([])
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    getProjectFiles(2)
-  }, [])
-
-  useEffect(() => {
-    console.log("files update")
-  }, [setFiles])
+  useEffect(() => {getProjectFiles(2)}, [])
 
   const getProjectFiles = async (project_id) => {
     const url = "http://localhost:3001/files/project/" + project_id
@@ -25,11 +19,13 @@ const FileSystem = (props) => {
       if (error) {
         console.log(error)
       } else {
-        const filesArray = []
-        Object.keys(results.data.rows).map((key) => {
-          filesArray.push(results.data.rows[key])
-        })
-        setFiles(filesArray)
+        if (results.status === 200) {
+          const filesArray = []
+          Object.keys(results.data.rows).map((key) => {
+            filesArray.push(results.data.rows[key])
+          })
+          setFiles(filesArray)
+        }
       }
     })
   }
@@ -41,22 +37,20 @@ const FileSystem = (props) => {
   }
 
   const onAddFile = () => {
-    getProjectFiles(2)
-    
+    getProjectFiles(2)  
   }
 
   const renderFiles = () => {
-    console.log(files)
     return files.map((file, i) => {
         if (files.length === i + 1){
           return (
-            <div>
+            <div key={i} data-testid='component-file'>
               <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
             </div>
           )
         } else {
           return (
-            <div>
+            <div key={i} data-testid='component-file'>
               <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
               <Divider light key={"divider"+i}/>
             </div>
@@ -84,12 +78,15 @@ const FileSystem = (props) => {
         </div>
 
       </Card>
-      <Button type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleOpen}/>
+      <Button data-test="component-showUploaderButton" type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleOpen}/>
       <Modal
+        data-test="component-fileUpload"
         open={open}
         onClose={handleClose}
       >
-        <FileUpload updateParent={onAddFile}/>
+        <div>
+          <FileUpload updateParent={onAddFile}/>
+        </div>
       </Modal>
     </React.Fragment>
   )

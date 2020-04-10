@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders a working fileUpload 1`] = `
+<div
+  data-test="component-fileUpload"
+>
+  <div
+    className="MuiPaper-root-146 MuiCard-root-145 MuiPaper-elevation8-157 MuiPaper-rounded-147"
+    style={
+      Object {
+        "alignItems": "center",
+        "borderRadius": 110,
+        "display": "flex",
+        "flexDirection": "row",
+        "left": "50%",
+        "marginLeft": "-300px",
+        "marginTop": "-120px",
+        "position": "absolute",
+        "top": "50%",
+        "width": 600,
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "float": "left",
+        }
+      }
+    >
+      <div
+        className="makeStyles-root-174"
+        data-test="component-dropzone"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onDragEnter={[Function]}
+        onDragLeave={[Function]}
+        onDragOver={[Function]}
+        onDrop={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "borderRadius": 75,
+            "borderStyle": "dashed",
+            "borderWidth": 2,
+            "display": "flex",
+            "flexDirection": "column",
+            "height": 150,
+            "justifyContent": "center",
+            "margin": "30px",
+            "width": 150,
+          }
+        }
+        tabIndex={0}
+      >
+        <div>
+          <input
+            disabled={false}
+            id="icon-button-file"
+            onChange={[Function]}
+            style={
+              Object {
+                "display": "none",
+              }
+            }
+            type="file"
+          />
+          <label
+            htmlFor="icon-button-file"
+          >
+            <div
+              data-test="component-button"
+              style={
+                Object {
+                  "display": "flex",
+                  "flexDirection": "row",
+                }
+              }
+            >
+              <span
+                aria-disabled={false}
+                className="MuiButtonBase-root-190 MuiIconButton-root-181 makeStyles-root-177"
+                onBlur={[Function]}
+                onDragLeave={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onKeyUp={[Function]}
+                onMouseDown={[Function]}
+                onMouseLeave={[Function]}
+                onMouseUp={[Function]}
+                onTouchEnd={[Function]}
+                onTouchMove={[Function]}
+                onTouchStart={[Function]}
+                role="button"
+                tabIndex={0}
+              >
+                <span
+                  className="MuiIconButton-label-189"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="MuiSvgIcon-root-193 MuiSvgIcon-fontSizeLarge-201"
+                    focusable="false"
+                    role="presentation"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+          </label>
+        </div>
+        <div
+          className="makeStyles-root-174"
+        >
+          Upload files
+        </div>
+      </div>
+    </div>
+    <div
+      style={
+        Object {
+          "marginBottom": "30px",
+          "marginTop": "20px",
+          "width": "250px",
+        }
+      }
+    />
+    <div
+      style={
+        Object {
+          "left": "50px",
+          "position": "relative",
+        }
+      }
+    >
+      <div
+        data-test="component-button"
+        style={
+          Object {
+            "display": "flex",
+            "flexDirection": "row",
+          }
+        }
+      >
+        <button
+          className="MuiButtonBase-root-215 MuiIconButton-root-206 makeStyles-useOther-204 MuiIconButton-colorPrimary-210"
+          disabled={false}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onDragLeave={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onMouseDown={[Function]}
+          onMouseLeave={[Function]}
+          onMouseUp={[Function]}
+          onTouchEnd={[Function]}
+          onTouchMove={[Function]}
+          onTouchStart={[Function]}
+          tabIndex={0}
+          type="button"
+        >
+          <span
+            className="MuiIconButton-label-214"
+          >
+            <svg
+              aria-hidden="true"
+              className="MuiSvgIcon-root-218 MuiSvgIcon-fontSizeLarge-226"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
