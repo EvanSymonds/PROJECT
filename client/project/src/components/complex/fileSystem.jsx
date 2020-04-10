@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/Card"
 import Divider from '@material-ui/core/Divider';
 import Modal from '@material-ui/core/Modal';
@@ -10,6 +11,14 @@ import axios from "axios"
 const FileSystem = (props) => {
   const [files, setFiles] = useState([])
   const [open, setOpen] = useState(false);
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      
+    }
+  }))
+
+  const classes = useStyles()
 
   useEffect(() => {getProjectFiles(2)}, [])
 
@@ -69,8 +78,8 @@ const FileSystem = (props) => {
 
   return (
     <React.Fragment>
-      <Card style={{
-        direction: "column"
+      <Card className={classes.root} style={{
+        direction: "column",
       }}>
 
         <div>

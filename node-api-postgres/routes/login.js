@@ -13,7 +13,7 @@ const config = require("config");
 
 router.post("/", async(request, response) => {
   const schema = {
-    credential: Joi.string().alphanum().min(3).max(25).required(),
+    credential: Joi.string().min(3).max(25).required(),
     password: Joi.string().alphanum().min(3).max(25).required()
   }
 
@@ -24,6 +24,8 @@ router.post("/", async(request, response) => {
       await user_api.getUserByCredential(request.body.credential).then(async (user) => {
         if (!user) return response.status(400).send("Invalid username or password");
         
+        console.log(request.body.password)
+
         const validPassword = await bcrypt.compare(request.body.password, user[0].password);
     
         if (!validPassword) return response.status(400).send("Invalid username or password");
@@ -50,7 +52,7 @@ router.post("/signup", async(request, response) => {
 
       await bcrypt.genSalt(10).then(async (salt) => {
         await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
-          await user_api.create(username, hashed, request.body.email).then((result) => {
+          await user_api.createUser(username, hashed, request.body.email).then((result) => {
             response.status(200).json(result);
           })
         })

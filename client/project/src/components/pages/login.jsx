@@ -1,17 +1,21 @@
 import React from "react";
-import FileSystem from "../complex/fileSystem"
+import LoginForm from "../complex/loginForm"
 import { ThemeProvider } from "@material-ui/core/styles"
 import { redGreyTheme, darkModeTheme } from "../../themes"
 
-const Main = (props) => {
+const Login = (props) => {
+
+  const onLogin = () => {
+
+  }
 
   return(
     <ThemeProvider theme={darkModeTheme}>
       <div data-test="component-main">
-        <FileSystem />
+        <LoginForm onLogin={onLogin()}/>
       </div>
     </ThemeProvider>    
   )
 }
 
-export default Main;
+export default Login;

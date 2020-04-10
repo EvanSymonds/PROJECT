@@ -73,7 +73,7 @@ const File = (props) => {
   }
 
   return (
-    <div data-test="component-file">
+    <div>
       <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={1}>
           {renderIcon()}
