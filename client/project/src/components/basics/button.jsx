@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/styles";
-import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle } from "@material-ui/icons"
+import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu } from "@material-ui/icons"
 
 export const returnIcon = (icon, size) => {
   switch (icon) {
@@ -20,6 +20,8 @@ export const returnIcon = (icon, size) => {
       return <Lock fontSize={size}/>
     case "AccountCircle":
       return <AccountCircle fontSize={size}/>
+    case "Menu":
+      return <Menu fontSize={size}/>
   }
 }
 

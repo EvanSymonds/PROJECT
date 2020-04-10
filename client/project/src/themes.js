@@ -28,7 +28,7 @@ let darkModeTheme = createMuiTheme({
   palette: {
     type: "dark",
     primary:{
-      main: blue[600]
+      main: blue[300]
     },
     secondary:{
       main: grey[500],

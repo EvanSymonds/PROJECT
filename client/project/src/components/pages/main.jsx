@@ -6,11 +6,9 @@ import { redGreyTheme, darkModeTheme } from "../../themes"
 const Main = (props) => {
 
   return(
-    <ThemeProvider theme={darkModeTheme}>
-      <div data-test="component-main">
-        <FileSystem />
-      </div>
-    </ThemeProvider>    
+    <div data-test="component-main">
+      <FileSystem />
+    </div>
   )
 }
 

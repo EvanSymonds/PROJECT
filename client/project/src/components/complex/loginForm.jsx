@@ -18,7 +18,6 @@ const LoginForm = (props) => {
     root: {
       width: 400,
       padding: 40,
-      margin: 50,
       background: theme.palette.secondary.light
     },
     inputPaper: {
@@ -73,7 +72,6 @@ const LoginForm = (props) => {
       if (error) {
         console.log(error)
       } else if (response.status === 200){
-        console.log(response)
         props.onLogin()
       }
     })
