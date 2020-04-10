@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import MaterialInput from "@material-ui/core/Input"
 import OutlinedInput from "@material-ui/core/OutlinedInput"
+import InputBase from '@material-ui/core/InputBase';
 import IconButton from "@material-ui/core/IconButton"
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Visibility, VisibilityOff } from "@material-ui/icons"
@@ -31,10 +33,17 @@ const Input = (props) => {
   const [inputValue, setInputValue] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 
+  const useStyles = makeStyles((theme) => ({
+    root: {
+    }
+  }))
+  const classes = useStyles()
+
   const renderHideAndIconType = () => {
     if (props.variant === null){
       return (
         <MaterialInput
+          classes={classes.root}
           id="outlined-adornment-password"
           variant={props.variant}
           type={showPassword ? 'text' : 'password'}
@@ -63,6 +72,7 @@ const Input = (props) => {
     } else if (props.variant === "outlined") {
       return (
         <OutlinedInput
+          classes={classes.root}
           id="outlined-adornment-password"
           variant={props.variant}
           type={showPassword ? 'text' : 'password'}
@@ -95,6 +105,7 @@ const Input = (props) => {
     if (props.variant === null){
       return (
         <MaterialInput
+          classes={classes.root}
           id="outlined-adornment-password"
           variant={props.variant}
           type={showPassword ? 'text' : 'password'}
@@ -118,6 +129,7 @@ const Input = (props) => {
     } else if (props.variant === "outlined") {
       return (
         <OutlinedInput
+          classes={classes.root}
           id="outlined-adornment-password"
           variant={props.variant}
           type={showPassword ? 'text' : 'password'}
@@ -153,8 +165,9 @@ const Input = (props) => {
     normal: {
       input: <TextField
           style={{
-            width: "270px"
+            width: "275px"
           }}
+          classes={classes.root}
           value={inputValue}
           data-test="component-input"
           disabled={props.disabled} 
@@ -166,8 +179,9 @@ const Input = (props) => {
     normalWithIcon: {
       input: <TextField
       style={{
-        width: "270px"
+        width: "275px"
       }}
+      classes={classes.root}
       data-test="component-input"
       label={props.label}
       color={props.color} 
@@ -185,8 +199,9 @@ const Input = (props) => {
     normalWithHide: {
       input: <FormControl 
       style={{
-        width: "270px"
+        width: "275px"
       }}
+      classes={classes.root}
       variant={props.variant}
       color={props.color}
     >
@@ -198,6 +213,7 @@ const Input = (props) => {
     },
     iconAndHide: {
       input: <FormControl 
+        classes={classes.root}
         variant={props.variant}
         color={props.color}
       >
@@ -206,6 +222,13 @@ const Input = (props) => {
         htmlFor="outlined-adornment-password">{props.label}</InputLabel>
         {renderHideAndIconType()}
       </FormControl>
+    },
+    inputBase: {
+      input: <InputBase
+        className={classes.input}
+        placeholder={props.label}
+        inputProps={{ 'aria-label': props.label }}
+      />
     }
   }
 
