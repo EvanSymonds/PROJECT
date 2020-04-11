@@ -7,12 +7,14 @@ import InputBase from "@material-ui/core/InputBase"
 import {AccountCircle, Lock, Visibility, VisibilityOff} from "@material-ui/icons"
 import Grid from "@material-ui/core/Grid"
 import Divider from "@material-ui/core/Divider"
+import Typography from "@material-ui/core/Typography"
 import axios from "axios"
 
 const LoginForm = (props) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
+  const [showError, setShowError] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,6 +60,15 @@ const LoginForm = (props) => {
     event.preventDefault();
   };
 
+  const renderError = () => {
+    if (showError === true) {
+      return (<Typography color="primary">
+          Username or password incorrect
+        </Typography>
+      )
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData()
@@ -67,14 +78,19 @@ const LoginForm = (props) => {
 
     const url = "http://localhost:3001/login"
 
-    await axios.post(url, formData).then((response, error) => {
-      console.log(response)
-      if (error) {
-        console.log(error)
-      } else if (response.status === 200){
-        props.onLogin()
+    try {
+      await axios.post(url, formData).then((response) =>{
+        if (response.status === 200){
+          const token = JSON.stringify(response.headers["x-auth-token"])
+          props.onLogin(token)
+        }
+      })
+    }
+    catch (error) {
+      if (error.message.substr(error.message.length - 3) === "401") {
+        setShowError(true)
       }
-    })
+    }
   }
 
   return (
@@ -111,17 +127,18 @@ const LoginForm = (props) => {
               </Paper>
             </Grid>
           </Grid>
-          <Grid item xs={5} align="center" >
+          {renderError()}
+          <Grid item xs={6} align="center" >
             <div style={{
-              margin: "20px",
+              marginTop: "20px",
               display: "inline-block",
             }}>
               <Button onClick={props.onSignup} variant="text" color="primary">Sign up</Button>
             </div>
           </Grid>
-          <Grid item xs={5}align="center" >
+          <Grid item xs={6}align="center" >
             <div style={{
-              margin: "20px",
+              marginTop: "20px",
               display: "inline-block"
             }}>
               <Button type="submit" variant="outlined" color="primary">Login</Button>

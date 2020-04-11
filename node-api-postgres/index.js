@@ -4,6 +4,7 @@ const fileupload = require("express-fileupload");
 const cors = require('cors')
 const express = require("express");
 const app = express();
+const config = require("config");
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -13,6 +14,14 @@ if (process.env.NODE_ENV !== 'production') {
 let corsOptions = {
   origin: '*',
   optionsSuccessStatus: 200,
+}
+if(!config.get("database.db_password")) {
+  console.error("FATAL ERROR: DB_PASSWORD is not defined")
+  process.exit(1)
+}
+if(!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR: jwtPrivateKey is not defined")
+  process.exit(1)
 }
 
 app.use(fileupload({
@@ -27,7 +36,8 @@ app.use(bodyParser.urlencoded({
 app.use(helmet());
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Expose-Headers', 'x-auth-token')
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   next();
 });

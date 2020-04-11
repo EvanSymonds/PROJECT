@@ -10,7 +10,7 @@ const DropzoneComponent = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      color: theme.palette.secondary.main,
+      color: theme.palette.secondary.dark,
     },
     disabled: {
       color: theme.palette.secondary.light

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "../basics/button"
 import Drawer from '@material-ui/core/Drawer';
+import Divider from "@material-ui/core/Divider"
 import Paper from "@material-ui/core/Paper"
 import Modal from '@material-ui/core/Modal';
+import Avater from "@material-ui/core/Avatar"
 
 const Sidebar = (props) => {
   const [permanent, setPermanent] = useState(window.innerWidth > 1000 ? true : false)
@@ -21,7 +23,18 @@ const Sidebar = (props) => {
     menuButton: {
       display: "absolute",
       zIndex: 1,
-
+    },
+    userZone: {
+      position: "fixed",
+      left: 0,
+      bottom: 0,
+      width: 250,
+      height: 100,
+    },
+    avatar: {
+      width: 70,
+      height: 70,
+      marginLeft: 15,
     }
   }));
   const classes = useStyles();
@@ -52,6 +65,20 @@ const Sidebar = (props) => {
     setOpen(false);
   };
 
+  const renderUserZone = () => {
+    console.log(window.location.pathname)
+
+    return (
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        height: 100,
+      }}>
+        <Avater className={classes.avatar}/>
+      </div>
+    )
+  }
+
   const renderSidebar = () => {
     if (permanent) {
       return (
@@ -61,7 +88,10 @@ const Sidebar = (props) => {
           anchor="left"
         >
           <Paper square className={classes.drawerPaper}>
-
+            <div className={classes.userZone}>
+              <Divider variant="middle" />
+              {renderUserZone()}
+            </div>
           </Paper>
         </Drawer>
       )
@@ -79,7 +109,10 @@ const Sidebar = (props) => {
               anchor="left"
             >
               <Paper square className={classes.drawerPaper}>
-
+                <div className={classes.userZone}>
+                  <Divider variant="middle" />
+                    {renderUserZone()}
+                </div>
               </Paper>
             </Drawer>
           </Modal>

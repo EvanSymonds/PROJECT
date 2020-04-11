@@ -24,8 +24,9 @@ const Login = (props) => {
 
   const history = useHistory();
 
-  const onLogin = () => {
-    console.log("LOGGED IN")
+  const onLogin = (token) => {
+    window.localStorage.setItem("authToken", token)
+    history.push("/home")
   }
 
   const onClickSignup = () => {

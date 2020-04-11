@@ -11,7 +11,7 @@ const pool = new Pool({
   user: config.get("database.user"),
   host: config.get("database.host"),
   database: config.get("database.database"),
-  password: config.get("database.password"),
+  password: config.get("database.db_password"),
   port: config.get("database.port"),
 });
 

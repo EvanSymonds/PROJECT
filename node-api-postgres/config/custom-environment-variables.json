@@ -1,5 +1,6 @@
 {
   "database":{
-    "password": "DB_PASSWORD"
-  }
+    "db_password": "DB_PASSWORD"
+  },
+  "jwtPrivateKey": "jwtPrivateKey"
 }

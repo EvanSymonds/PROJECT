@@ -12,7 +12,8 @@ let redGreyTheme = createMuiTheme({
       contrastText: '#fff',
     },
     secondary: {
-      main: grey[500],
+      dark: grey[500],
+      main: grey[400],
       light: grey[200]
     },
   },
@@ -21,7 +22,7 @@ let redGreyTheme = createMuiTheme({
       fontWeight: "500",
       textTransform: 'none',
     }
-  }
+  },
 })
 
 let darkModeTheme = createMuiTheme({

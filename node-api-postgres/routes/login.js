@@ -4,6 +4,7 @@ const user_api = require("../APIs/user_api");
 const randomize = require("randomatic");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
+const jwt = require("jsonwebtoken")
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");
@@ -22,16 +23,19 @@ router.post("/", async(request, response) => {
       response.status(400).json(error);
     } else {
       await user_api.getUserByCredential(request.body.credential).then(async (user) => {
-        if (!user) return response.status(400).send("Invalid username or password");
-        
-        console.log(request.body.password)
+        if (user.length === 0) {
+          return response.status(401).send("Invalid username or password")
+        } else {
+          const validPassword = await bcrypt.compare(request.body.password, user[0].password);
+      
+          if (!validPassword) return response.send("Invalid username or password");
+      
+          debug("Successfully logged in");
 
-        const validPassword = await bcrypt.compare(request.body.password, user[0].password);
-    
-        if (!validPassword) return response.status(400).send("Invalid username or password");
-    
-        debug("Successfully logged in");
-        response.status(200).send("Logged in");
+          const token = jwt.sign({ name: user[0].username }, config.get("jwtPrivateKey"))
+
+          response.header("x-auth-token", token).status(200).send(user[0].username)
+        }
       })
     }
   })
@@ -53,7 +57,9 @@ router.post("/signup", async(request, response) => {
       await bcrypt.genSalt(10).then(async (salt) => {
         await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
           await user_api.createUser(username, hashed, request.body.email).then((result) => {
-            response.status(200).json(result);
+            const token = jwt.sign({ name: username }, config.get("jwtPrivateKey"))
+
+            response.header("x-auth-token", token).status(200).send(username)
           })
         })
       })
