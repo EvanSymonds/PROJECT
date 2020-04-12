@@ -17,7 +17,7 @@ var jwt = require("jsonwebtoken")
 const Sidebar = (props) => {
   const [permanent, setPermanent] = useState(window.innerWidth > 1000 ? true : false)
   const [open, setOpen] = useState(false);
-  const [menuItemsList] = useState(["Projects", "Settings", "Support", "Sign out"])
+  const [menuItemsList] = useState(["Projects", "Settings", "Support"])
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -93,6 +93,23 @@ const Sidebar = (props) => {
     setOpen(false);
   };
 
+  const signOut = () => {
+    window.localStorage.removeItem("authToken")
+    history.push("/")
+  }
+
+  const renderSignOut = () => {
+    if (window.localStorage.getItem("authToken") !== null){
+      return (
+      <div style={{
+        marginTop: 10
+      }}>
+        <Button type="normal" variant="outlined" buttonText="Sign out" onClick={signOut} color="primary" />
+      </div>
+      )
+    }
+  }
+
   const renderUserZone = () => {
 
     if (window.localStorage.getItem("authToken") === null){
@@ -104,8 +121,16 @@ const Sidebar = (props) => {
           justifyContent: "center",
           height: "100%",
         }}>
-          <Button type="normal" variant="text" buttonText="Sign up" color="primary" onClick={() => history.push("/signup")}/>
-          <Button type="normal" variant="outlined" buttonText="Login" color="primary" onClick={() => history.push("/login")}/>
+          <div style={{
+            margin: 10
+          }}>
+            <Button type="normal" variant="text" buttonText="Sign up" color="primary" onClick={() => history.push("/signup")}/>
+          </div>
+          <div style={{
+            margin: 10
+          }}>
+            <Button type="normal" variant="outlined" buttonText="Login" color="primary" onClick={() => history.push("/login")}/>
+          </div>
         </div>
       )
     } else {
@@ -201,6 +226,15 @@ const Sidebar = (props) => {
               <Divider variant="middle" />
               {renderMenuItems()}
             </div>
+            <div style={{
+                position: "absolute",
+                width: 250,
+                bottom: 10,
+                display: "flex",
+                justifyContent: "center"
+              }}>
+                {renderSignOut()}
+              </div>
           </Paper>
         </Drawer>
       )
@@ -224,6 +258,15 @@ const Sidebar = (props) => {
                   {renderMenuItems()}
                 </div>
               </Paper>
+              <div style={{
+                position: "absolute",
+                width: 250,
+                bottom: 10,
+                display: "flex",
+                justifyContent: "center"
+              }}>
+                {renderSignOut()}
+              </div>
             </Drawer>
           </Modal>
         </React.Fragment>

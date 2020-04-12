@@ -8,6 +8,8 @@ import Main       from './components/pages/main'
 import Login      from "./components/pages/login"
 import Signup     from "./components/pages/signup"
 import Projects   from "./components/pages/projects"
+import Settings   from "./components/pages/settings"
+import Support    from "./components/pages/support"
 
 export default function configRoutes() {
   return (
@@ -18,6 +20,8 @@ export default function configRoutes() {
             <Route exact path="/" component={Main} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/support" component={Support} />
             <AuthenticatedRoute path="/projects" component={Projects} />
           </Switch>
         </ThemeProvider>

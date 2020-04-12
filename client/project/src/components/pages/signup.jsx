@@ -36,12 +36,12 @@ const Login = (props) => {
   }
 
   return(
-    <div className={classes.background}>
+    <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.root}>
         <SignupForm onSignup={onFormComplete}/>
       </div>
-    </div>   
+    </Paper>   
   )
 }
 

@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import FileSystem from "../complex/fileSystem"
 import Sidebar from "../complex/sidebar"
+import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
 
@@ -10,6 +10,7 @@ const Main = (props) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       height: permanentSidebar ? window.innerHeight : window.innerHeight - 96,
+      marginLeft: permanentSidebar ? 250 : 0
     },
     background:{
       height: window.innerHeight,
@@ -27,12 +28,11 @@ const Main = (props) => {
   }
 
   return(
-    <div className={classes.background}>
+    <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.root}>
-        <FileSystem />
       </div>
-    </div>
+    </Paper>
   )
 }
 

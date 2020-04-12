@@ -1,36 +1,23 @@
-import React, { useState } from "react";
-import LoginForm from "../complex/loginForm"
+import React, {useState} from "react";
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
-import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from "react-router-dom";
 
-const Login = (props) => {
+const Settings = () => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
       height: permanentSidebar ? window.innerHeight : window.innerHeight - 96,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      marginLeft: permanentSidebar ? 250 : 0
     },
     background:{
       height: window.innerHeight,
     }
   }));
   const classes = useStyles();
-
   const history = useHistory();
-
-  const onLogin = (token) => {
-    window.localStorage.setItem("authToken", token)
-    history.push("/")
-  }
-
-  const onClickSignup = () => {
-    history.push("/signup")
-  }
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
@@ -40,14 +27,13 @@ const Login = (props) => {
     }
   }
 
-  return(
+  return (
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.root}>
-        <LoginForm onLogin={onLogin} onSignup={onClickSignup}/>
       </div>
     </Paper> 
   )
 }
 
-export default Login;
+export default Settings
