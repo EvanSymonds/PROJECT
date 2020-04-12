@@ -16,7 +16,7 @@ const SignupForm = (props) => {
   const [password1, setPassword1] = useState("")
   const [password2, setPassword2] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [passwordsMatch, setPasswordsMatch] = useState(true)
+  const [error, setError] = useState("")
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,7 +52,6 @@ const SignupForm = (props) => {
       margin: 4,
     }
   }));
-
   const classes = useStyles();
 
   const handleClickShowPassword = () => {
@@ -67,7 +66,7 @@ const SignupForm = (props) => {
     event.preventDefault()
 
     if (password1 === password2) {
-      console.log("passwords match")
+
       const formData = new FormData()
 
       formData.append("username", username)
@@ -76,26 +75,28 @@ const SignupForm = (props) => {
 
       const url = "http://localhost:3001/login/signup"
 
-      await axios.post(url, formData).then((response, error) => {
-        console.log(response)
-        if (error) {
-          console.log(error)
-        } else if (response.status === 200){
-          console.log(response)
-          props.onSignup()
-        }
-      })
+      try {
+        await axios.post(url, formData).then((response) => {
+          if (response.status === 200){
+            const token = JSON.stringify(response.headers["x-auth-token"])
+            props.onSignup(token)
+          }
+        })
+      }
+      catch (error) {
+        setError(error.response.data.detail)
+      }
+
     } else {
-      setPasswordsMatch(false)
+      setError("Passwords must match")
     }
   }
 
-  const renderPasswordError = () => {
-    if (!passwordsMatch) {
-      return <Typography color="primary">
-        Passwords must match
-      </Typography>
-    }
+  const renderError = () => {
+      return ( <Typography color="primary">
+          {error}
+        </Typography>
+      )
   }
 
   return (
@@ -162,7 +163,7 @@ const SignupForm = (props) => {
               </Paper>
             </Grid>
           </Grid>
-          {renderPasswordError()}
+          {renderError()}
           <Grid item xs={12} align="center" >
             <div style={{
               margin: "20px",

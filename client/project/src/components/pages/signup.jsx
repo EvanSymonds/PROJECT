@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SignupForm from "../complex/signupForm"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
+import { useHistory } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 
 const Login = (props) => {
@@ -13,16 +14,17 @@ const Login = (props) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      zIndex: 0
     },
     background:{
       height: window.innerHeight,
     }
   }));
   const classes = useStyles();
+  const history = useHistory();
 
-  const onFormComplete = () => {
-
+  const onFormComplete = (token) => {
+    window.localStorage.setItem("authToken", token)
+    history.push("/")
   }
 
   const onResize = () => {
@@ -34,12 +36,12 @@ const Login = (props) => {
   }
 
   return(
-    <Paper square className={classes.background}>
+    <div className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.root}>
         <SignupForm onSignup={onFormComplete}/>
       </div>
-    </Paper>   
+    </div>   
   )
 }
 

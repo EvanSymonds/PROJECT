@@ -4,10 +4,10 @@ import './index.css';
 import { ThemeProvider } from "@material-ui/core/styles"
 import { redGreyTheme, darkModeTheme } from "./themes"
 
-import Main       from './components/pages/main';
+import Main       from './components/pages/main'
 import Login      from "./components/pages/login"
 import Signup     from "./components/pages/signup"
-import Home       from "./components/pages/home"
+import Projects   from "./components/pages/projects"
 
 export default function configRoutes() {
   return (
@@ -18,7 +18,7 @@ export default function configRoutes() {
             <Route exact path="/" component={Main} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <AuthenticatedRoute path="/home" component={Home} />
+            <AuthenticatedRoute path="/projects" component={Projects} />
           </Switch>
         </ThemeProvider>
       </div>

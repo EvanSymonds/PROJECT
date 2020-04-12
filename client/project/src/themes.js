@@ -32,8 +32,9 @@ let darkModeTheme = createMuiTheme({
       main: blue[300]
     },
     secondary:{
+      dark: grey[300],
       main: grey[500],
-      light: grey[700]
+      light: grey[700],
     }
   },
   typography:{

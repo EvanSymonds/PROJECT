@@ -50,19 +50,40 @@ router.post("/signup", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      response.status(400).json(error);
+      if (error.details[0].message === 'email" must be a valid email') {
+        response.status(400).json({detail: "Email is invalid"})
+      } else if (error.details[0].message === '"username" length must be at least 3 characters long') {
+        response.status(400).json({detail: "Username must be more than 3 characters long"})
+      }else if (error.details[0].message === '"username" length must be less than or equal to 25 characters long') {
+        response.status(400).json({detail: "Username must be less than 25 characters"})
+      } else if (error.details[0].message === '"username" must only contain alpha-numeric characters') {
+        response.status(400).send({detail:"Username must only contain alphanumeric characters"})
+      }else if (error.details[0].message === '"password" length must be at least 3 characters long') {
+        response.status(400).send({detail:"Password must be more than 3 characters long"})
+      }else if (error.details[0].message === '"password" length must be less than or equal to 25 characters long') {
+        response.status(400).send({detail:"Password must be less than 25 characters"})
+      } else if (error.details[0].message === '"password" must only contain alpha-numeric characters') {
+        response.status(400).send({detail:"Password must only contain alphanumeric characters"})
+      }
     } else {
       const username = request.body.username + "#" + randomize("0", 4);
 
-      await bcrypt.genSalt(10).then(async (salt) => {
-        await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
-          await user_api.createUser(username, hashed, request.body.email).then((result) => {
-            const token = jwt.sign({ name: username }, config.get("jwtPrivateKey"))
+      try{
+        await bcrypt.genSalt(10).then(async (salt) => {
+          await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
+            await user_api.createUser(username, hashed, request.body.email).then((result) => {
+              const token = jwt.sign({ name: username }, config.get("jwtPrivateKey"))
 
-            response.header("x-auth-token", token).status(200).send(username)
+              response.header("x-auth-token", token).status(200).send(username)
+            })
           })
         })
-      })
+      }
+      catch (error) {
+        if (error.detail.substring(0,11) === "Key (email)") {
+          response.status(409).json({detail:"Email already exists"})
+        }
+      }
     }
   })
 })
