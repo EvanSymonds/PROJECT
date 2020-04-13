@@ -27,8 +27,8 @@ if(!config.get("jwtPrivateKey")) {
 app.use(fileupload({
   useTempFiles: false,
 }));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    limit: "50mb",
     extended: true,
     parameterLimit: 1000000,
   })
@@ -48,6 +48,7 @@ const users = require("./routes/users");
 const projects = require("./routes/projects");
 const roles = require("./routes/roles");
 const files = require("./routes/files");
+const thumbnails = require("./routes/thumbnails");
 
 //Routing
 app.use("/login", login);
@@ -55,6 +56,7 @@ app.use("/users", users);
 app.use("/projects", projects);
 app.use("/roles", roles);
 app.use("/files", files);
+app.use("/thumbnails", thumbnails);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

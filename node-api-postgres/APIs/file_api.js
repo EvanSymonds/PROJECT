@@ -88,7 +88,6 @@ const getFileById = (file_id) => {
         } else {
           dbDebugger("File data retrieved");
         }
-        dbDebugger(results)
         const data = (results.rows[0].lo_get);
 
         const path = "./Temp_storage/" + file[0].file_name 
@@ -104,7 +103,7 @@ const getFileById = (file_id) => {
   })
 }
 
-const storeFile = async (data, file_name, project_id, path) => {
+const storeFile = async (data, file_name, project_id) => {
   //Stores a file in the files table
 
   return new Promise( async (resolve, reject) => {
@@ -118,9 +117,7 @@ const storeFile = async (data, file_name, project_id, path) => {
           reject(error)
         } else{
           dbDebugger("File uploaded to database")
-          //fsExtra.emptyDir("./Temp_storage", () => {
-            resolve(results)
-          //});
+          resolve(results)
         }
       })
   })

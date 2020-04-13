@@ -58,12 +58,12 @@ const File = (props) => {
 
   const onDownload = () => {
     const url = "http://localhost:3001/files/" + props.file_id
+
     axios.get(url).then((response, error) => {
       if (error) {
         console.log(error)
       } else {
-        setAnchorEl(null)
-        window.open(url)
+        window.location.assign(url)
       }
     })
   }

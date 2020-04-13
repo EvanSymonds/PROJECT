@@ -12,7 +12,7 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.get("/", async (request, response) => {
-  await file_api.getFiles().then((error, files) => {
+  await file_api.getFiles().then((files, error) => {
     if (error){
       debug("Error: ", error)
       response.status(400).json(error)
@@ -30,24 +30,7 @@ router.get("/:id", async (request, response) => {
       response.status(400).json(error)
     } else  {
       response.download(file.path, file.file[0].file_name, () => {
-        //fsExtra.emptyDirSync("./Temp_storage");
-      })
-    }
-  })
-})
-
-router.get("/download/:id", async (request, response) => {
-  await file_api.getFileById(parseInt(request.params.id)).then((file, error) => {
-    if (error) {
-      debug("Error: ", error)
-      response.status(400).json(error)
-    } else  {
-      fs.writeFile("./Temp_storage/download", file, () => {
-        response.download("C:/Users/Evan Symonds/PROJECT/node-api-postgres/Temp_storage/download", file.file[0].file_name, (error) => {
-          if (error) {
-            debug(error)
-          }
-        })
+        fsExtra.emptyDirSync("./Temp_storage");
       })
     }
   })
@@ -80,7 +63,6 @@ router.post("/", async (request, response) => {
       } else {
         await file_api.storeFile(request.files.file.data, request.files.file.name, request.body.project_id, request.files.file.tempFilePath).then((results, error) => {
           if (error) {
-            console.log("test")
             debug(error)
             response.status(400).json(error)
           } else {

@@ -3,6 +3,7 @@ import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
+import ProjectCard from "../basics/projectCard"
 
 const Projects = () => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
@@ -36,6 +37,7 @@ const Projects = () => {
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
+        <ProjectCard project_id="2" project_name="Ammonia generator" members="12"/>
       </div>
     </Paper> 
   )

@@ -21,6 +21,7 @@ let redGreyTheme = createMuiTheme({
       textTransform: 'none',
     }
   },
+  spacing: 4
 })
 
 let darkModeTheme = createMuiTheme({
@@ -40,7 +41,8 @@ let darkModeTheme = createMuiTheme({
       fontWeight: "500",
       textTransform: 'none',
     }
-  }
+  },
+  spacing: 4
 })
 
 let orangeBlackTheme = createMuiTheme({
@@ -60,7 +62,8 @@ let orangeBlackTheme = createMuiTheme({
       fontWeight: "500",
       textTransform: 'none',
     }
-  }
+  },
+  spacing: 4
 })
 
 orangeBlackTheme = responsiveFontSizes(orangeBlackTheme)
