@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import configRoutes from "./router"
+import AppRouter from "./router"
 import * as serviceWorker from './serviceWorker';
 
-const routing = (
-  configRoutes()
-)
+import { Provider } from "react-redux"
+import { createStore } from "redux"
+import reducers from "./reducers/settings"
 
-ReactDOM.render(routing,document.getElementById('root'))
+ReactDOM.render(
+  <Provider store={createStore(reducers)}>
+    <AppRouter />
+  </Provider>
+  ,document.getElementById('root'))
 
 serviceWorker.unregister();

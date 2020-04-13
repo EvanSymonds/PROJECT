@@ -1,21 +1,37 @@
 import React from 'react';
 import { Route, Redirect, BrowserRouter as Router, Switch } from 'react-router-dom'
 import './index.css';
+
+import { connect } from "react-redux"
+import { selectTheme } from "./actions"
+
 import { ThemeProvider } from "@material-ui/core/styles"
-import { redGreyTheme, darkModeTheme } from "./themes"
+import { redGreyTheme, darkModeTheme, orangeBlackTheme } from "./themes"
 
-import Main       from './components/pages/main'
-import Login      from "./components/pages/login"
-import Signup     from "./components/pages/signup"
-import Projects   from "./components/pages/projects"
-import Settings   from "./components/pages/settings"
-import Support    from "./components/pages/support"
+import Main       from  "./components/pages/main"
+import Login      from  "./components/pages/login"
+import Signup     from  "./components/pages/signup"
+import Projects   from  "./components/pages/projects"
+import Settings   from  "./components/pages/settings"
+import Support    from  "./components/pages/support"
 
-export default function configRoutes() {
+const AppRouter = (props) => {
+
+  const returnTheme = () => {
+    switch (props.selectedTheme.name) {
+      case "redGreyTheme":
+        return redGreyTheme
+      case "darkModeTheme":
+        return darkModeTheme
+      case "orangeBlackTheme":
+        return orangeBlackTheme
+    }
+  }
+
   return (
     <Router>
       <div>
-        <ThemeProvider theme={darkModeTheme}>
+        <ThemeProvider theme={returnTheme()}>
           <Switch>
             <Route exact path="/" component={Main} />
             <Route path="/login" component={Login} />
@@ -29,6 +45,12 @@ export default function configRoutes() {
     </Router>
   )
 }
+
+const mapStateToProps = state => {
+  return { selectedTheme: state.selectedTheme }
+}
+
+export default connect(mapStateToProps)(AppRouter)
 
 const AuthenticatedRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (

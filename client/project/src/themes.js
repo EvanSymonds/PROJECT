@@ -1,7 +1,5 @@
 import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles"
-import red from "@material-ui/core/colors/red"
-import grey from "@material-ui/core/colors/grey"
-import blue from "@material-ui/core/colors/blue"
+import { red, green, blue, grey, lightBlue, orange } from "@material-ui/core/colors"
 
 
 let redGreyTheme = createMuiTheme({
@@ -45,6 +43,27 @@ let darkModeTheme = createMuiTheme({
   }
 })
 
+let orangeBlackTheme = createMuiTheme({
+  palette: {
+    type: "light",
+    primary:{
+      main: orange[500]
+    },
+    secondary:{
+      dark: grey[400],
+      main: grey[600],
+      light: grey[800],
+    }
+  },
+  typography:{
+    button: {
+      fontWeight: "500",
+      textTransform: 'none',
+    }
+  }
+})
+
+orangeBlackTheme = responsiveFontSizes(orangeBlackTheme)
 darkModeTheme = responsiveFontSizes(darkModeTheme)
 redGreyTheme  = responsiveFontSizes(redGreyTheme)
-export { redGreyTheme, darkModeTheme }
+export { redGreyTheme, darkModeTheme, orangeBlackTheme}

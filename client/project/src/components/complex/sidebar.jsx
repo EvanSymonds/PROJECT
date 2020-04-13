@@ -112,7 +112,7 @@ const Sidebar = (props) => {
 
   const renderUserZone = () => {
 
-    if (window.localStorage.getItem("authToken") === null){
+    if (window.localStorage.getItem("authToken") === "undefined" || !window.localStorage.getItem("authToken")){
       return (
         <div style={{
           display: "flex",
@@ -263,7 +263,7 @@ const Sidebar = (props) => {
                 width: 250,
                 bottom: 10,
                 display: "flex",
-                justifyContent: "center"
+                justifyContent: "center",
               }}>
                 {renderSignOut()}
               </div>

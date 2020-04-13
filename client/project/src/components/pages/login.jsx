@@ -9,18 +9,23 @@ const Login = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
 
   const useStyles = makeStyles((theme) => ({
-    root: {
-      height: permanentSidebar ? window.innerHeight : window.innerHeight - 96,
+    page: {
+      height: window.innerHeight - 96,
+      marginLeft: permanentSidebar ? 250 : 0,
+      marginTop: permanentSidebar ? 48 : 0,
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
+      alignItems: "center"
     },
     background:{
-      height: window.innerHeight,
+      position: "absolute",
+      top: 0,
+      right: 0,
+      width: window.innerWidth,
+      height: "100%"
     }
   }));
   const classes = useStyles();
-
   const history = useHistory();
 
   const onLogin = (token) => {
@@ -43,7 +48,7 @@ const Login = (props) => {
   return(
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
-      <div className={classes.root}>
+      <div className={classes.page}>
         <LoginForm onLogin={onLogin} onSignup={onClickSignup}/>
       </div>
     </Paper> 
