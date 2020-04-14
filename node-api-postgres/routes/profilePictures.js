@@ -3,7 +3,7 @@ const router = express.Router();
 const Joi = require("joi");
 const fs = require("fs")
 const fsExtra = require("fs-extra")
-const thumbnail_api = require("../APIs/thumbnail_api")
+const profile_picture_api = require("../APIs/profile_picture_api")
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");
@@ -11,32 +11,32 @@ const debug = require("debug")("app:debug");
 //Configuration
 const config = require("config");
 
-router.get("/:id", async (request, response) => {
-  await thumbnail_api.getThumbnailByProject(parseInt(request.params.id)).then((thumbnail, error) => {
+router.get("/user/:id", async (request, response) => {
+  await profile_picture_api.getProfilePictureByUser(parseInt(request.params.id)).then((profile_picture, error) => {
     if (error){
       debug("Error: ", error)
       response.status(400).json(error)
     } else {
       debug("Thumbnail retrieved")
-      response.send(thumbnail)
+      response.send(profile_picture)
     }
   })
 })
 
 router.post("/", async (request, response) => {
   const schema = {
-    project_id: Joi.number().integer().max(100000000).required(),
+    user_id: Joi.number().integer().max(100000000).required(),
   }
 
   if (!request.files) {
-    response.status(400).send("No file found")
+    response.status(400).send("No profile picture found")
   } else {
     Joi.validate(request.body, schema, async (error) => {
       if (error) {
         debug(error)
         response.status(400).json(error);
       } else {
-        await thumbnail_api.storeThumbnail(request.files.file.data, request.body.project_id).then((results, error) => {
+        await profile_picture_api.storeProfilePicture(request.files.file.data, request.body.user_id).then((results, error) => {
           if (error) {
             debug(error)
             response.status(400).json(error)
@@ -49,8 +49,8 @@ router.post("/", async (request, response) => {
   }
 })
 
-router.delete("/project/:id", (async (request, response) => {
-  await thumbnail_api.deleteThumbnail(parseInt(request.params.id)).then((results, error) => {
+router.delete("/user/:id", (async (request, response) => {
+  await profile_picture_api.deleteProfilePicture(parseInt(request.params.id)).then((results, error) => {
     if (error) {
       response.status(400).json(error)
     } else {

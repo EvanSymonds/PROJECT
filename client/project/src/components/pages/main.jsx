@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 
 const Main = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
+  const [width, setWidth] = React.useState(window.innerWidth);
 
   const useStyles = makeStyles((theme) => ({
     page: {
@@ -17,7 +18,7 @@ const Main = (props) => {
       position: "absolute",
       top: 0,
       right: 0,
-      width: window.innerWidth,
+      width: width,
       height: "100%"
     }
   }));
@@ -26,8 +27,10 @@ const Main = (props) => {
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
+      setWidth(window.innerWidth)
       setPermanentSidebar(false)
     } else if (window.innerWidth > 1000) {
+      setWidth(window.innerWidth)
       setPermanentSidebar(true)
     }
   }

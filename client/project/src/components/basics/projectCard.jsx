@@ -8,6 +8,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from "@material-ui/core/Typography"
 import { useOverShadowStyles } from '@mui-treasury/styles/shadow/over';
 import { useBouncyShadowStyles } from '@mui-treasury/styles/shadow/bouncy';
+import Avatar from '@material-ui/core/Avatar';
+import ProfilePicture from "./profilePicture"
+import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import { Lock, Public} from "@material-ui/icons"
+import Grid from "@material-ui/core/Grid"
 import axios from "axios"
 
 const ProjectCard = (props) => {
@@ -33,22 +38,19 @@ const ProjectCard = (props) => {
       backgroundColor: theme.palette.type === "dark" ? theme.palette.secondary.light : null,
       marginLeft: 'auto',
       marginRight: 'auto',
-      height: 300,
-      width: 300,
+      height: 350,
+      width: 350,
       borderRadius: theme.spacing(4),
       overflow: 'visible',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      [theme.breakpoints.up('md')]: {
-        flexDirection: 'row',
-        paddingTop: theme.spacing(2),
-      },
     },
     mediaContainer: {
       width: '88%',
       marginLeft: 'auto',
       marginRight: 'auto',
+      height: 200,
       marginTop: theme.spacing(-3),
       borderRadius: theme.spacing(4),
       boxShadow: theme.palette.type === "dark" ? 0 : '0px 6px 15px rgba(34, 35, 58, 0.2)',
@@ -57,8 +59,9 @@ const ProjectCard = (props) => {
       width: "100%",
       marginLeft: 'auto',
       marginRight: 'auto',
-      marginTop: 0,
-      height: 0,
+      marginTop: "auto",
+      marginBotton: "auto",
+      height: 200,
       paddingBottom: '60%',
       borderRadius: theme.spacing(4),
       [theme.breakpoints.up('md')]: {
@@ -75,7 +78,14 @@ const ProjectCard = (props) => {
       },
     },
     textBody: {
-      color: theme.palette.secondary.dark
+      color: theme.palette.primary.main,
+      fontSize: 16
+    },
+    avatarGroup: {
+      '& .MuiAvatar-root': {
+        width: 35,
+        height: 35,
+      }
     }
   }));
   const classes = useStyles();
@@ -83,17 +93,36 @@ const ProjectCard = (props) => {
   const darkModeShadowStyles = useBouncyShadowStyles();
   const styles = useStyles();
 
+  const renderIcon = () => {
+    if (props.isPublic === true) {
+      return <Public color="primary" fontSize="large"/>
+    } else {
+      return <Lock color="primary" fontSize="large"/>
+    }
+  }
+
+  const renderAvatars = () => {
+    const avatars = props.memberList.map((member, i) => {
+      return (<Avatar key={i}>
+        <ProfilePicture user_id={member.user_id} width={35} height={35} />
+      </Avatar>
+      )
+    })
+
+    return avatars
+  }
+
   return (
     <div>
       <Card className={cx(classes.root, props.selectedTheme.name === "darkModeTheme" ? darkModeShadowStyles.root : shadowStyles.root)}
-        onClick={() => {console.log("test")}}
+        onClick={props.onClick}
       >
           <Card className={classes.mediaContainer}>
             <CardMedia
-                image={thumbnail}
-                className={styles.media}
-                src={thumbnail}
-              />
+              image={thumbnail}
+              className={styles.media}
+              component="img"
+            />
           </Card>
           <div style={{
             textAlign: "left",
@@ -115,6 +144,19 @@ const ProjectCard = (props) => {
               </Typography>
             </div>
           </div>
+          <Grid container style={{
+            marginTop: 15,
+            marginLeft: 60
+          }}>
+            <Grid item xs={9}>
+              <AvatarGroup max={4} width="35" className={classes.avatarGroup}>
+                {renderAvatars()}
+              </AvatarGroup>
+            </Grid>
+            <Grid item xs={2}>
+              {renderIcon()}
+            </Grid>
+          </Grid>
       </Card>
     </div>
   )

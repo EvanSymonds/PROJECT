@@ -8,12 +8,13 @@ import { selectTheme } from "./actions"
 import { ThemeProvider } from "@material-ui/core/styles"
 import { redGreyTheme, darkModeTheme, orangeBlackTheme } from "./themes"
 
-import Main       from  "./components/pages/main"
-import Login      from  "./components/pages/login"
-import Signup     from  "./components/pages/signup"
-import Projects   from  "./components/pages/projects"
-import Settings   from  "./components/pages/settings"
-import Support    from  "./components/pages/support"
+import Main         from  "./components/pages/main"
+import Login        from  "./components/pages/login"
+import Signup       from  "./components/pages/signup"
+import Projects     from  "./components/pages/projects"
+import Settings     from  "./components/pages/settings"
+import Support      from  "./components/pages/support"
+import ProjectHome  from  "./components/pages/projectHome"
 
 const AppRouter = (props) => {
 
@@ -39,6 +40,7 @@ const AppRouter = (props) => {
             <Route path="/settings" component={Settings} />
             <Route path="/support" component={Support} />
             <AuthenticatedRoute path="/projects" component={Projects} />
+            <AuthenticatedRoute path="/:project_name/:project_id" component={ProjectHome} />
           </Switch>
         </ThemeProvider>
       </div>

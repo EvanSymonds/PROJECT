@@ -7,10 +7,11 @@ import Drawer from '@material-ui/core/Drawer';
 import Divider from "@material-ui/core/Divider"
 import Paper from "@material-ui/core/Paper"
 import Modal from '@material-ui/core/Modal';
-import Avater from "@material-ui/core/Avatar"
+import Avatar from "@material-ui/core/Avatar"
 import Grid from "@material-ui/core/Grid"
 import Link from '@material-ui/core/Link';
 import { Typography } from '@material-ui/core';
+import ProfilePicture from "../basics/profilePicture"
 
 var jwt = require("jsonwebtoken")
 
@@ -56,6 +57,10 @@ const Sidebar = (props) => {
       height: 60,
       marginLeft: 15,
       marginRight: 10,
+    },
+    profilePicture: {
+      width: 60,
+      height: 60,
     },
     username: {
       display: "flex",
@@ -146,7 +151,9 @@ const Sidebar = (props) => {
           alignItems: "center",
           height: 100,
         }}>
-          <Avater className={classes.avatar}/>
+          <Avatar className={classes.avatar}>
+            <ProfilePicture user_id={token.user_id} width={60} height={60}/>
+          </Avatar>
           <div className={classes.username}>
             <Typography noWrap style={{
               display: "block",

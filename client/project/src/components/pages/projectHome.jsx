@@ -1,11 +1,11 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react"
+import FileSystem from "../complex/fileSystem"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
-import SiteSettings from "../complex/siteSettings"
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory } from "react-router-dom";
 
-const Settings = () => {
+const ProjectHome = (props) => {
+  const [project_id] = useState(parseInt(props.match.params.project_id))
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
   const [width, setWidth] = React.useState(window.innerWidth);
 
@@ -24,8 +24,6 @@ const Settings = () => {
     }
   }));
   const classes = useStyles();
-  const history = useHistory();
-
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
@@ -41,10 +39,11 @@ const Settings = () => {
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
-        <SiteSettings />
+        <FileSystem project_id={project_id} />
       </div>
     </Paper> 
   )
+
 }
 
-export default Settings
+export default ProjectHome

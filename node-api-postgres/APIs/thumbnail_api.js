@@ -20,15 +20,15 @@ const pool = new Pool({
 const fsExtra = require('fs-extra');
 const fs = require('fs');
 
-const getThumbnailByProject = (thumbnail_id) => {
+const getThumbnailByProject = (project_id) => {
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM thumbnails WHERE project_id = $1", [thumbnail_id], (error, results) => {
+    pool.query("SELECT * FROM thumbnails WHERE project_id = $1", [project_id], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error)
       } else {
-        dbDebugger("File retrieved");
+        dbDebugger("Thumbnail retrieved");
       }
 
       var thumbnail = results.rows;
@@ -56,8 +56,6 @@ const getThumbnailByProject = (thumbnail_id) => {
 }
 
 const storeThumbnail = async (data, project_id) => {
-  //Stores a file in the files table
-
   return new Promise( async (resolve, reject) => {
 
       pool.query("INSERT INTO thumbnails (thumbnail_data_id, project_id) VALUES (lo_from_bytea(0, $1), $2)", [data, project_id], (error, results) => {
@@ -72,7 +70,22 @@ const storeThumbnail = async (data, project_id) => {
   })
 }
 
+const deleteThumbnail = async(project_id) => {
+  return new Promise( async (resolve, reject) => {
+    pool.query("DELETE FROM thumbnails WHERE project_id = $1", [project_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error)
+        reject(error)
+      } else {
+        dbDebugger("Thumbnail deleted")
+        resolve(results)
+      }
+    })
+  })
+}
+
 module.exports = {
   getThumbnailByProject,
-  storeThumbnail
+  storeThumbnail,
+  deleteThumbnail
 }

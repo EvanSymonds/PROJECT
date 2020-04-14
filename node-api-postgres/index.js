@@ -49,6 +49,7 @@ const projects = require("./routes/projects");
 const roles = require("./routes/roles");
 const files = require("./routes/files");
 const thumbnails = require("./routes/thumbnails");
+const profilePictures = require("./routes/profilePictures");
 
 //Routing
 app.use("/login", login);
@@ -57,6 +58,7 @@ app.use("/projects", projects);
 app.use("/roles", roles);
 app.use("/files", files);
 app.use("/thumbnails", thumbnails);
+app.use("/profilePictures", profilePictures);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

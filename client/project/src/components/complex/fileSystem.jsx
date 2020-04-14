@@ -20,9 +20,10 @@ const FileSystem = (props) => {
 
   const classes = useStyles()
 
-  useEffect(() => {getProjectFiles(2)}, [])
+  useEffect(() => {getProjectFiles(props.project_id)}, [])
 
   const getProjectFiles = async (project_id) => {
+
     const url = "http://localhost:3001/files/project/" + project_id
     await axios.get(url).then((results, error) => {
       if (error) {
@@ -46,7 +47,7 @@ const FileSystem = (props) => {
   }
 
   const onAddFile = () => {
-    getProjectFiles(2)  
+    getProjectFiles(props.project_id)  
   }
 
   const renderFiles = () => {

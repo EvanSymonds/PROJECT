@@ -32,7 +32,7 @@ router.post("/", async(request, response) => {
       
           debug("Successfully logged in");
 
-          const token = jwt.sign({ name: user[0].username }, config.get("jwtPrivateKey"))
+          const token = jwt.sign({ name: user[0].username, user_id: user[0].user_id }, config.get("jwtPrivateKey"))
 
           response.header("x-auth-token", token).status(200).send(user[0].username)
         }
@@ -72,7 +72,7 @@ router.post("/signup", async(request, response) => {
         await bcrypt.genSalt(10).then(async (salt) => {
           await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
             await user_api.createUser(username, hashed, request.body.email).then((result) => {
-              const token = jwt.sign({ name: username }, config.get("jwtPrivateKey"))
+              const token = jwt.sign({ name: username, user_id: user[0].user_id }, config.get("jwtPrivateKey"))
 
               response.header("x-auth-token", token).status(200).send(username)
             })

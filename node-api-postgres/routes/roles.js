@@ -40,9 +40,9 @@ router.get("/user/:id", async (request, response) => {
 
 router.post("/", async (request, response) => {
   const schema = {
-    project_id: Joi.number.integer().max(100000000).required(),
-    project_name: Joi.string().alphanum().min(3).max(25).required(),
-    user_id: Joi.number.integer().max(10000000).required()
+    project_id: Joi.number().integer().max(100000000).required(),
+    role_name: Joi.string().min(3).max(25).required(),
+    user_id: Joi.number().integer().max(10000000).required()
   }
 
   Joi.validate(request.body, schema, async (error) => {
@@ -61,9 +61,9 @@ router.post("/", async (request, response) => {
 
 router.post("/update", async (request, response) => {
   const schema = {
-    project_id: Joi.number.integer().max(100000000).required(),
-    project_name: Joi.string().alphanum().min(3).max(25).required(),
-    user_id: Joi.number.integer().max(10000000).required(),
+    project_id: Joi.number().integer().max(100000000).required(),
+    project_name: Joi.string().min(3).max(25).required(),
+    user_id: Joi.number().integer().max(10000000).required(),
     new_name: Joi.string().alphanum().min(3).max(25).required()
   }
 
