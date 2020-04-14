@@ -95,7 +95,12 @@ const FileSystem = (props) => {
         onClose={handleClose}
       >
         <div>
-          <FileUpload updateParent={onAddFile}/>
+          <FileUpload 
+            updateParent={onAddFile}
+            project_id={props.project_id} 
+            maxFiles={4}
+            endpoint="/files"  
+          />
         </div>
       </Modal>
     </React.Fragment>

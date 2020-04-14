@@ -51,7 +51,7 @@ const getUserByCredential = (value) => {
   //Gets a single user from a credential
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM users WHERE position($1 in username) > 0 OR email = $1", [value], (error, results) => {
+    pool.query("SELECT * FROM users WHERE position($1 in LOWER(username)) > 0 OR LOWER(email) = $1", [value.toLowerCase()], (error, results) => {
       if (error){
         dbDebugger("Error: ", error);
         reject(error);

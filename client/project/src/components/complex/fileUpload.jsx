@@ -44,11 +44,13 @@ const FileUpload = (props) => {
   }
 
   const onDrop = (e) => {
-    if (files.length === 3) {
-      setMaxFiles(true)
-    }
+    let tempLength = files.length
 
     setFiles([...files, e[0]])
+
+    if (tempLength + 1 === props.maxFiles) {
+      setMaxFiles(true)
+    }
   }
 
   const onUpload = async (e) => {
@@ -57,7 +59,7 @@ const FileUpload = (props) => {
       return false
     }))
 
-    await uploadFiles(2).then((results) => {
+    await uploadFiles(props.project_id).then((results) => {
       props.updateParent()
       console.log(results)
     })
@@ -91,7 +93,9 @@ const FileUpload = (props) => {
         formData.append("file", file)
         formData.append("project_id", project_id)
 
-        await axios.post("http://localhost:3001/files", formData, config).then((response, error) => {
+        const url = "http://localhost:3001" + props.endpoint
+
+        await axios.post(url, formData, config).then((response, error) => {
           if (error) {
             reject("Error: ", error)
             setUploadable(true)

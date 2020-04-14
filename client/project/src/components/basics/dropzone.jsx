@@ -37,7 +37,6 @@ const DropzoneComponent = (props) => {
   }
 
   const onDrop = useCallback(files => {
-    console.log(files)
     props.onDrop(files)
   })
 
