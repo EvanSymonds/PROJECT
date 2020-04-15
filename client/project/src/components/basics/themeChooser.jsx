@@ -4,16 +4,11 @@ import { selectTheme } from "../../actions/"
 import Radio from "@material-ui/core/Radio"
 import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
+import axios from "axios"
+
+var jwt = require("jsonwebtoken")
 
 const ThemeChooser = (props) => {
-  const [selectedValue, setSelectedValue] = useState(props.selectedTheme.id.toString())
-
-  const useStyles = makeStyles((theme) => ({
-    radios: {
-    
-    }
-  }));
-  const classes = useStyles();
 
   const themes = [
     {
@@ -30,15 +25,28 @@ const ThemeChooser = (props) => {
     }
   ]
 
-  const handleChange = (event) => {
-    setSelectedValue(event.target.id)
+  const getRadioSelected = () => {
+    return props.selectedTheme.id.toString()
+  }
 
+  const handleChange = (event) => {
     let theme = {
       name: event.target.name,
       id: event.target.id
     }
 
     props.selectTheme(theme)
+
+    if (window.localStorage.getItem("authToken") !== "undefined" && window.localStorage.getItem("authToken")){
+      const encrypted = window.localStorage.getItem("authToken")
+      const token = jwt.decode(JSON.parse(encrypted))
+
+      axios.post("http://localhost:3001/user_settings/" + token.user_id, { theme: theme.name }).then((error) => {
+        if (error) {
+          console.log(error)
+        }
+      })
+    }
   }
 
   const renderRadios = () => {
@@ -66,8 +74,7 @@ const ThemeChooser = (props) => {
             />
           </Paper>
           <Radio 
-            className={classes.radios}
-            checked={selectedValue === i.toString()}
+            checked={getRadioSelected() === i.toString()}
             id={i.toString()}
             onChange={handleChange}
             name={theme.name}

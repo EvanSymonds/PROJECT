@@ -49,7 +49,8 @@ const projects = require("./routes/projects");
 const roles = require("./routes/roles");
 const files = require("./routes/files");
 const thumbnails = require("./routes/thumbnails");
-const profilePictures = require("./routes/profilePictures");
+const profile_pictures = require("./routes/profile_pictures");
+const user_settings = require("./routes/user_settings");
 
 //Routing
 app.use("/login", login);
@@ -58,7 +59,8 @@ app.use("/projects", projects);
 app.use("/roles", roles);
 app.use("/files", files);
 app.use("/thumbnails", thumbnails);
-app.use("/profilePictures", profilePictures);
+app.use("/profile_pictures", profile_pictures);
+app.use("/user_settings", user_settings);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

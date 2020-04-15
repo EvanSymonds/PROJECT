@@ -21,7 +21,7 @@ const ProfilePicture = (props) => {
       return window.btoa(binary);
     };
 
-    axios.get("http://localhost:3001/profilePictures/user/" + props.user_id).then((data) => {
+    axios.get("http://localhost:3001/profile_pictures/user/" + props.user_id).then((data) => {
       const base64Flag = 'data:image/png;base64,'
       const imageStr = arrayBufferToBase64(data.data.data.data)
       setProfilePicture(((base64Flag + imageStr).toString()))

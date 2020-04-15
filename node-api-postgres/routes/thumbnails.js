@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
-const fs = require("fs")
-const fsExtra = require("fs-extra")
 const thumbnail_api = require("../APIs/thumbnail_api")
 
 //Setting up debugging channels
