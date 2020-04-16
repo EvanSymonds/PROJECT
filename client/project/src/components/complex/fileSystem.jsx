@@ -97,7 +97,8 @@ const FileSystem = (props) => {
         <div>
           <FileUpload 
             updateParent={onAddFile}
-            project_id={props.project_id} 
+            credentialType="project_id"
+            credential={props.project_id} 
             maxFiles={4}
             endpoint="/files"  
           />

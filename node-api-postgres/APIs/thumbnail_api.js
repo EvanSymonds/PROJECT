@@ -33,24 +33,28 @@ const getThumbnailByProject = (project_id) => {
 
       var thumbnail = results.rows;
 
-      pool.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id], async (error, results) => {
-        if (error){
-          dbDebugger("Error: ", error);
-          reject(error)
-        } else {
-          dbDebugger("Thumbnail data retrieved");
-        }
-        const data = (results.rows[0].lo_get);
-
-        const path = "./Temp_storage/" + thumbnail[0].project_id
-        fs.writeFile(path, data, () => {
-          resolve({
-            thumbnail,
-            data,
-            path
+      if (thumbnail.length === 0) {
+        reject("No thumbnail")
+      } else {
+        pool.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id], async (error, results) => {
+          if (error){
+            dbDebugger("Error: ", error);
+            reject(error)
+          } else {
+            dbDebugger("Thumbnail data retrieved");
+          }
+          const data = (results.rows[0].lo_get);
+  
+          const path = "./Temp_storage/" + thumbnail[0].project_id
+          fs.writeFile(path, data, () => {
+            resolve({
+              thumbnail,
+              data,
+              path
+            })
           })
         })
-      })
+      }
     })
   })
 }

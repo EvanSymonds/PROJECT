@@ -15,7 +15,7 @@ import Signup       from  "./components/pages/signup"
 import Projects     from  "./components/pages/projects"
 import Settings     from  "./components/pages/settings"
 import Support      from  "./components/pages/support"
-import ProjectHome  from  "./components/pages/projectHome"
+import ProjectPage  from  "./components/pages/projectPage"
 
 var jwt = require("jsonwebtoken")
 
@@ -93,7 +93,7 @@ const AppRouter = (props) => {
             <Route path="/settings" component={Settings} />
             <Route path="/support" component={Support} />
             <AuthenticatedRoute path="/projects" component={Projects} />
-            <AuthenticatedRoute path="/:project_name/:project_id" component={ProjectHome} />
+            <AuthenticatedRoute path="/:project_name/:project_id" component={ProjectPage} />
           </Switch>
         </ThemeProvider>
       </div>

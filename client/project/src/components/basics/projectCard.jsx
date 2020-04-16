@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import CardMedia from '@material-ui/core/CardMedia';
+import Paper from "@material-ui/core/paper"
+import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import Typography from "@material-ui/core/Typography"
 import { useOverShadowStyles } from '@mui-treasury/styles/shadow/over';
 import { useBouncyShadowStyles } from '@mui-treasury/styles/shadow/bouncy';
@@ -26,10 +28,15 @@ const ProjectCard = (props) => {
       return window.btoa(binary);
     };
 
-    axios.get("http://localhost:3001/thumbnails/2").then((data) => {
+    axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
       const base64Flag = 'data:image/png;base64,'
       const imageStr = arrayBufferToBase64(data.data.data.data)
       setThumbnail(((base64Flag + imageStr).toString()))
+    })
+    .catch((error) => {
+      if (error.response.data === "No thumbnail"){
+        setThumbnail(null)
+      }
     })
   }, [])
 
@@ -86,6 +93,32 @@ const ProjectCard = (props) => {
         width: 35,
         height: 35,
       }
+    },
+    placeholder: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      background: theme.palette.secondary.main,
+      width: "100%",
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: "auto",
+      marginBotton: "auto",
+      height: 200,
+      paddingBottom: '60%',
+      borderRadius: theme.spacing(4),
+      [theme.breakpoints.up('md')]: {
+        width: '100%',
+      },
+      '&:after': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        borderRadius: theme.spacing(2),
+        opacity: 0.5,
+      },
     }
   }));
   const classes = useStyles();
@@ -112,17 +145,32 @@ const ProjectCard = (props) => {
     return avatars
   }
 
+  const renderMedia = () => {
+    if (thumbnail === null) {
+      return (
+        <Paper
+          className={classes.placeholder}
+        >
+          <ImageOutlinedIcon style={{ fontSize: 70 }}/>
+        </Paper>
+      )
+    } else {
+      return (
+        <CardMedia
+          component="img"
+          image={thumbnail}
+          className={classes.thumbnail}/>
+      )
+    }
+  }
+
   return (
     <div>
       <Card className={cx(classes.root, props.selectedTheme.name === "darkModeTheme" ? darkModeShadowStyles.root : shadowStyles.root)}
         onClick={props.onClick}
       >
           <Card className={classes.mediaContainer}>
-            <CardMedia
-              image={thumbnail}
-              className={styles.media}
-              component="img"
-            />
+            {renderMedia()}
           </Card>
           <div style={{
             textAlign: "left",

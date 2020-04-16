@@ -23,18 +23,32 @@ const Sidebar = (props) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       width: 250,
+      display: "inline"
     },
-    menuItem: {
+    itemText: {
       color: theme.palette.secondary.dark,
       fontSize: 20,
-      marginBottom: 5,
-      marginTop: 5,
+      marginLeft: 30,
+    },
+    menuItem: {
+      backgroundColor: theme.palette.secondary.light,
+      height: 50,
+      display: "flex",
+      alignItems: "center",
+      cursor: 'pointer',
+      "&:hover": {
+        background: theme.palette.secondary.menuGradient
+      }
     },
     menuItemSelected: {
-      color: theme.palette.primary.main,
-      fontSize: 20,
-      marginBottom: 5,
-      marginTop: 5,
+      background: theme.palette.secondary.menuGradient,
+      height: 50,
+      display: "flex",
+      alignItems: "center",
+      cursor: 'pointer',
+      "&:hover": {
+        background: theme.palette.secondary.menuGradient
+      }
     },
     drawerPaper: {
       width: 250,
@@ -42,13 +56,10 @@ const Sidebar = (props) => {
       background: theme.palette.secondary.light
     },
     menuButton: {
-      display: "absolute",
-      zIndex: 1,
+      display: "inline",
+      width: 48,
     },
     userZone: {
-      position: "fixed",
-      left: 0,
-      top: 0,
       width: 250,
       height: 100,
     },
@@ -183,19 +194,18 @@ const Sidebar = (props) => {
   const renderMenuItems = () => {
 
     const menuItems = menuItemsList.map((itemName, i) => {
-      return (<Grid item key={i} style={{
-        marginTop: 5,
-        marginBottom: 5
-      }}>
-          <Link 
-            component="button"
-            onClick={() => history.push(`/${itemName.toLowerCase()}`)}
-          >
-            <Typography variant="body2" className={getLinkColor(itemName)}>
-              {itemName}
-            </Typography>
-          </Link>
-        </Grid>
+      return (
+        <Paper 
+          square
+          key={i}
+          className={getLinkColor(itemName)}
+          elevation={0}
+          onClick={() => history.push(`/${itemName.toLowerCase()}`)}
+        >
+          <Typography variant="body2" className={classes.itemText}>
+            {itemName}
+          </Typography>
+        </Paper>
       )
     })
 
@@ -203,18 +213,20 @@ const Sidebar = (props) => {
       <Grid 
         container 
         direction="column"
-        style={{
-          marginTop: 20,
-          marginLeft: 30,
-          width: 150
-        }}
       >
         <Grid item style={{
-          marginBottom: 15
+          marginBottom: 15,
+          marginTop: 15,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
         }}>
+
           <Logo />
         </Grid>
-        {menuItems}
+        <Grid item>
+          {menuItems}
+        </Grid>
       </Grid>
     )
   }
@@ -231,6 +243,8 @@ const Sidebar = (props) => {
             <div className={classes.userZone}>
               {renderUserZone()}
               <Divider variant="middle" />
+            </div>
+            <div>
               {renderMenuItems()}
             </div>
             <div style={{
@@ -247,7 +261,10 @@ const Sidebar = (props) => {
       )
     } else {
       return (
-        <React.Fragment>
+        <div style={{
+          width: 48,
+          display: "inline",
+        }}>
           <Button className={classes.menuButton} type="icon" icon="Menu" color="primary" onClick={handleOpen}/>
           <Modal
             open={open}
@@ -276,13 +293,16 @@ const Sidebar = (props) => {
               </div>
             </Drawer>
           </Modal>
-        </React.Fragment>
+        </div>
       )
     }
   }
 
   return (
-    <div>
+    <div style={{
+      width: 48,
+      display: "inline",
+    }}>
       {renderSidebar()}
     </div>
   )

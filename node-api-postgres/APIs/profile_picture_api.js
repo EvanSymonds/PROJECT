@@ -33,8 +33,6 @@ const getProfilePictureByUser = (user_id) => {
 
       var profile_picture = results.rows;
 
-      dbDebugger(profile_picture)
-
       if (profile_picture.length === 0) {
         reject(profile_picture)
       } else {

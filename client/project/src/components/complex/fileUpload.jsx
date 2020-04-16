@@ -59,13 +59,13 @@ const FileUpload = (props) => {
       return false
     }))
 
-    await uploadFiles(props.project_id).then((results) => {
+    await uploadFiles(props.credential).then((results) => {
       props.updateParent()
       console.log(results)
     })
   }
 
-  const uploadFiles = async (project_id) => {
+  const uploadFiles = async (credential) => {
 
     setUploadable(false)
 
@@ -91,7 +91,7 @@ const FileUpload = (props) => {
     
         let formData = new FormData()
         formData.append("file", file)
-        formData.append("project_id", project_id)
+        formData.append(props.credentialType, credential)
 
         const url = "http://localhost:3001" + props.endpoint
 

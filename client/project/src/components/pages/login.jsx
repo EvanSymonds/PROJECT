@@ -32,6 +32,7 @@ const Login = (props) => {
   const onLogin = (token) => {
     window.localStorage.setItem("authToken", token)
     history.push("/")
+    window.location.reload(false);
   }
 
   const onClickSignup = () => {

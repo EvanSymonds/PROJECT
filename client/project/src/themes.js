@@ -12,7 +12,9 @@ let redGreyTheme = createMuiTheme({
     secondary: {
       dark: grey[500],
       main: grey[400],
-      light: grey[200]
+      light: grey[200],
+      menuGradient: "linear-gradient(to right, #eeeeee 40%, #e0e0e0 70%)",
+      contrastText: '#000'
     },
   },
   typography:{
@@ -34,6 +36,8 @@ let darkModeTheme = createMuiTheme({
       dark: grey[300],
       main: grey[500],
       light: grey[700],
+      menuGradient: "linear-gradient(to right, #616161 40%, #545454 70%)",
+      contrastText: '#fff'
     }
   },
   typography:{
@@ -55,6 +59,8 @@ let orangeBlackTheme = createMuiTheme({
       dark: grey[400],
       main: grey[600],
       light: grey[800],
+      menuGradient: "linear-gradient(to right, #424242 40%, #363636 70%)",
+      contrastText: '#fff'
     }
   },
   typography:{

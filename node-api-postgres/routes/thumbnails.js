@@ -10,14 +10,18 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.get("/:id", async (request, response) => {
-  await thumbnail_api.getThumbnailByProject(parseInt(request.params.id)).then((thumbnail, error) => {
-    if (error){
-      debug("Error: ", error)
-      response.status(400).json(error)
-    } else {
-      debug("Thumbnail retrieved")
-      response.send(thumbnail)
-    }
+  await thumbnail_api.getThumbnailByProject(parseInt(request.params.id)).then((thumbnail) => {
+    debug("Thumbnail retrieved")
+    response.send(thumbnail)
+  })
+  .catch((error) => {
+    debug(error)
+      if (error === "No thumbnail") {
+        response.status(400).send("No thumbnail")
+      } else {
+        debug("Error: ", error)
+        response.status(400).json(error)
+      }
   })
 })
 
@@ -33,6 +37,29 @@ router.post("/", async (request, response) => {
       if (error) {
         debug(error)
         response.status(400).json(error);
+      } else {
+        await thumbnail_api.storeThumbnail(request.files.file.data, request.body.project_id).then((results, error) => {
+          if (error) {
+            debug(error)
+            response.status(400).json(error)
+          } else {
+            response.status(200).json(results)
+          }
+        })
+      }
+    })
+  }
+})
+
+router.post("/update", async (request, response) => {
+
+  if (!request.files) {
+    response.status(400).send("No file found")
+  } else {
+    await thumbnail_api.deleteThumbnail(request.body.project_id).then(async (results, error) => {
+      if (error) {
+        debug(error)
+        response.status(400).json(error)
       } else {
         await thumbnail_api.storeThumbnail(request.files.file.data, request.body.project_id).then((results, error) => {
           if (error) {
