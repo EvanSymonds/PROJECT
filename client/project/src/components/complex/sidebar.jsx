@@ -26,7 +26,6 @@ const Sidebar = (props) => {
       display: "inline"
     },
     itemText: {
-      color: theme.palette.secondary.dark,
       fontSize: 20,
       marginLeft: 30,
     },

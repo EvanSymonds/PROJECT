@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import Team from "../complex/team"
 import FileSystem from "../complex/fileSystem"
 import ProjectHome from "../complex/projectHome"
 import Sidebar from "../complex/sidebar"
@@ -55,6 +56,8 @@ const ProjectPage = (props) => {
         return <ProjectHome project_id={project_id}/>
       case 1: 
         return <FileSystem project_id={project_id}/>
+      case 2: 
+        return <Team project_id={project_id}/>
     }
   }
 

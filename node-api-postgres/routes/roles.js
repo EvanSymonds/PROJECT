@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const roles_api = require("../APIs/role_api");
+const role_api = require("../APIs/role_api");
+const user_api = require("../APIs/user_api")
 const Joi = require("joi");
 
 //Setting up debugging channels
@@ -10,7 +11,7 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.get("/", async (request, response) => {
-  await roles_api.getRoles().then((roles) => {
+  await role_api.getRoles().then((roles) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
@@ -19,9 +20,8 @@ router.get("/", async (request, response) => {
 })
 
 router.get("/project/:id", async (request, response) => {
-  debug(parseInt(request.params.id))
 
-  await roles_api.getRolesByProject(parseInt(request.params.id)).then((roles) => {
+  await role_api.getRolesByProject(parseInt(request.params.id)).then((roles) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
@@ -29,8 +29,43 @@ router.get("/project/:id", async (request, response) => {
   })
 })
 
+router.get("/allusers/:id", async (request, response) => {
+  await role_api.getRolesByProject(parseInt(request.params.id)).then(async(roles) => {
+
+    let rolesWithUsers = []
+
+    roles.forEach( async(role) => {
+      const getUser = (role) => {
+        return new Promise(async (resolve) => {
+          return await user_api.getUserById(role.user_id).then((user) => {
+            resolve(user)
+          })
+          .catch((error) => {
+            response.status(400).json(error)
+          })
+        })
+      }
+
+      getUser(role).then((user) => {
+        rolesWithUsers = [...rolesWithUsers, {
+          role,
+          user
+        }]
+        if (rolesWithUsers.length === roles.length) {
+          response.status(200).send(rolesWithUsers)
+        }
+      })
+
+    })
+
+  })
+  .catch((error) => {
+    response.status(400).json(error);
+  })
+})
+
 router.get("/user/:id", async (request, response) => {
-  await roles_api.getRolesByUser(parseInt(request.params.id)).then((roles) => {
+  await role_api.getRolesByUser(parseInt(request.params.id)).then((roles) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
@@ -49,7 +84,7 @@ router.post("/", async (request, response) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      await roles_api.createRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
+      await role_api.createRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
@@ -71,7 +106,7 @@ router.post("/update", async (request, response) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      await roles_api.updateRole(request.body.project_id, request.body.role_name, request.body.user_id, request.body.new_name).then((results) => {
+      await role_api.updateRole(request.body.project_id, request.body.role_name, request.body.user_id, request.body.new_name).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
@@ -82,7 +117,7 @@ router.post("/update", async (request, response) => {
 })
 
 router.delete("/delete", async (request, response) => {
-  await roles_api.deleteRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
+  await role_api.deleteRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
     response.status(200).json(results);
   })
   .catch((error) => {

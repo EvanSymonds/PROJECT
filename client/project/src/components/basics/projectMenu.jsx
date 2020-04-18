@@ -40,6 +40,7 @@ const ProjectMenu = (props) => {
       >
         <Tab label="Home" {...tabProps(0)}/>
         <Tab label="Files" {...tabProps(1)} />
+        <Tab label="Team" {...tabProps(2)} />
       </Tabs>
     </div>
 

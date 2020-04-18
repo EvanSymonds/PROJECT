@@ -26,7 +26,7 @@ const ProfilePicture = (props) => {
       const imageStr = arrayBufferToBase64(data.data.data.data)
       setProfilePicture(((base64Flag + imageStr).toString()))
     })
-  }, [])
+  }, [props.user_id])
 
   return (
     <div className={classes.root}>
