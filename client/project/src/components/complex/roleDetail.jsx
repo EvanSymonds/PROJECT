@@ -1,8 +1,6 @@
 import React from "react"
 import Card from "@material-ui/core/card"
-import Grid from "@material-ui/core/grid"
-import Avatar from "@material-ui/core/avatar"
-import ProfilePicture from "../basics/profilePicture"
+import RoleUser from "../basics/roleUser"
 import { makeStyles } from '@material-ui/core/styles';
 
 const RoleDetail = (props) => {
@@ -11,48 +9,23 @@ const RoleDetail = (props) => {
     root: {
       width: "100%",
       height: "100%",
-    },
-    user: {
-      marginLeft: 20,
-      marginTop: 20,
-    },
-    avatar: {
-      width: 50,
-      height: 50,
-    },
-    usernameContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginLeft: 20
-    },
-    username: {
-      fontSize: 20,
-      marginBottom: 5,
     }
   }));
   const classes = useStyles();
 
+  const onChangeRole = (user_id, newRole) => {
+    props.onChangeRole(props.role, user_id, newRole)
+  }
+
   const renderUsers = () => {
     return props.users.map((user, i) => {
-      return (
-        <Grid
-          className={classes.user}
-          container
-          key={i}
-        >
-          <Grid item>
-            <Avatar className={classes.avatar}>
-              <ProfilePicture user_id={user.user_id} width={50} height={50} />
-            </Avatar>
-          </Grid>
-          <Grid item className={classes.usernameContainer}>
-            <div className={classes.username}>
-              {props.users[i].username}
-            </div>
-          </Grid>
-        </Grid>
-      )
+      if (user.user_id === -1) {
+        return null
+      } else {
+        return (
+          <RoleUser roles={props.roles} user={user} key={i} onChangeRole={onChangeRole}/>
+        )
+      }
     })
   }
 

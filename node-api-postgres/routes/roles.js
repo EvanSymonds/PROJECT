@@ -97,16 +97,17 @@ router.post("/", async (request, response) => {
 router.post("/update", async (request, response) => {
   const schema = {
     project_id: Joi.number().integer().max(100000000).required(),
-    project_name: Joi.string().min(3).max(25).required(),
+    role_name: Joi.string().min(3).max(25).required(),
     user_id: Joi.number().integer().max(10000000).required(),
-    new_name: Joi.string().alphanum().min(3).max(25).required()
+    new_name: Joi.string().min(3).max(25).required()
   }
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
       response.status(400).json(error);
+      debug(error)
     } else {
-      await role_api.updateRole(request.body.project_id, request.body.role_name, request.body.user_id, request.body.new_name).then((results) => {
+      await role_api.renameRole(request.body.project_id, request.body.role_name, request.body.user_id, request.body.new_name).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {

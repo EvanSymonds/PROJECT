@@ -79,10 +79,31 @@ const createRole = (project_id, role_name, user_id) => {
   })
 }
 
-const updateRole = (project_id, role_name, user_id, new_name) => {
+const renameRole = (project_id, role_name, user_id, new_name) => {
   //Changes the name of a role
 
   return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM project_roles WHERE role_name = $1", [role_name], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error);
+      } else {
+
+        if (results.rows.length === 1) {
+          dbDebugger("CREATE A PLACEHOLDER")
+
+          pool.query("INSERT INTO project_roles (project_id, role_name, user_id) VALUES ($1, $2, $3)", [project_id, role_name, -1], (error, results) => {
+            if (error) {
+              dbDebugger("Error: ", error);
+              reject(error);
+            } else {
+              dbDebugger("Placeholder created")
+            }
+          })
+        }
+      }
+    })
+
     pool.query("UPDATE project_roles SET role_name = $1 WHERE project_id = $2 AND user_id = $3 AND role_name = $4", [new_name, project_id, user_id, role_name], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
@@ -116,6 +137,6 @@ module.exports = {
   getRolesByProject,
   getRolesByUser,
   createRole,
-  updateRole,
+  renameRole,
   deleteRole
 }
