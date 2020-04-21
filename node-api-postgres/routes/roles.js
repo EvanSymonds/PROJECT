@@ -84,7 +84,28 @@ router.post("/", async (request, response) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      await role_api.createRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
+      await role_api.assignRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
+        response.status(200).json(results);
+      })
+      .catch((error) => {
+        response.status(400).json(error);
+      })
+    }
+  })
+})
+
+router.post("/new", async (request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+    role_name: Joi.string().min(3).max(25).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      await role_api.createRole(request.body.project_id, request.body.role_name).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
@@ -117,7 +138,8 @@ router.post("/update", async (request, response) => {
   })
 })
 
-router.delete("/delete", async (request, response) => {
+router.post("/delete", async (request, response) => {
+
   await role_api.deleteRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
     response.status(200).json(results);
   })

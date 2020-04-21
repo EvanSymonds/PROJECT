@@ -136,10 +136,12 @@ const ProjectCard = (props) => {
 
   const renderAvatars = () => {
     const avatars = props.memberList.map((member, i) => {
-      return (<Avatar key={i}>
-        <ProfilePicture user_id={member.user_id} width={35} height={35} />
-      </Avatar>
-      )
+      if (member.user_id !== "-1") {
+        return (<Avatar key={i}>
+          <ProfilePicture user_id={member.user_id} width={35} height={35} />
+        </Avatar>
+        )
+      }
     })
 
     return avatars

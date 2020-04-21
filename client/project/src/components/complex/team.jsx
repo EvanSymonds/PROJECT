@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import Grid from "@material-ui/core/grid"
-import RoleList from "../basics/roleList"
+import RoleList from "../complex/roleList"
 import RoleDetail from "../complex/roleDetail"
+import RoleSettings from "../complex/roleSettings"
 import axios from "axios"
 
 const Team = (props) => {
@@ -53,6 +54,28 @@ const Team = (props) => {
     setSelected(parseInt(role))
   }
 
+  const onDeleteRole = (role) => {
+    let formData = new FormData()
+    formData.append("project_id", props.project_id)
+    formData.append("role_name", role)
+
+    roles[selected].api_role_users.forEach((user) => {
+      formData.append("user_id", user.user_id)
+
+      axios.post("http://localhost:3001/roles/delete", formData).then((results) => {
+        setRoles([...roles].filter((item, i) => i != selected))
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    })
+    
+  }
+
+  const onAddRole = (role) => {
+    setRoles([...roles, {api_role: role, api_role_users:[]}])
+  }
+
   const handleChangeUserRole = (role, user_id, newRole) => {
     let formData = new FormData()
     formData.append("project_id", props.project_id)
@@ -73,16 +96,18 @@ const Team = (props) => {
     <Grid
       container
       direction="row"
-      justify="center"
       style={{
         height: "100%",
         width: "100%",
       }}>
       <Grid item>
-        <RoleList onChange={onChangeRole} roles={roles}/>
+        <RoleList project_id={props.project_id} onChange={onChangeRole} roles={roles} onAddRole={onAddRole}/>
       </Grid>
-      <Grid item xs style={{ width: "100%" }}>
+      <Grid item>
         {roles.length === 0 ? null : <RoleDetail role={roles[selected].api_role} roles={roles} users={roles[selected].api_role_users} project_id={props.project_id} onChangeRole={handleChangeUserRole}/>}
+      </Grid>
+      <Grid item xs>
+      {roles.length === 0 ? null : <RoleSettings handleDelete={onDeleteRole} role={roles[selected].api_role}/>}
       </Grid>
     </Grid>
 

@@ -51,19 +51,23 @@ const Projects = () => {
     axios.get("http://localhost:3001/roles/user/" + token.user_id).then((roles) => {  
 
       roles.data.forEach((role) => {
-        axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
+        if (role.user_id !== "-1") {
+          axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
           
-          axios.get("http://localhost:3001/roles/project/" + project.data[0].project_id).then((users) => {  
+          axios.get("http://localhost:3001/roles/project/" + project.data[0].project_id).then((users) => {
+            const realUsers = users.data.filter((user) => user.user_id !== "-1")
+            
             setProjects([...projects, {
               project_id: project.data[0].project_id,
               project_name: project.data[0].project_name,
               isPublic: project.data[0].is_public,
-              members: users.data.length,
-              memberList: users.data
+              members: realUsers.length,
+              memberList: realUsers
             }])
           })
 
         })
+        }
       })
 
     })

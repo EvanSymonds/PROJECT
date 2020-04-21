@@ -63,11 +63,27 @@ const getRolesByUser = (user_id) => {
   })
 }
 
-const createRole = (project_id, role_name, user_id) => {
+const assignRole = (project_id, role_name, user_id) => {
   //Creates a role relation between a user and a project
 
   return new Promise((resolve, reject) => {
     pool.query("INSERT INTO project_roles (project_id, role_name, user_id) VALUES ($1, $2, $3)", [project_id, role_name, user_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error);
+      } else {
+        dbDebugger("Role created");
+        resolve(results);
+      }
+    })
+  })
+}
+
+const createRole = (project_id, role_name) => {
+  //Creates an empty role in an a project
+
+  return new Promise((resolve, reject) => {
+    pool.query("INSERT INTO project_roles (project_id, role_name, user_id) VALUES ($1, $2, -1)", [project_id, role_name], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
@@ -136,6 +152,7 @@ module.exports = {
   getRoles,
   getRolesByProject,
   getRolesByUser,
+  assignRole,
   createRole,
   renameRole,
   deleteRole
