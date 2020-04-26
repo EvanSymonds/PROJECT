@@ -22,7 +22,6 @@ const Team = (props) => {
 
       let final_roles = []
 
-
       api_roles.forEach((api_role) => {
         let api_role_users = []
 
@@ -30,9 +29,11 @@ const Team = (props) => {
 
           if (roleWithUser.role.role_name === api_role) {
             if (roleWithUser.role.user_id === "-1") {
-              api_role_users = [...api_role_users, {username: "PLACEHOLDER", user_id: -1}]
+              api_role_users = [...api_role_users, {username: "PLACEHOLDER", user_id: -1, role_id: roleWithUser.role.role_id}]
             } else {
-              api_role_users = [...api_role_users, {username: roleWithUser.user[0].username, user_id: roleWithUser.user[0].user_id}]
+              api_role_users = [...api_role_users, {username: roleWithUser.user[0].username, user_id: roleWithUser.user[0].user_id,
+              role_id: roleWithUser.role.role_id
+              }]
             }
           }
 
@@ -55,33 +56,25 @@ const Team = (props) => {
   }
 
   const onDeleteRole = (role) => {
-    let formData = new FormData()
-    formData.append("project_id", props.project_id)
-    formData.append("role_name", role)
-
-    roles[selected].api_role_users.forEach((user) => {
-      formData.append("user_id", user.user_id)
-
-      axios.post("http://localhost:3001/roles/delete", formData).then((results) => {
-        setRoles([...roles].filter((item, i) => i != selected))
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    axios.delete("http://localhost:3001/roles", {data: {role_name: role, project_id: props.project_id}}).then(() => {
+      setSelected(selected => selected === 0 ? 0 : selected - 1)
+      getAllRoles()
     })
-    
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
-  const onAddRole = (role) => {
-    setRoles([...roles, {api_role: role, api_role_users:[]}])
+  const onAddRole = () => {
+    getAllRoles()
   }
 
-  const handleChangeUserRole = (role, user_id, newRole) => {
+  const handleChangeUserRole = (role_id, newRole) => {
+
     let formData = new FormData()
-    formData.append("project_id", props.project_id)
-    formData.append("role_name", role)
-    formData.append("user_id", user_id)
+    formData.append("role_id", role_id)
     formData.append("new_name", newRole)
+    formData.append("project_id", props.project_id)
 
     axios.post("http://localhost:3001/roles/update", formData).then((response) => {
       getAllRoles()
@@ -89,7 +82,7 @@ const Team = (props) => {
     .catch((error) => {
       console.log(error.response)
     })
-  }
+  }   
 
   return (
 
@@ -101,13 +94,15 @@ const Team = (props) => {
         width: "100%",
       }}>
       <Grid item>
-        <RoleList project_id={props.project_id} onChange={onChangeRole} roles={roles} onAddRole={onAddRole}/>
+        <RoleList selected={selected} project_id={props.project_id} onChange={onChangeRole} roles={roles} onAddRole={onAddRole}/>
       </Grid>
       <Grid item>
-        {roles.length === 0 ? null : <RoleDetail role={roles[selected].api_role} roles={roles} users={roles[selected].api_role_users} project_id={props.project_id} onChangeRole={handleChangeUserRole}/>}
-      </Grid>
-      <Grid item xs>
-      {roles.length === 0 ? null : <RoleSettings handleDelete={onDeleteRole} role={roles[selected].api_role}/>}
+        {roles.length === 0 ? null : <RoleDetail 
+          role={roles[selected]}
+          roles={roles}project_id={props.project_id}
+          onChangeRole={handleChangeUserRole}
+          handleDelete={onDeleteRole}
+        />}
       </Grid>
     </Grid>
 

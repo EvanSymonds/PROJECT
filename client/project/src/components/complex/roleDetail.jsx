@@ -2,17 +2,16 @@ import React from "react"
 import Card from "@material-ui/core/card"
 import Grid from "@material-ui/core/grid"
 import RoleUser from "../basics/roleUser"
-import Divider from "@material-ui/core/divider"
-import { makeStyles } from '@material-ui/core/styles';
+import RoleSettings from "./roleSettings"
 
 const RoleDetail = (props) => {
 
-  const onChangeRole = (user_id, newRole) => {
-    props.onChangeRole(props.role, user_id, newRole)
+  const onChangeRole = (role_id, newRole) => {
+    props.onChangeRole(role_id, newRole)
   }
 
   const renderUsers = () => {
-    return props.users.map((user, i) => {
+    return props.role.api_role_users.map((user, i) => {
       if (user.user_id === -1) {
         return null
       } else {
@@ -24,24 +23,24 @@ const RoleDetail = (props) => {
   }
 
   return (
+    <Grid
 
-    <Grid container style={{ height: "100%" }}>
+    >
       <Grid item>
         <Card
-            square
-            elevation={0}
-            style={{
-              width: window.innerWidth < 1000 ? 400 : window.innerWidth < 1100 ? 300 : window.innerWidth < 1500 ? 500 : 800,
-            }}
-          >
-            {renderUsers()}
+          square
+          elevation={0}
+        >
+          {renderUsers()}
         </Card>
       </Grid>
       <Grid item>
-        <Divider orientation="vertical"/>
+        <RoleSettings 
+          handleDelete={props.handleDelete}
+          role={props.role.api_role}
+        />
       </Grid>
     </Grid>
-
   )
 
 }

@@ -76,7 +76,7 @@ const LoginForm = (props) => {
     formData.append("credential", username)
     formData.append("password", password)
 
-    const url = "http://localhost:3001/login"
+    const url = "http://localhost:3001/auth"
 
     try {
       await axios.post(url, formData).then((response) =>{

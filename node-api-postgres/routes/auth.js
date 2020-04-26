@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const user_api = require("../APIs/user_api");
+const role_api = require("../APIs/role_api")
 const randomize = require("randomatic");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
@@ -85,6 +86,38 @@ router.post("/signup", async(request, response) => {
         }
       }
     }
+  })
+})
+
+router.post("/authlevel/", async(request, response) => {
+  const token = jwt.decode(JSON.parse(request.body.token))
+
+  await role_api.getRolesByUser(token.user_id).then(async (results) => {
+
+    if (results.length > 0) {
+      
+      results.filter((result) => result.project_id === request.body.project_id)
+
+      if (results.length === 1) {
+
+        debug(token.name)
+        
+        const authToken = jwt.sign({
+          name: token.name,
+          user_id: token.user_id,
+          authLevel: results[0].authentication_level
+        }, config.get("jwtPrivateKey"))
+
+        response.header("x-auth-token", authToken).status(200).send("AUTHENTICATION LEVEL RECEIVED")
+      }
+  
+    } else {
+      response.status(400).send("User does not exist")
+    }
+  })
+  .catch((error) => {
+    debug(error)
+    response.status(400).json(error.response)
   })
 })
 

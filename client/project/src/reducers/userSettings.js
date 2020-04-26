@@ -9,5 +9,5 @@ const selectedThemeReducer = (selectedTheme = {name: "redGreyTheme", id: 0}, act
 }
 
 export default combineReducers({
-  selectedTheme: selectedThemeReducer
+  selectedTheme: selectedThemeReducer,
 })

@@ -44,7 +44,7 @@ const RoleUser = (props) => {
   }
 
   const handleChange = (event) => {
-    props.onChangeRole(props.user.user_id, event.currentTarget.textContent)
+    props.onChangeRole(props.user.role_id, event.currentTarget.textContent)
   };
 
   const handleClickOpen = (event) => {
@@ -79,7 +79,16 @@ const RoleUser = (props) => {
       <Menu
         open={open}
         anchorEl={anchorEl}
+        getContentAnchorEl={null}
         onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
       >
         {renderMenuItems()}
       </Menu>

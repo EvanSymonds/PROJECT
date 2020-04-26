@@ -18,10 +18,6 @@ const ThemeChooser = (props) => {
     {
       url: "/static/images/dark-mode-icon.png",
       name: "darkModeTheme"
-    },
-    {
-      url: "/static/images/orange-black-icon.png",
-      name: "orangeBlackTheme"
     }
   ]
 

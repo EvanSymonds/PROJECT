@@ -73,7 +73,7 @@ const SignupForm = (props) => {
       formData.append("email", email)
       formData.append("password", password1)
 
-      const url = "http://localhost:3001/login/signup"
+      const url = "http://localhost:3001/auth/signup"
 
       try {
         await axios.post(url, formData).then((response) => {

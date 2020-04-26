@@ -49,30 +49,6 @@ let darkModeTheme = createMuiTheme({
   spacing: 4
 })
 
-let orangeBlackTheme = createMuiTheme({
-  palette: {
-    type: "light",
-    primary:{
-      main: orange[500]
-    },
-    secondary:{
-      dark: grey[400],
-      main: grey[600],
-      light: grey[800],
-      menuGradient: "linear-gradient(to right, #424242 40%, #363636 70%)",
-      contrastText: '#fff'
-    }
-  },
-  typography:{
-    button: {
-      fontWeight: "500",
-      textTransform: 'none',
-    }
-  },
-  spacing: 4
-})
-
-orangeBlackTheme = responsiveFontSizes(orangeBlackTheme)
 darkModeTheme = responsiveFontSizes(darkModeTheme)
 redGreyTheme  = responsiveFontSizes(redGreyTheme)
-export { redGreyTheme, darkModeTheme, orangeBlackTheme}
+export { redGreyTheme, darkModeTheme }

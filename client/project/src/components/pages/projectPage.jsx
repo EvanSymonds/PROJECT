@@ -2,16 +2,36 @@ import React, { useState, useEffect } from "react"
 import Team from "../complex/team"
 import FileSystem from "../complex/fileSystem"
 import ProjectHome from "../complex/projectHome"
+import ProjectSettings from "../complex/projectSettings"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import ProjectMenu from "../basics/projectMenu"
 import { makeStyles } from '@material-ui/core/styles';
+import axios from "axios"
+
+var jwt = require("jsonwebtoken")
 
 const ProjectPage = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
   const [width, setWidth] = React.useState(window.innerWidth);
   const [page, setPage] = useState(0)
   const [project_id] = useState(parseInt(props.match.params.project_id))
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("authToken")
+    const formData = new FormData()
+    formData.append("token", token)
+    formData.append("project_id", project_id)
+
+    axios.post("http://localhost:3001/auth/authlevel", formData).then((response) => {
+      const authToken = JSON.stringify(response.headers["x-auth-token"])
+
+      window.localStorage.setItem("authToken", authToken)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }, [])
 
   const useStyles = makeStyles((theme) => ({
     page: {
@@ -58,6 +78,8 @@ const ProjectPage = (props) => {
         return <FileSystem project_id={project_id}/>
       case 2: 
         return <Team project_id={project_id}/>
+      case 3: 
+        return <ProjectSettings project_id={project_id}/>
     }
   }
 

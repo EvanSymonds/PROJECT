@@ -117,10 +117,9 @@ router.post("/new", async (request, response) => {
 
 router.post("/update", async (request, response) => {
   const schema = {
+    role_id: Joi.number().integer().max(100000000).required(),
+    new_name: Joi.string().min(3).max(25).required(),
     project_id: Joi.number().integer().max(100000000).required(),
-    role_name: Joi.string().min(3).max(25).required(),
-    user_id: Joi.number().integer().max(10000000).required(),
-    new_name: Joi.string().min(3).max(25).required()
   }
 
   Joi.validate(request.body, schema, async (error) => {
@@ -128,7 +127,9 @@ router.post("/update", async (request, response) => {
       response.status(400).json(error);
       debug(error)
     } else {
-      await role_api.renameRole(request.body.project_id, request.body.role_name, request.body.user_id, request.body.new_name).then((results) => {
+      await role_api.getRolesByProject
+
+      await role_api.changeRole(request.body.role_id, request.body.new_name, request.body.project_id).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
@@ -138,13 +139,39 @@ router.post("/update", async (request, response) => {
   })
 })
 
-router.post("/delete", async (request, response) => {
+router.delete("/", async (request, response) => {
+  await role_api.getRolesByProject(request.body.project_id).then(async (roles) => {
+    if (roles.length === 1) {
+      debug("Cannot delete all roles in a project")
+      response.send("Cannot delete all roles in a project")
+    } else {
+      const targetRoles = roles.filter((role) => role.role_name === request.body.role_name)
 
-  await role_api.deleteRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
-    response.status(200).json(results);
+      if (targetRoles.length > 1) {
+        debug("There are still users in this role")
+        response.send("There are still users in this role")
+      } else {
+
+        if (parseInt(targetRoles[0].authentication_level) === 9) {
+          const roleRemoved = roles.filter((role) => role.authentication_level !== 9)
+
+          const highestAuth = Math.max(...roleRemoved.map(role => role.authentication_level))
+
+          const highestAuthRole = roleRemoved.filter((role) => role.authentication_level === highestAuth)
+
+          role_api.updateRoleAuth(highestAuthRole[0].role_name ,request.body.project_id, 9)
+        }
+        await role_api.deleteRole(request.body.role_name, request.body.project_id).then((results) => {
+          response.status(200).json(results);
+        })
+        .catch((error) => {
+          response.status(400).json(error);
+        })
+      }
+    }
   })
   .catch((error) => {
-    response.status(400).json(error);
+    response.status(400).json(error)
   })
 })
 

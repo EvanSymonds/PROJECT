@@ -43,7 +43,7 @@ app.use(function(req, res, next) {
 });
 
 //Routes
-const login = require("./routes/login");
+const auth = require("./routes/auth");
 const users = require("./routes/users");
 const projects = require("./routes/projects");
 const roles = require("./routes/roles");
@@ -53,7 +53,7 @@ const profile_pictures = require("./routes/profile_pictures");
 const user_settings = require("./routes/user_settings");
 
 //Routing
-app.use("/login", login);
+app.use("/auth", auth);
 app.use("/users", users);
 app.use("/projects", projects);
 app.use("/roles", roles);

@@ -7,7 +7,7 @@ import { connect } from "react-redux"
 import { selectTheme } from "./actions"
 
 import { ThemeProvider } from "@material-ui/core/styles"
-import { redGreyTheme, darkModeTheme, orangeBlackTheme } from "./themes"
+import { redGreyTheme, darkModeTheme } from "./themes"
 
 import Main         from  "./components/pages/main"
 import Login        from  "./components/pages/login"
@@ -77,8 +77,6 @@ const AppRouter = (props) => {
         return redGreyTheme
       case "darkModeTheme":
         return darkModeTheme
-      case "orangeBlackTheme":
-        return orangeBlackTheme
     }
   }
 

@@ -14,13 +14,9 @@ const CreateRole = (props) => {
   const onSubmit = (event) => {
     event.preventDefault()
 
-    console.log(parseInt(props.project_id))
-
     let formData = new FormData()
     formData.append("project_id", parseInt(props.project_id))
     formData.append("role_name", roleName)
-
-    console.log(roleName)
 
     axios.post("http://localhost:3001/roles/new", formData).then((results) => {
       props.onAddRole(roleName)

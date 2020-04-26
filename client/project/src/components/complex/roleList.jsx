@@ -9,7 +9,6 @@ import Button from "../basics/button"
 import CreateRole from "../basics/createRole"
 
 const RoleList = (props) => {
-  const [selected, setSelected] = useState(0)
   const [open, setOpen] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
@@ -38,7 +37,6 @@ const RoleList = (props) => {
   const classes = useStyles();
 
   const handleChange = (event) => {
-    setSelected(parseInt(event.target.id))
     props.onChange(event.target.id)
   }
 
@@ -57,7 +55,7 @@ const RoleList = (props) => {
             square
             onClick={handleChange}
             id={i}
-            className={selected === i ? classes.roleSelected : classes.role}
+            className={props.selected === i ? classes.roleSelected : classes.role}
           >
             {role.api_role}
           </Paper>
@@ -83,7 +81,7 @@ const RoleList = (props) => {
           square
           elevation={0}
           className={classes.root}
-          value={selected}
+          value={props.selected}
         >
           {renderRoles()}
         </Card>
