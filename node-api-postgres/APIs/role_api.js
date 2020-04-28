@@ -19,7 +19,7 @@ const getRoles = () => {
   //Gets all of the roles
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM project_roles ORDER BY project_id ASC", (error, roles) => {
+    pool.query("SELECT * FROM project_roles ORDER BY project_id ASC ORDER BY authorisation_level DESC", (error, roles) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
@@ -35,7 +35,7 @@ const getRolesByProject = (project_id) => {
   //Gets all of the roles from a project
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM project_roles WHERE project_id = $1", [project_id], (error, roles) => {
+    pool.query("SELECT * FROM project_roles WHERE project_id = $1 ORDER BY authorisation_level DESC", [project_id], (error, roles) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
@@ -51,7 +51,7 @@ const getRolesByUser = (user_id) => {
   //Gets all of the roles that a user has
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM project_roles WHERE user_id = $1", [user_id], (error, roles) => {
+    pool.query("SELECT * FROM project_roles WHERE user_id = $1 ORDER BY authorisation_level DESC", [user_id], (error, roles) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
@@ -67,7 +67,7 @@ const getRolesById = (role_id) => {
   //Gets all of the roles from a role ID
 
   return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM project_roles WHERE role_id = $1", [role_id], (error, roles) => {
+    pool.query("SELECT * FROM project_roles WHERE role_id = $1 ORDER BY authorisation_level DESC", [role_id], (error, roles) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
@@ -91,9 +91,9 @@ const assignRole = (project_id, role_name, user_id) => {
 
         const targetRoles = results.rows.filter((role) => role.role_name === role_name)
 
-        const auth_level = targetRoles[0].authentication_level
+        const auth_level = targetRoles[0].authorisation_level
 
-        pool.query("INSERT INTO project_roles (project_id, role_name, user_id, authentication_level) VALUES ($1, $2, $3, $4)", [project_id, role_name, user_id, auth_level], (error, results) => {
+        pool.query("INSERT INTO project_roles (project_id, role_name, user_id, authorisation_level) VALUES ($1, $2, $3, $4)", [project_id, role_name, user_id, auth_level], (error, results) => {
           if (error) {
             dbDebugger("Error: ", error);
             reject(error);
@@ -125,7 +125,7 @@ const createRole = (project_id, role_name) => {
             if (results.rows.length > 0) {
               reject("ROLE ALREADY EXISTS WITH THAT NAME")
             } else {
-              pool.query("INSERT INTO project_roles (project_id, role_name, user_id, authentication_level) VALUES ($1, $2, -1, $3)", [project_id, role_name, auth_level], (error, results) => {
+              pool.query("INSERT INTO project_roles (project_id, role_name, user_id, authorisation_level) VALUES ($1, $2, -1, $3)", [project_id, role_name, auth_level], (error, results) => {
                 if (error) {
                   dbDebugger("Error: ", error);
                   reject(error);
@@ -169,9 +169,9 @@ const changeRole = (role_id, new_role, project_id) => {
       } else {
         const targetRole = results.rows.filter((role) => role.role_name === new_role)
 
-        const auth_level = targetRole[0].authentication_level
+        const auth_level = targetRole[0].authorisation_level
 
-        pool.query("UPDATE project_roles SET role_name = $1, authentication_level = $2 WHERE role_id = $3", [new_role, auth_level, role_id], (error, results) => {
+        pool.query("UPDATE project_roles SET role_name = $1, authorisation_level = $2 WHERE role_id = $3", [new_role, auth_level, role_id], (error, results) => {
           if (error) {
             dbDebugger("Error: ", error);
             reject(error);
@@ -190,7 +190,7 @@ const updateRoleAuth = (role_name, project_id, auth_level) => {
 
   return new Promise((resolve, reject) => {
 
-    pool.query("UPDATE project_roles SET authentication_level = $1 WHERE role_name = $2 AND project_id = $3", [auth_level, role_name, project_id], (error, results) => {
+    pool.query("UPDATE project_roles SET authorisation_level = $1 WHERE role_name = $2 AND project_id = $3", [auth_level, role_name, project_id], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);

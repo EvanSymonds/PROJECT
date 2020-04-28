@@ -1,46 +1,55 @@
 import React from "react"
 import Card from "@material-ui/core/card"
-import Grid from "@material-ui/core/grid"
 import RoleUser from "../basics/roleUser"
-import RoleSettings from "./roleSettings"
 
 const RoleDetail = (props) => {
-
-  const onChangeRole = (role_id, newRole) => {
-    props.onChangeRole(role_id, newRole)
-  }
 
   const renderUsers = () => {
     return props.role.api_role_users.map((user, i) => {
       if (user.user_id === -1) {
         return null
       } else {
+        let userRole
+
+        props.roles.forEach((role) => {
+          if (role.api_role !== "change_role") {
+            const pos = role.api_role_users.map((e) => {return e.username}).indexOf(user.username)
+    
+            if (pos !== -1) {
+              userRole = role.api_role
+            }
+          }
+        })
+
         return (
-          <RoleUser roles={props.roles} user={user} key={i} onChangeRole={onChangeRole}/>
+          <RoleUser
+            roles={props.roles}
+            role={props.role}
+            user={user}
+            userRole={userRole}
+            key={i}
+            onChangeMode={props.onChangeMode}
+            onChangeRole={props.onChangeRole}
+          />
         )
       }
     })
   }
 
   return (
-    <Grid
-
+    <Card
+      square
+      elevation={0}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+      }}
     >
-      <Grid item>
-        <Card
-          square
-          elevation={0}
-        >
-          {renderUsers()}
-        </Card>
-      </Grid>
-      <Grid item>
-        <RoleSettings 
-          handleDelete={props.handleDelete}
-          role={props.role.api_role}
-        />
-      </Grid>
-    </Grid>
+      {renderUsers()}
+    </Card>
   )
 
 }

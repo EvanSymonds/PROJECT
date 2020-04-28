@@ -123,19 +123,109 @@ router.post("/update", async (request, response) => {
   }
 
   Joi.validate(request.body, schema, async (error) => {
-    if (error) {
-      response.status(400).json(error);
-      debug(error)
-    } else {
-      await role_api.getRolesByProject
 
-      await role_api.changeRole(request.body.role_id, request.body.new_name, request.body.project_id).then((results) => {
-        response.status(200).json(results);
+    //MAKE ROLES WITH USERS
+    let final_roles = []
+
+    await role_api.getRolesByProject(request.body.project_id).then((projectRoles) => {
+
+      let api_roles = []
+
+      //get an array with every type of role
+      projectRoles.forEach((role) => {
+
+        const pos = api_roles.map((api_role) => { return api_role.role_name }).indexOf(role.role_name)
+
+        if (pos === -1) {
+          api_roles = [...api_roles, {
+            role_name: role.role_name,
+            authorisation_level: role.authorisation_level
+          }]
+        }
       })
-      .catch((error) => {
-        response.status(400).json(error);
+      //get an array with every type of role
+
+      api_roles.forEach((api_role) => {
+        api_role_users = []
+
+        projectRoles.forEach((projectRole) => {
+          if (projectRole.role_name === api_role.role_name) {
+            api_role_users = [...api_role_users, projectRole.user_id]
+          }
+        })
+
+        final_roles = [...final_roles, {
+          api_role: api_role,
+          api_role_users: api_role_users
+        }]
       })
-    }
+
+    })
+    //MAKE ROLES WITH USERS
+
+    //IS USER LEVEL 9
+    await role_api.getRolesById(request.body.role_id).then((role) => {
+      if (role[0].authorisation_level == 9){
+
+        let correspondingRole
+
+        final_roles.forEach((final_role) => {
+
+          if (final_role.api_role.role_name === role[0].role_name) {
+            correspondingRole = final_role
+          }
+
+        })
+
+        //ARE THERE OTHER USERS IN THIS ROLE
+
+        if (correspondingRole.api_role_users.length < 3) {
+          
+          //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+          let highestAuth = 0
+
+          final_roles.forEach((final_role) => {
+            if (final_role.api_role.authorisation_level > highestAuth && final_role.api_role.authorisation_level !== 9) {
+              highestAuth = final_role.api_role.authorisation_level
+            }
+          })
+
+          highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth && role.api_role_users.length > 1)
+
+          //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+          //MAKE THAT ROLE LEVEL 9
+
+          role_api.updateRoleAuth(highestAuthRoles[0].api_role.role_name, request.body.project_id, 9)
+
+          //MAKE THAT ROLE LEVEL 9
+
+          //MAKE THE OTHER ROLE LEVEL 8
+
+          role_api.updateRoleAuth(correspondingRole.api_role.role_name, request.body.project_id, 8)
+
+          //MAKE THE OTHER ROLE LEVEL 8
+
+        }
+
+        //ARE THERE OTHER USERS IN THIS ROLE
+
+      }
+    })
+    //IS USER LEVEL 9
+
+    //EXECUTE CHANGE
+
+    role_api.changeRole(request.body.role_id, request.body.new_name, request.body.project_id).then((results) => {
+      response.status(200).json(results)
+    })
+    .catch((error) => {
+      response.status(400).json(error)
+    })
+
+    //EXECUTE CHANGE
+
   })
 })
 
@@ -152,12 +242,12 @@ router.delete("/", async (request, response) => {
         response.send("There are still users in this role")
       } else {
 
-        if (parseInt(targetRoles[0].authentication_level) === 9) {
-          const roleRemoved = roles.filter((role) => role.authentication_level !== 9)
+        if (parseInt(targetRoles[0].authorisation_level) === 9) {
+          const roleRemoved = roles.filter((role) => role.authorisation_level !== 9)
 
-          const highestAuth = Math.max(...roleRemoved.map(role => role.authentication_level))
+          const highestAuth = Math.max(...roleRemoved.map(role => role.authorisation_level))
 
-          const highestAuthRole = roleRemoved.filter((role) => role.authentication_level === highestAuth)
+          const highestAuthRole = roleRemoved.filter((role) => role.authorisation_level === highestAuth)
 
           role_api.updateRoleAuth(highestAuthRole[0].role_name ,request.body.project_id, 9)
         }

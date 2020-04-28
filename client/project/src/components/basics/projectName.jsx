@@ -106,9 +106,14 @@ const ProjectName = (props) => {
           onChange={onChange}
         />
         <div style={{
-          width: 48
+          width: props.mode === "admin" ? 48 : 0
         }}>
-          <Button type="icon" icon="Edit" variant="contained" onClick={onClick}/>
+          {props.mode === "admin" ? <Button
+            type="icon"
+            icon="Edit"
+            variant="contained"
+            onClick={onClick}
+          /> : null}
         </div>
       </Paper>
     </Card>

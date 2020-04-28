@@ -7,13 +7,14 @@ import Divider from "@material-ui/core/divider"
 import Modal from "@material-ui/core/modal"
 import Button from "../basics/button"
 import CreateRole from "../basics/createRole"
+import { Edit } from "@material-ui/icons"
 
 const RoleList = (props) => {
   const [open, setOpen] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      width: window.innerWidth < 1000 ? 300 : window.innerWidth < 1400 ? 250 : 400
+      width: window.innerWidth < 1000 ? 250 : window.innerWidth < 1400 ? 200 : 400
     },
     role: {
       height: 50,
@@ -24,6 +25,24 @@ const RoleList = (props) => {
       '&:hover': {
         backgroundColor: theme.palette.secondary.light
       }
+    },
+    changeRoles: {
+      height: 50,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: theme.palette.secondary.light
+      }
+    },
+    changeRolesSelected: {
+      height: 50,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: 'pointer',
+      backgroundColor: theme.palette.secondary.light,
     },
     roleSelected: {
       height: 50,
@@ -46,22 +65,24 @@ const RoleList = (props) => {
 
   const renderRoles = () => {
     return props.roles.map((role, i) => {
-      return (
-        <div 
-          key={i}
-        >
-          <Paper
-            elevation={0}
-            square
-            onClick={handleChange}
-            id={i}
-            className={props.selected === i ? classes.roleSelected : classes.role}
+      if (i !== props.roles.length - 1) {
+        return (
+          <div 
+            key={i}
           >
-            {role.api_role}
-          </Paper>
-          <Divider light variant="middle"/>
-        </div>
-      )
+            <Paper
+              elevation={0}
+              square
+              onClick={handleChange}
+              id={i}
+              className={props.selected === i ? classes.roleSelected : classes.role}
+            >
+              {role.api_role}
+            </Paper>
+            <Divider light variant="middle"/>
+          </div>
+        )
+      }
     })
   }
 
@@ -77,7 +98,7 @@ const RoleList = (props) => {
     <Grid container style={{ height: "100%" }}>
       <Grid item>
         <Card
-          style={{ height: window.innerHeight - 142 }}
+          style={{ height: window.innerHeight - (props.mode === "admin" ? 200 : 142) }}
           square
           elevation={0}
           className={classes.root}
@@ -85,12 +106,22 @@ const RoleList = (props) => {
         >
           {renderRoles()}
         </Card>
+        {props.mode === "admin" ? <Card
+          className={props.selected === props.roles.length - 1 ? classes.changeRolesSelected : classes.changeRoles}
+          elevation={0}
+          square
+          onClick={props.onChangeMode}
+        >
+          Change roles
+          <Edit style={{ marginLeft: 10 }} color="primary"/>
+        </Card> : null}
         <div style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          marginTop: 10
         }}>
-          <Button type="normal" variant="outlined" color="primary" buttonText="New role" onClick={handleOpen}/>
+          {props.mode === "admin" ? <Button type="normal" variant="contained" color="primary" buttonText="New role" onClick={handleOpen}/> : null}
         </div>
         <Modal
           open={open}
@@ -100,9 +131,6 @@ const RoleList = (props) => {
             <CreateRole project_id={props.project_id} onAddRole={onAddRole}/>
           </div>
         </Modal>
-      </Grid>
-      <Grid item>
-        <Divider orientation="vertical"/>
       </Grid>
     </Grid>
 

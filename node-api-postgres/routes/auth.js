@@ -105,7 +105,7 @@ router.post("/authlevel/", async(request, response) => {
         const authToken = jwt.sign({
           name: token.name,
           user_id: token.user_id,
-          authLevel: results[0].authentication_level
+          authLevel: results[0].authorisation_level
         }, config.get("jwtPrivateKey"))
 
         response.header("x-auth-token", authToken).status(200).send("AUTHENTICATION LEVEL RECEIVED")

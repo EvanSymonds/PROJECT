@@ -132,7 +132,12 @@ const SelectThumbnail = (props) => {
             </Grid>
             <Grid item>
               <div className={classes.uploadButton}>
-                <Button type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleOpen}/>
+                {props.mode === "admin" ? <Button 
+                  type="normal" 
+                  variant="contained" buttonText="Upload" 
+                  color="primary" 
+                  onClick={handleOpen}
+                /> : null}
               </div>
             </Grid>
           </Grid>

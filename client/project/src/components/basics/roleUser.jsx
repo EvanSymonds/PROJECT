@@ -3,9 +3,10 @@ import Grid from "@material-ui/core/grid"
 import Avatar from "@material-ui/core/avatar"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from "./button"
+import Button from "@material-ui/core/button"
 import ProfilePicture from "./profilePicture"
 import { makeStyles } from '@material-ui/core/styles';
+import {ArrowDropDown} from "@material-ui/icons"
 
 const RoleUser = (props) => {
   const [open, setOpen] = useState(false);
@@ -13,8 +14,10 @@ const RoleUser = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     user: {
-      marginLeft: 20,
-      marginTop: 20,
+      margin: "10px 0px 10px 20px",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
     },
     avatar: {
       width: 50,
@@ -22,29 +25,34 @@ const RoleUser = (props) => {
     },
     usernameContainer: {
       display: "flex",
-      justifyContent: "center",
       alignItems: "center",
-      marginLeft: 20
+      marginLeft: 20,
+      height: 50,
+      width: 'calc(100% - 240px)'
     },
     username: {
       fontSize: 20,
       marginBottom: 5,
+    },
+    button: {
+      width: 150,
+      padding: "5px 0px 5px 5px",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      display: "flex",
+      justifyContent: "left",
+    },
+    buttonText: {
+      width: 110,
+      overflow: "hidden",
+      textAlign: "left"
     }
   }));
   const classes = useStyles();
- 
-  const renderMenuItems = () => {
-    return props.roles.map((role, i) => {
-      return (<MenuItem key={i} onClick={handleChange}>
-        <div>
-          {role.api_role}
-        </div>
-      </MenuItem>)
-    })
-  }
 
   const handleChange = (event) => {
     props.onChangeRole(props.user.role_id, event.currentTarget.textContent)
+    handleClose()
   };
 
   const handleClickOpen = (event) => {
@@ -56,6 +64,18 @@ const RoleUser = (props) => {
     setOpen(false);
     setAnchorEl(null);
   };
+
+  const renderMenuItems = () => {
+    return props.roles.map((role, i) => {
+      if (role.api_role !== "change_role"){
+        return (<MenuItem key={i} onClick={handleChange}>
+          <div>
+            {role.api_role}
+          </div>
+        </MenuItem>)
+      }
+    })
+  }
 
   return (
 
@@ -73,25 +93,28 @@ const RoleUser = (props) => {
           {props.user.username}
         </div>
       </Grid>
-      <Grid item>
-        <Button type="icon" icon="Edit" color="primary" onClick={handleClickOpen} />
-      </Grid>
-      <Menu
-        open={open}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        {renderMenuItems()}
-      </Menu>
+      {props.onChangeMode === true ? <div>
+          <Grid item>
+            <Button 
+              className={classes.button}
+              color="primary"
+              variant="outlined"
+              onClick={handleClickOpen}
+              endIcon={<ArrowDropDown />}
+            >
+              <div className={classes.buttonText}>
+                {props.userRole}
+              </div>
+            </Button>
+          </Grid>
+          <Menu
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+          >
+            {renderMenuItems()}
+          </Menu>
+        </div> : null}
     </Grid>
 
   )
