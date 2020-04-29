@@ -161,6 +161,8 @@ const renameRole = (role_id, new_name) => {
 const changeRole = (role_id, new_role, project_id) => {
   //Changes the role of a user
 
+  dbDebugger(new_role)
+
   return new Promise((resolve, reject) => {
     pool.query("SELECT * FROM project_roles WHERE project_id = $1", [project_id], (error, results) => {
       if (error) {
@@ -168,6 +170,8 @@ const changeRole = (role_id, new_role, project_id) => {
         reject(error)
       } else {
         const targetRole = results.rows.filter((role) => role.role_name === new_role)
+
+        dbDebugger(targetRole)
 
         const auth_level = targetRole[0].authorisation_level
 

@@ -115,10 +115,33 @@ router.post("/new", async (request, response) => {
   })
 })
 
+router.post("/auth/update", async(request, response) => {
+  const schema = {
+    role_name: Joi.string().min(3).max(25).required(),
+    project_id: Joi.number().integer().max(100000000).required(),
+    auth_level: Joi.number().integer().max(9).min(1).required()
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      response.status(400).json(error)
+    } else {
+
+      await role_api.updateRoleAuth(request.body.role_name, request.body.project_id, request.body.auth_level).then((results) => {
+        response.status(200).send("Updated role")
+      })
+      .catch((error) => {
+        response.status(400).json(error)
+      })
+
+    }
+  })
+})
+
 router.post("/update", async (request, response) => {
   const schema = {
     role_id: Joi.number().integer().max(100000000).required(),
-    new_name: Joi.string().min(3).max(25).required(),
+    new_role: Joi.string().min(3).max(25).required(),
     project_id: Joi.number().integer().max(100000000).required(),
   }
 
@@ -217,7 +240,7 @@ router.post("/update", async (request, response) => {
 
     //EXECUTE CHANGE
 
-    role_api.changeRole(request.body.role_id, request.body.new_name, request.body.project_id).then((results) => {
+    role_api.changeRole(request.body.role_id, request.body.new_role, request.body.project_id).then((results) => {
       response.status(200).json(results)
     })
     .catch((error) => {

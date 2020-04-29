@@ -16,6 +16,9 @@ let redGreyTheme = createMuiTheme({
       menuGradient: "linear-gradient(to right, #eeeeee 40%, #e0e0e0 70%)",
       contrastText: '#000'
     },
+    background: {
+      default: "#fff"
+    }
   },
   typography:{
     button: {
@@ -38,6 +41,9 @@ let darkModeTheme = createMuiTheme({
       light: grey[700],
       menuGradient: "linear-gradient(to right, #616161 40%, #545454 70%)",
       contrastText: '#fff'
+    },
+    background: {
+      default: "#424242"
     }
   },
   typography:{

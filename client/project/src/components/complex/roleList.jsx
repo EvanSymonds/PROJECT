@@ -14,7 +14,6 @@ const RoleList = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      width: window.innerWidth < 1000 ? 250 : window.innerWidth < 1400 ? 200 : 400
     },
     role: {
       height: 50,
@@ -96,7 +95,7 @@ const RoleList = (props) => {
 
   return (
     <Grid container style={{ height: "100%" }}>
-      <Grid item>
+      <Grid item style={{ width: "100%" }}>
         <Card
           style={{ height: window.innerHeight - (props.mode === "admin" ? 200 : 142) }}
           square

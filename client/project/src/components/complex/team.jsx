@@ -45,14 +45,16 @@ const Team = (props) => {
 
           if (roleWithUser.role.role_name === api_role) {
             if (roleWithUser.role.user_id === "-1") {
-              api_role_users = [...api_role_users, {username: "PLACEHOLDER", user_id: -1, role_id: roleWithUser.role.role_id}]
+              api_role_users = [...api_role_users, {username: "PLACEHOLDER", user_id: -1, role_id: roleWithUser.role.role_id,
+              authorisation_level: roleWithUser.role.authorisation_level}]
             } else {
               allUsers = [...allUsers, {username: roleWithUser.user[0].username, user_id: roleWithUser.user[0].user_id,
                 role_id: roleWithUser.role.role_id
                 }]
 
               api_role_users = [...api_role_users, {username: roleWithUser.user[0].username, user_id: roleWithUser.user[0].user_id,
-              role_id: roleWithUser.role.role_id
+              role_id: roleWithUser.role.role_id,
+              authorisation_level: roleWithUser.role.authorisation_level
               }]
             }
           }
@@ -98,7 +100,7 @@ const Team = (props) => {
 
     let formData = new FormData()
     formData.append("role_id", role_id)
-    formData.append("new_name", newRole)
+    formData.append("new_role", newRole)
     formData.append("project_id", props.project_id)
 
     axios.post("http://localhost:3001/roles/update", formData).then((response) => {
@@ -109,6 +111,30 @@ const Team = (props) => {
     })
   }   
 
+  const handleUpdateAuth = (role_name, auth_level) => {
+    let formData = new FormData()
+    formData.append("role_name", role_name)
+    formData.append("project_id", props.project_id)
+    formData.append("auth_level", auth_level)
+
+    axios.post("http://localhost:3001/roles/auth/update", formData).then(() => {
+
+      const newRoles = [...roles]
+      const role = newRoles.filter((role) => role.api_role === role_name)
+      const index = newRoles.indexOf(role)
+      
+      role[0].api_role_users.forEach((user) => {
+        user.authorisation_level = auth_level
+      })
+
+      newRoles[index] = role
+      setRoles(newRoles)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   return (
 
     <Grid
@@ -118,7 +144,12 @@ const Team = (props) => {
         height: "100%",
         width: "100%",
       }}>
-      <Grid item>
+      <Grid item xs={3} style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
         <RoleList 
           selected={selected}
           project_id={props.project_id}
@@ -128,15 +159,12 @@ const Team = (props) => {
           mode={mode}
           onChangeMode={onChangeMode}
         />
-      </Grid>
-      <Grid item>
         <Divider orientation="vertical"/>
       </Grid>
-      <Grid item style={{
-        width: window.inner < 1000 ? 500 :
-        window.innerWidth < 1150 ? 450 :
-        window.innerWidth < 1400 ? 500 :
-        700
+      <Grid item xs={5} style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
       }}>
         {roles.length === 0 ? null : <RoleDetail 
           role={roles[selected]}
@@ -147,14 +175,15 @@ const Team = (props) => {
           mode={mode}
           onChangeMode={selected === roles.length -1 ? true : false}
         />}
-      </Grid>
-      <Grid item>
         <Divider orientation="vertical"/>
       </Grid>
-      <Grid item>
+      <Grid item xs={4}>
         {roles.length === 0 ? null : <RoleSettings 
           handleDelete={onDeleteRole}
-          role={roles[selected].api_role}
+          handleUpdateAuth={handleUpdateAuth}
+          project_id={props.project_id}
+          roles={roles}
+          role={roles[selected]}
           mode={mode}
         />}
       </Grid>
