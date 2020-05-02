@@ -59,6 +59,7 @@ const RoleList = (props) => {
   }
 
   const onAddRole = (role_name) => {
+    setOpen(false);
     props.onAddRole(role_name)
   }
 

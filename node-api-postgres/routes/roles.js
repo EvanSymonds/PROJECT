@@ -146,109 +146,113 @@ router.post("/update", async (request, response) => {
   }
 
   Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error)
+    } else {
+      //MAKE ROLES WITH USERS
+      let final_roles = []
 
-    //MAKE ROLES WITH USERS
-    let final_roles = []
+      await role_api.getRolesByProject(request.body.project_id).then((projectRoles) => {
 
-    await role_api.getRolesByProject(request.body.project_id).then((projectRoles) => {
+        let api_roles = []
 
-      let api_roles = []
+        //get an array with every type of role
+        projectRoles.forEach((role) => {
 
-      //get an array with every type of role
-      projectRoles.forEach((role) => {
+          const pos = api_roles.map((api_role) => { return api_role.role_name }).indexOf(role.role_name)
 
-        const pos = api_roles.map((api_role) => { return api_role.role_name }).indexOf(role.role_name)
-
-        if (pos === -1) {
-          api_roles = [...api_roles, {
-            role_name: role.role_name,
-            authorisation_level: role.authorisation_level
-          }]
-        }
-      })
-      //get an array with every type of role
-
-      api_roles.forEach((api_role) => {
-        api_role_users = []
-
-        projectRoles.forEach((projectRole) => {
-          if (projectRole.role_name === api_role.role_name) {
-            api_role_users = [...api_role_users, projectRole.user_id]
+          if (pos === -1) {
+            api_roles = [...api_roles, {
+              role_name: role.role_name,
+              authorisation_level: role.authorisation_level
+            }]
           }
         })
+        //get an array with every type of role
 
-        final_roles = [...final_roles, {
-          api_role: api_role,
-          api_role_users: api_role_users
-        }]
-      })
+        api_roles.forEach((api_role) => {
+          api_role_users = []
 
-    })
-    //MAKE ROLES WITH USERS
-
-    //IS USER LEVEL 9
-    await role_api.getRolesById(request.body.role_id).then((role) => {
-      if (role[0].authorisation_level == 9){
-
-        let correspondingRole
-
-        final_roles.forEach((final_role) => {
-
-          if (final_role.api_role.role_name === role[0].role_name) {
-            correspondingRole = final_role
-          }
-
-        })
-
-        //ARE THERE OTHER USERS IN THIS ROLE
-
-        if (correspondingRole.api_role_users.length < 3) {
-          
-          //FIND THE NEXT ROLE IN LINE TO BE ADMIN
-
-          let highestAuth = 0
-
-          final_roles.forEach((final_role) => {
-            if (final_role.api_role.authorisation_level > highestAuth && final_role.api_role.authorisation_level !== 9) {
-              highestAuth = final_role.api_role.authorisation_level
+          projectRoles.forEach((projectRole) => {
+            if (projectRole.role_name === api_role.role_name) {
+              api_role_users = [...api_role_users, projectRole.user_id]
             }
           })
 
-          highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth && role.api_role_users.length > 1)
+          final_roles = [...final_roles, {
+            api_role: api_role,
+            api_role_users: api_role_users
+          }]
+        })
 
-          //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+      })
+      //MAKE ROLES WITH USERS
 
-          //MAKE THAT ROLE LEVEL 9
+      //IS USER LEVEL 9
+      await role_api.getRolesById(request.body.role_id).then((role) => {
+        if (role[0].authorisation_level == 9){
 
-          role_api.updateRoleAuth(highestAuthRoles[0].api_role.role_name, request.body.project_id, 9)
+          let correspondingRole
 
-          //MAKE THAT ROLE LEVEL 9
+          final_roles.forEach((final_role) => {
 
-          //MAKE THE OTHER ROLE LEVEL 8
+            if (final_role.api_role.role_name === role[0].role_name) {
+              correspondingRole = final_role
+            }
 
-          role_api.updateRoleAuth(correspondingRole.api_role.role_name, request.body.project_id, 8)
+          })
 
-          //MAKE THE OTHER ROLE LEVEL 8
+          //ARE THERE OTHER USERS IN THIS ROLE
+
+          if (correspondingRole.api_role_users.length < 3) {
+            
+            //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+            let highestAuth = 0
+
+            final_roles.forEach((final_role) => {
+              if (final_role.api_role.authorisation_level > highestAuth && final_role.api_role.authorisation_level !== 9) {
+                highestAuth = final_role.api_role.authorisation_level
+              }
+            })
+
+            highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth && role.api_role_users.length > 1)
+
+            //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+            //MAKE THAT ROLE LEVEL 9
+
+            role_api.updateRoleAuth(highestAuthRoles[0].api_role.role_name, request.body.project_id, 9)
+
+            //MAKE THAT ROLE LEVEL 9
+
+            //MAKE THE OTHER ROLE LEVEL 8
+
+            role_api.updateRoleAuth(correspondingRole.api_role.role_name, request.body.project_id, 8)
+
+            //MAKE THE OTHER ROLE LEVEL 8
+
+          }
+
+          //ARE THERE OTHER USERS IN THIS ROLE
 
         }
+      })
+      //IS USER LEVEL 9
 
-        //ARE THERE OTHER USERS IN THIS ROLE
+      //EXECUTE CHANGE
 
-      }
-    })
-    //IS USER LEVEL 9
+      role_api.changeRole(request.body.role_id, request.body.new_role, request.body.project_id).then((results) => {
+        response.status(200).json(results)
+      })
+      .catch((error) => {
+        response.status(400).json(error)
+      })
 
-    //EXECUTE CHANGE
+      //EXECUTE CHANGE
 
-    role_api.changeRole(request.body.role_id, request.body.new_role, request.body.project_id).then((results) => {
-      response.status(200).json(results)
-    })
-    .catch((error) => {
-      response.status(400).json(error)
-    })
-
-    //EXECUTE CHANGE
-
+    }
   })
 })
 

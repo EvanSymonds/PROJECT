@@ -46,6 +46,7 @@ app.use(function(req, res, next) {
 const auth = require("./routes/auth");
 const users = require("./routes/users");
 const projects = require("./routes/projects");
+const project_settings = require("./routes/project_settings");
 const roles = require("./routes/roles");
 const files = require("./routes/files");
 const thumbnails = require("./routes/thumbnails");
@@ -56,6 +57,7 @@ const user_settings = require("./routes/user_settings");
 app.use("/auth", auth);
 app.use("/users", users);
 app.use("/projects", projects);
+app.use("/project_settings", project_settings);
 app.use("/roles", roles);
 app.use("/files", files);
 app.use("/thumbnails", thumbnails);

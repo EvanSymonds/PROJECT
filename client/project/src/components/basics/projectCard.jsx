@@ -52,6 +52,7 @@ const ProjectCard = (props) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      cursor: 'pointer',
     },
     mediaContainer: {
       width: '88%',

@@ -37,9 +37,32 @@ const RoleSettings = (props) => {
     switch (props.mode) {
       case "view":
         return (
-          <Grid container className={classes.root}>
-            <Grid item>
-              
+          <Grid 
+            container 
+            className={classes.root}
+            direction="column"
+            alignItems="center"
+          >
+            <Grid item style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%"
+            }}>
+              <div style={{
+                height: 20,
+                width: 'calc(100% - 110px)'
+              }}>
+                Authorisation level
+              </div>
+              <ValueSelect 
+                value={props.role.api_role_users[0].authorisation_level}
+                disabled
+                maxValue={9}
+                minValue={1}
+                onChange={onAuthChange}
+              />
             </Grid>
           </Grid>
         )

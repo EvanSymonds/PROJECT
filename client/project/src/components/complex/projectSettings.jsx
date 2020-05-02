@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles";
 import SelectThumbnail from "../basics/selectThumbnail"
 import ProjectName from "../basics/projectName"
+import AuthSliders from "./authSliders"
 import Grid from "@material-ui/core/grid"
 
 var jwt = require("jsonwebtoken")
@@ -45,6 +46,9 @@ const ProjectSettings = (props) => {
             project_id={props.project_id}
             mode={mode}
           />
+        </Grid>
+        <Grid item xs={11}>
+          <AuthSliders />
         </Grid>
       </Grid>
     

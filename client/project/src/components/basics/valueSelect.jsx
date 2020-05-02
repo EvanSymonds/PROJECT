@@ -61,6 +61,7 @@ const ValueSelect = (props) => {
       <ButtonBase
         className={classes.leftButton}
         onClick={onDecrease}
+        disabled={props.disabled}
       >
         <Remove className={classes.icon}/>
       </ButtonBase>
@@ -76,6 +77,7 @@ const ValueSelect = (props) => {
       <ButtonBase
         className={classes.rightButton}
         onClick={onIncrease}
+        disabled={props.disabled}
       >
         <Add className={classes.icon}/>
       </ButtonBase>

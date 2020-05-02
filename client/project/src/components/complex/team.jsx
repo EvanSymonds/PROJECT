@@ -161,7 +161,7 @@ const Team = (props) => {
         />
         <Divider orientation="vertical"/>
       </Grid>
-      <Grid item xs={5} style={{
+      <Grid item xs={selected === roles.length -1 ? 9 : 5} style={{
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
@@ -175,8 +175,9 @@ const Team = (props) => {
           mode={mode}
           onChangeMode={selected === roles.length -1 ? true : false}
         />}
-        <Divider orientation="vertical"/>
+        {selected === roles.length -1 ? null : <Divider orientation="vertical"/>}
       </Grid>
+      {selected === roles.length -1 ? null :
       <Grid item xs={4}>
         {roles.length === 0 ? null : <RoleSettings 
           handleDelete={onDeleteRole}
@@ -186,7 +187,7 @@ const Team = (props) => {
           role={roles[selected]}
           mode={mode}
         />}
-      </Grid>
+      </Grid>}
     </Grid>
 
   )

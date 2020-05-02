@@ -28,14 +28,14 @@ const RoleUser = (props) => {
       alignItems: "center",
       marginLeft: 20,
       height: 50,
-      width: 'calc(100% - 240px)'
+      width: 'calc(100% - 320px)'
     },
     username: {
       fontSize: 20,
       marginBottom: 5,
     },
     button: {
-      width: 150,
+      width: 200,
       padding: "5px 0px 5px 5px",
       overflow: "hidden",
       whiteSpace: "nowrap",
@@ -43,7 +43,7 @@ const RoleUser = (props) => {
       justifyContent: "left",
     },
     buttonText: {
-      width: 110,
+      width: 160,
       overflow: "hidden",
       textAlign: "left"
     }
