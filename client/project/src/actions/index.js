@@ -11,3 +11,10 @@ export const changeSettingsAuth = (auth) => {
     payload: auth
   }
 }
+
+export const editFilesAuth = (auth) => {
+  return {
+    type: "EDIT_FILES_AUTH",
+    payload: auth
+  }
+}

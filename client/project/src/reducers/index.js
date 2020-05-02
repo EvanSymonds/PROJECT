@@ -8,15 +8,23 @@ const selectedThemeReducer = (selectedTheme = {name: "redGreyTheme", id: 0}, act
   return selectedTheme
 }
 
-const settingsAuthReducer = (settingsAuth = null, action) => {
+const projectSettingsReducer = (projectSettings = {
+  changeSettingsAuth: 9,
+  editFilesAuth: 9
+},action) => {
+  
   if (action.type === "CHANGE_SETTINGS_AUTH") {
-    return action.payload
+    return {...projectSettings, changeSettingsAuth: action.payload}
   }
 
-  return settingsAuth
+  if (action.type === "EDIT_FILES_AUTH") {
+    return {...projectSettings, editFilesAuth: action.payload}
+  }
+  
+  return projectSettings
 }
 
 export default combineReducers({
   selectedTheme: selectedThemeReducer,
-  changeSettingsAuth: settingsAuthReducer,
+  projectSettings: projectSettingsReducer,
 })

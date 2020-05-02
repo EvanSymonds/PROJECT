@@ -51,9 +51,18 @@ router.post("/:id", async(request, response) => {
       debug(error)
       response.status(400).json(error)
     } else {
+      debug(request.body.setting_name)
       switch (request.body.setting_name) {
         case "changeSettingsAuth":
           await project_settings_api.changeSettingsAuth(parseInt(request.params.id), request.body.new_value).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+        case "editFilesAuth":
+          await project_settings_api.editFilesAuth(parseInt(request.params.id), request.body.new_value).then((results) => {
             response.status(200).json(results)
           })
           .catch((error) => {

@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios"
 
 import { connect } from "react-redux"
-import { changeSettingsAuth } from "../../actions"
+import { changeSettingsAuth, editFilesAuth } from "../../actions"
 
 var jwt = require("jsonwebtoken")
 
@@ -33,6 +33,7 @@ const ProjectPage = (props) => {
 
       axios.get("http://localhost:3001/project_settings/" + project_id).then((response) => {
         props.changeSettingsAuth(response.data.rows[0].change_settings_auth)
+        props.editFilesAuth(response.data.rows[0].edit_files_auth)
       })
       .catch((error) => {
         console.log(error)
@@ -116,4 +117,4 @@ const mapStateToProps = state => {
   return { changeSettingsAuth: state.changeSettingsAuth }
 }
 
-export default connect(mapStateToProps, { changeSettingsAuth })(ProjectPage)
+export default connect(mapStateToProps, { changeSettingsAuth , editFilesAuth})(ProjectPage)

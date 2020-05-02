@@ -17,7 +17,9 @@ const ProjectSettings = (props) => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
 
-    if (token.authLevel >= props.settingsAuth) {
+    console.log()
+
+    if (token.authLevel >= props.projectSettings.changeSettingsAuth) {
       setMode("admin")
     }
   }, [])
@@ -60,7 +62,7 @@ const ProjectSettings = (props) => {
 }
 
 const mapStateToProps = state => {
-  return { settingsAuth: state.changeSettingsAuth }
+  return { projectSettings: state.projectSettings }
 }
 
 export default connect(mapStateToProps, { changeSettingsAuth })(ProjectSettings)
