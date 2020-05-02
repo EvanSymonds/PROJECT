@@ -4,3 +4,10 @@ export const selectTheme = (theme) => {
     payload: theme
   }
 }
+
+export const changeSettingsAuth = (auth) => {
+  return {
+    type: "CHANGE_SETTINGS_AUTH",
+    payload: auth
+  }
+}

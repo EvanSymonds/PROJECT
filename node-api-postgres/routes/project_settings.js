@@ -42,6 +42,7 @@ router.post("/", async(request, response) => {
 
 router.post("/:id", async(request, response) => {
   const schema = {
+    setting_name: Joi.string().min(3).max(25).required(),
     new_value: Joi.required()
   }
 
@@ -50,13 +51,16 @@ router.post("/:id", async(request, response) => {
       debug(error)
       response.status(400).json(error)
     } else {
-      await project_settings_api.changeSettingsAuth(parseInt(request.params.id), request.body.new_value).then((results) => {
-        response.status(200).json(results)
-      })
-      .catch((error) => {
-        debug(error)
-        response.status(400).json(error)
-      })
+      switch (request.body.setting_name) {
+        case "changeSettingsAuth":
+          await project_settings_api.changeSettingsAuth(parseInt(request.params.id), request.body.new_value).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+      }
     }
   })
 })

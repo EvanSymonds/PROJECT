@@ -9,6 +9,9 @@ import ProjectMenu from "../basics/projectMenu"
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios"
 
+import { connect } from "react-redux"
+import { changeSettingsAuth } from "../../actions"
+
 var jwt = require("jsonwebtoken")
 
 const ProjectPage = (props) => {
@@ -27,6 +30,13 @@ const ProjectPage = (props) => {
       const authToken = JSON.stringify(response.headers["x-auth-token"])
 
       window.localStorage.setItem("authToken", authToken)
+
+      axios.get("http://localhost:3001/project_settings/" + project_id).then((response) => {
+        props.changeSettingsAuth(response.data.rows[0].change_settings_auth)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     })
     .catch((error) => {
       console.log(error)
@@ -102,4 +112,8 @@ const ProjectPage = (props) => {
 
 }
 
-export default ProjectPage
+const mapStateToProps = state => {
+  return { changeSettingsAuth: state.changeSettingsAuth }
+}
+
+export default connect(mapStateToProps, { changeSettingsAuth })(ProjectPage)

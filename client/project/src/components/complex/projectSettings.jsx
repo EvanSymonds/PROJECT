@@ -5,6 +5,9 @@ import ProjectName from "../basics/projectName"
 import AuthSliders from "./authSliders"
 import Grid from "@material-ui/core/grid"
 
+import { connect } from "react-redux"
+import { changeSettingsAuth } from "../../actions"
+
 var jwt = require("jsonwebtoken")
 
 const ProjectSettings = (props) => {
@@ -14,7 +17,7 @@ const ProjectSettings = (props) => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
 
-    if (token.authLevel === 9) {
+    if (token.authLevel >= props.settingsAuth) {
       setMode("admin")
     }
   }, [])
@@ -47,8 +50,8 @@ const ProjectSettings = (props) => {
             mode={mode}
           />
         </Grid>
-        <Grid item xs={11}>
-          <AuthSliders />
+        <Grid item>
+          <AuthSliders project_id={props.project_id}/>
         </Grid>
       </Grid>
     
@@ -56,4 +59,8 @@ const ProjectSettings = (props) => {
 
 }
 
-export default ProjectSettings
+const mapStateToProps = state => {
+  return { settingsAuth: state.changeSettingsAuth }
+}
+
+export default connect(mapStateToProps, { changeSettingsAuth })(ProjectSettings)
