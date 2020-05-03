@@ -143,6 +143,7 @@ const Team = (props) => {
       style={{
         height: "100%",
         width: "100%",
+        marginTop: 48,
       }}>
       <Grid item xs={3} style={{
         display: "flex",

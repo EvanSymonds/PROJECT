@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/styles";
-import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropDown } from "@material-ui/icons"
+import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropDown, Folder, FormatColorFill, FormatColorText, Add } from "@material-ui/icons"
 
 export const returnIcon = (icon, size) => {
   switch (icon) {
@@ -28,6 +28,14 @@ export const returnIcon = (icon, size) => {
       return <Edit fontSize={size}/>
     case "ArrowDropDown":
       return <ArrowDropDown fontSize={size}/>
+    case "Folder":
+      return <Folder fontSize={size}/>
+    case "Fill":
+      return <FormatColorFill fontSize={size}/>
+    case "TextColor":
+      return <FormatColorText fontSize={size}/>
+    case "Add":
+      return <Add fontSize={size}/>
   }
 }
 
@@ -61,28 +69,60 @@ const Button = (props) => {
 
   const type = {
     normal: {
-      button: <MaterialButton classes={{
-        root: getClasses(),
-        disabled: classes.disabled
-        }}  disabled={props.disabled} onClick={props.onClick} variant={props.variant} size={props.size} color={props.color} component={props.component}>
-      {props.buttonText}
-    </MaterialButton>
+      button: <MaterialButton 
+        classes={{
+          root: getClasses(),
+          disabled: classes.disabled
+        }}
+        disabled={props.disabled}
+        onClick={props.onClick}
+        variant={props.variant}
+        size={props.size}
+        color={props.color}
+        component={props.component}
+      >
+        {props.buttonText}
+      </MaterialButton>
     },
     normalWithIcon: {
-      button: <MaterialButton classes={{
-        root: getClasses(),
-        disabled: classes.disabled
-        }} disabled={props.disabled} onClick={props.onClick} startIcon={returnIcon(props.icon)} variant={props.variant} size={props.size} color={props.color} component={props.component}>
-      {props.buttonText}
-    </MaterialButton>
+      button: <MaterialButton 
+        classes={{
+          root: getClasses(),
+          disabled: classes.disabled
+        }} 
+        disabled={props.disabled}
+        onClick={props.onClick} 
+        startIcon={returnIcon(props.icon)}
+        variant={props.variant}
+        size={props.size}
+        color={props.color}
+        component={props.component}
+        fill={props.fill}
+      >
+        {props.buttonText}
+      </MaterialButton>
     },
     icon: {
-      button: <IconButton classes={{
-        root: getClasses(),
-        disabled: classes.disabled
-        }} disabled={props.disabled} onClick={props.onClick} component={props.component} color={props.color}>
-        {returnIcon(props.icon, props.size)}
-      </IconButton>
+      button: <IconButton 
+        classes={{
+          root: getClasses(),
+          disabled: classes.disabled
+        }}
+        disabled={props.disabled}
+        onClick={props.onClick}
+        component={props.component}
+        color={props.color}
+        fill={props.fill}
+        >
+          {returnIcon(props.icon, props.size)}
+          {props.fillColor ? <div style={{
+            width: 24,
+            height: 4,
+            background: "blue",
+            position: "absolute",
+            bottom: 12,
+          }} /> : null}
+        </IconButton>
     }
   }
 

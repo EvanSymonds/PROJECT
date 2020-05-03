@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
+import FileSystemMenu from "./fileSystemMenu"
 import Card from "@material-ui/core/Card"
 import Divider from '@material-ui/core/Divider';
 import Modal from '@material-ui/core/Modal';
@@ -14,10 +15,10 @@ const FileSystem = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      
+      width: "90%",
+      marginLeft: 10
     }
   }))
-
   const classes = useStyles()
 
   useEffect(() => {getProjectFiles(props.project_id)}, [])
@@ -54,14 +55,27 @@ const FileSystem = (props) => {
     return files.map((file, i) => {
         if (files.length === i + 1){
           return (
-            <div key={i} data-testid='component-file'>
+            <div 
+              key={i}
+              data-testid='component-file'
+              style={{
+                marginLeft: 10
+              }}  
+            >
               <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
             </div>
           )
         } else {
           return (
-            <div key={i} data-testid='component-file'>
-              <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
+            <div key={i}>
+              <div 
+                data-testid='component-file'
+                style={{
+                  marginLeft: 10
+                }}
+              >
+                <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
+              </div>
               <Divider light key={"divider"+i}/>
             </div>
           )
@@ -79,16 +93,18 @@ const FileSystem = (props) => {
 
   return (
     <React.Fragment>
-      <Card className={classes.root} style={{
-        direction: "column",
-      }}>
+      <FileSystemMenu onClickUpload={handleOpen}/>
+      <Card 
+        className={classes.root}
+        square
+        elevation={0}  
+      >
 
         <div>
           {renderFiles()}
         </div>
 
       </Card>
-      <Button data-test="component-showUploaderButton" type="normal" variant="contained" buttonText="Upload" color="primary" onClick={handleOpen}/>
       <Modal
         data-test="component-fileUpload"
         open={open}

@@ -74,7 +74,12 @@ const File = (props) => {
 
   return (
     <div>
-      <Grid container direction="row" justify="center" alignItems="center">
+      <Grid 
+        container 
+        direction="row" 
+        justify="center" 
+        alignItems="center"
+      >
         <Grid item xs={1}>
           {renderIcon()}
         </Grid>

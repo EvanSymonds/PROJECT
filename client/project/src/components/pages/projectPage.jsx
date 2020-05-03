@@ -48,7 +48,6 @@ const ProjectPage = (props) => {
     page: {
       height: window.innerHeight - 96,
       marginLeft: permanentSidebar ? 250 : 0,
-      marginTop: 48
     },
     background:{
       position: "absolute",
