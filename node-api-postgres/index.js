@@ -27,6 +27,7 @@ if(!config.get("jwtPrivateKey")) {
 app.use(fileupload({
   useTempFiles: false,
 }));
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,

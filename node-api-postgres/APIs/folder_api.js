@@ -30,6 +30,20 @@ const getFoldersByProject = (project_id) => {
   })
 }
 
+const getFolderById = (folder_id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM folders WHERE folder_id = $1", [folder_id], (error, folders) => {
+      if (error) {
+        dbDebugger("Error: ", error)
+        reject(error)
+      } else {
+        dbDebugger("Folders retrieved")
+        resolve(folders)
+      }
+    })
+  })
+}
+
 const createFolder = (project_id) => {
   return new Promise((resolve, reject) => {
     pool.query("INSERT INTO folders (project_id) VALUES ($1) RETURNING folder_id", [project_id], (error, results) => {
@@ -88,6 +102,7 @@ const deleteFoldersByProject = (project_id) => {
 
 module.exports = {
   getFoldersByProject,
+  getFolderById,
   createFolder,
   renameFolder,
   deleteFolder,

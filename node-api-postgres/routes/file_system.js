@@ -27,7 +27,8 @@ router.get("/:id", async(request, response) => {
             return new Promise(async(resolve) => {
 
               const mapFolders = (folders) => {
-                  return Promise.all(folders.map(async(row) => await getFolderContents(folder_id, parseInt(row.child_id)).then((folderContents) => folderContents )))
+                return Promise.all(folders.map(async(row) => await getFolderContents(folder_id, parseInt(row.child_id)).then((folderContents) => folderContents )
+                ))
               }
 
               const mapFiles = (files) => {
@@ -35,35 +36,40 @@ router.get("/:id", async(request, response) => {
                 ))
               }
 
-              await folder_children_api.getFolderFolders(folder_id).then(async (folders) => {
+              await folder_api.getFolderById(folder_id).then(async(folder_detail) => {
 
-                await folder_children_api.getFolderFiles(folder_id).then(async(files) => {
+                await folder_children_api.getFolderFolders(folder_id).then(async (folders) => {
 
-                  const file_system = {
-                    folder_id: folder_id,
-
-                    parent_id: parent_id,
-
-                    files: [],
-
-                    folders: []
-                  }
-
-                  mapFiles(files.rows).then((filesArray) => {
-                    file_system.files = filesArray
-
-                    mapFolders(folders.rows).then((childFolders) => {
-                      file_system.folders = childFolders
-                      resolve(file_system)
-                    })
-                  })
+                  await folder_children_api.getFolderFiles(folder_id).then(async(files) => {
   
+                    const file_system = {
+                      folder_id: folder_id,
+  
+                      parent_id: parent_id,
+  
+                      folder_name: folder_detail.rows[0].folder_name,
+  
+                      files: [],
+  
+                      folders: []
+                    }
+  
+                    mapFiles(files.rows).then((filesArray) => {
+                      file_system.files = filesArray
+  
+                      mapFolders(folders.rows).then((childFolders) => {
+                        file_system.folders = childFolders
+                        resolve(file_system)
+                      })
+                    })
+    
+                  })
                 })
               })
             })
           }
 
-          await getFolderContents(null, rootFolder.folder_id).then((folderContents) => {
+          await getFolderContents(null, rootFolder.folder_id, rootFolder.folder_name).then((folderContents) => {
             response.status(200).json(folderContents)
           })
         }
@@ -159,7 +165,7 @@ router.post("/:id", async (request, response) => {
   })
 })
 
-router.delete("/:id", async(request, response) => {
+router.post("/delete/:id", async(request, response) => {
   const schema = {
     folder_id: Joi.number().integer().max(100000000).required(),
     type: Joi.string().valid(...["file", "folder"])
@@ -170,8 +176,14 @@ router.delete("/:id", async(request, response) => {
       debug(error)
       response.status(400).json(error);
     } else {
-      await folder_children_api.deleteRelation(request.body.folder_id, parseInt(request.params.id), request.body.type).then((results) => {
-        response.status(200).json(results)
+      await folder_children_api.deleteRelation(request.body.folder_id, parseInt(request.params.id), request.body.type).then(async(results) => {
+        await file_api.deleteFile(parseInt(request.params.id)).then((results) => {
+          response.status(200).json(results)
+        })
+        .catch((error) => {
+          debug(error)
+          response.status(400).json(error)
+        })
       })
       .catch((error) => {
         debug(error)

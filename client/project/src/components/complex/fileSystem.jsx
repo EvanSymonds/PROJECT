@@ -1,126 +1,84 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import FileSystemMenu from "./fileSystemMenu"
-import Card from "@material-ui/core/Card"
-import Divider from '@material-ui/core/Divider';
-import Modal from '@material-ui/core/Modal';
-import FileUpload from "../complex/fileUpload"
-import Button from "../basics/button"
-import File from "../basics/file"
+import FolderPage from "./folderPage"
 import axios from "axios"
 
 const FileSystem = (props) => {
-  const [files, setFiles] = useState([])
-  const [open, setOpen] = useState(false);
-
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      width: "90%",
-      marginLeft: 10
-    }
-  }))
-  const classes = useStyles()
+  const [folder, setFolder] = useState()
+  const [folderViewed, setFolderViewed] = useState([])
 
   useEffect(() => {getProjectFiles(props.project_id)}, [])
 
+  const rerender = () => {
+    getProjectFiles(props.project_id)
+  }
+
+  const handleEnterFolder = (folder_id, folder_name) => {
+    setFolderViewed([...folderViewed, {
+      folder_id: folder_id,
+      folder_name: folder_name
+    }])
+    rerender()
+  }
+
+  const getFolderRendered = () => {
+    let targetFolder = folder
+
+    if (folderViewed.length === 0) {
+      return folder
+    } else {
+      folderViewed.forEach((folderId) => {
+        targetFolder.folders.forEach((childFolder) => {
+          if (childFolder.folder_id === folderId.folder_id) {
+            targetFolder = childFolder
+          }
+        })
+      })
+      return targetFolder
+    }
+  }
+
+  const handleReturn = (value) => {
+    if (value === -1) {
+      setFolderViewed([])
+    } else {
+      let destination
+
+      folderViewed.forEach((folder, i) => {
+        if (folder.folder_id === value){
+          destination = i + 1
+        }
+      })
+
+      setFolderViewed([...folderViewed].slice(0, destination))
+    }
+  }
+
   const getProjectFiles = async (project_id) => {
 
-    const url = "http://localhost:3001/files/project/" + project_id
+    const url = "http://localhost:3001/file_system/" + project_id
     await axios.get(url).then((results, error) => {
       if (error) {
         console.log(error)
       } else {
         if (results.status === 200) {
-          const filesArray = []
-          Object.keys(results.data.rows).map((key) => {
-            filesArray.push(results.data.rows[key])
-          })
-          setFiles(filesArray)
+          setFolder(results.data)
         }
       }
     })
   }
 
-  const onDeleteFile = (e) => {
-    setFiles((files) => files.filter((i) => {
-      return files.indexOf(i) != e
-    }))
-  }
-
-  const onAddFile = () => {
-    getProjectFiles(props.project_id)  
-  }
-
-  const renderFiles = () => {
-    return files.map((file, i) => {
-        if (files.length === i + 1){
-          return (
-            <div 
-              key={i}
-              data-testid='component-file'
-              style={{
-                marginLeft: 10
-              }}  
-            >
-              <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
-            </div>
-          )
-        } else {
-          return (
-            <div key={i}>
-              <div 
-                data-testid='component-file'
-                style={{
-                  marginLeft: 10
-                }}
-              >
-                <File key={i} fileIndex={i} fileType={file.file_type} fileName={file.file_name} file_id={file.file_id} updateParent={onDeleteFile}/>
-              </div>
-              <Divider light key={"divider"+i}/>
-            </div>
-          )
-        }
-    })
-  }
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <React.Fragment>
-      <FileSystemMenu onClickUpload={handleOpen}/>
-      <Card 
-        className={classes.root}
-        square
-        elevation={0}  
-      >
-
-        <div>
-          {renderFiles()}
-        </div>
-
-      </Card>
-      <Modal
-        data-test="component-fileUpload"
-        open={open}
-        onClose={handleClose}
-      >
-        <div>
-          <FileUpload 
-            updateParent={onAddFile}
-            credentialType="project_id"
-            credential={props.project_id} 
-            maxFiles={4}
-            endpoint="/files"  
-          />
-        </div>
-      </Modal>
-    </React.Fragment>
+    <div>
+      {folder !== undefined && folderViewed !== [] ? <FolderPage 
+        onReturn={handleReturn}
+        ancestry={folderViewed}
+        folder={getFolderRendered()} 
+        rerender={rerender}
+        handleEnterFolder={handleEnterFolder}
+        project_id={props.project_id}
+      /> : null}
+    </div>
   )
 
 }

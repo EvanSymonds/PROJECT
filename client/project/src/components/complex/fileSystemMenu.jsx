@@ -20,7 +20,7 @@ const FileSystemMenu = (props) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       marginTop: 4,
-      marginBottom: 30,
+      marginBottom: 10,
       height: 60
     },
     grid: {
@@ -57,7 +57,11 @@ const FileSystemMenu = (props) => {
     props.onClickUpload()
   }
 
-  // return focus to the button when we transitioned from !open -> open
+  const handleCreateFolder = (event) => {
+    handleClose(event)
+    props.onCreateFolder()
+  }
+
   const prevOpen = useRef(open);
   useEffect(() => {
     if (prevOpen.current === true && open === false) {
@@ -122,7 +126,7 @@ const FileSystemMenu = (props) => {
                         Add file
                       </MenuItem>
                       <MenuItem 
-                        onClick={handleClose}
+                        onClick={handleCreateFolder}
                       > 
                         <Folder fontSize="large" color="secondary" style={{ marginRight: 10 }}/>
                         Add folder

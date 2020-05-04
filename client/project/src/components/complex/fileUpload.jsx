@@ -92,6 +92,9 @@ const FileUpload = (props) => {
         let formData = new FormData()
         formData.append("file", file)
         formData.append(props.credentialType, credential)
+        if (props.folder_id !== undefined) {
+          formData.append("folder_id", props.folder_id)
+        }
 
         const url = "http://localhost:3001" + props.endpoint
 
@@ -103,7 +106,6 @@ const FileUpload = (props) => {
             if (response.status === 200) {
               let successArray = successfullyUploaded
               successArray[i] = true
-              console.log(successArray)
               setSuccessfullyUploaded(successArray)
 
               const isEqualToTrue = (value) => value === true;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid"
 import Typography from "@material-ui/core/Typography"
 import LayersIcon from '@material-ui/icons/LayersOutlined';
@@ -10,15 +11,39 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "../basics/button"
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import axios from "axios"
 
 const File = (props) => {
   const [anchorEl, setAnchorEl] = useState (null)
+  const [selected, setSelected] = useState(false)
+
+  const onSelect = () => {
+    setSelected(true)
+  }
+
+  const onDeselect = () => {
+    setSelected(false)
+  }
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      cursor: 'pointer',
+      backgroundColor: selected ? theme.palette.secondary.light : theme.palette.background.default,
+      paddingLeft: 10,
+    },
+    text: {
+      WebkitUserSelect: "none",
+      msUserSelect: "none",
+      userSelect: "none",
+    }
+  }))
+  const classes = useStyles()
 
   const fileTypes = [["jpg", "png", "jpeg"],["txt", "docx"],["stl", "3ds", "f3d"],["mp4", "mov", "avi"],["mp3", "wav", "midi"]]
 
   const renderIcon = () => {
-    let fileType = 1
+    let fileType
 
     for (let i=0; i<fileTypes.length; i++) {
       if (fileTypes[i].indexOf(props.fileType) > -1){
@@ -41,8 +66,13 @@ const File = (props) => {
   }
 
   const onDelete = () => {
-    const url = "http://localhost:3001/files/" + props.file_id
-    axios.delete(url).then((response, error) => {
+    let formData = new FormData()
+
+    formData.append("folder_id", parseInt(props.folder_id))
+    formData.append("type", 'file')
+
+    const url = "http://localhost:3001/file_system/delete/" + props.file_id
+    axios.post(url, formData).then((response, error) => {
       if (error) {
         console.log(error)
       } else {
@@ -72,24 +102,28 @@ const File = (props) => {
     setAnchorEl(null)
   }
 
+
+
   return (
-    <div>
+    <ClickAwayListener onClickAway={onDeselect}>
       <Grid 
         container 
         direction="row" 
         justify="center" 
         alignItems="center"
+        className={classes.root}
+        onClick={onSelect}
       >
-        <Grid item xs={1}>
+        <Grid item xs={1} style={{ marginTop: 2 }}>
           {renderIcon()}
         </Grid>
-        <Grid item xs={8}>
-          <Typography>
+        <Grid item xs={8} style={{ marginTop: 2 }}>
+          <Typography className={classes.text}>
             {props.fileName}
           </Typography>
         </Grid>
         <Grid item xs={2}>
-          <Typography>
+          <Typography className={classes.text}>
             {props.fileType}
           </Typography>
         </Grid>
@@ -121,9 +155,9 @@ const File = (props) => {
           </Menu>
         </Grid>
       </Grid>
-    </div>
+    </ClickAwayListener>
   )
 
 }
 
-export default File;
+export default File
