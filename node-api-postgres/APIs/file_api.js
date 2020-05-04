@@ -67,6 +67,22 @@ const getFileInfoByProject = (project_id) => {
   })
 }
 
+const getFileInfoById = (file_id) => {
+  //Gets all files from the files table
+  
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM files WHERE file_id = $1", [file_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error)
+      } else {
+        dbDebugger("Files retrieved");
+        resolve(results)
+      }
+    })
+  })
+}
+
 const getFileById = (file_id) => {
   //Gets a single file from the files table
 
@@ -111,7 +127,7 @@ const storeFile = async (data, file_name, project_id) => {
       file_type = file_name.split(".");
       file_type = file_type[file_type.length - 1].toLowerCase();
 
-      pool.query("INSERT INTO files (file_data_id, file_type, file_name, project_id) VALUES (lo_from_bytea(0, $1), $2, $3, $4)", [data, file_type, file_name, project_id], (error, results) => {
+      pool.query("INSERT INTO files (file_data_id, file_type, file_name, project_id) VALUES (lo_from_bytea(0, $1), $2, $3, $4) RETURNING file_id", [data, file_type, file_name, project_id], (error, results) => {
         if (error) {
           dbDebugger("Error: ", error);
           reject(error)
@@ -140,6 +156,22 @@ const deleteFile = (file_id) => {
   })
 }
 
+const deleteFilesByProject = (project_id) => {
+  //Deletes a file from the files table
+
+  return new Promise((resolve, reject) => {
+
+    pool.query("DELETE FROM files WHERE project_id = $1", [project_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error)
+      } else{
+        dbDebugger("File deleted");
+        resolve(results)
+      }
+    })
+  })
+}
 
 function getFileData(file){
   //Gets just the data of a single file
@@ -158,6 +190,8 @@ module.exports = {
   getFiles,
   getFileById,
   getFileInfoByProject,
+  getFileInfoById,
   storeFile,
-  deleteFile
+  deleteFile,
+  deleteFilesByProject
 }

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const project_api = require("../APIs/project_api");
+const project_settings_api = require("../APIs/project_settings_api");
+const folder_api = require("../APIs/folder_api")
+const file_api = require("../APIs/file_api")
 const Joi = require("joi");
 
 //Setting up debugging channels
@@ -30,15 +33,37 @@ router.get("/:id", async (request, response) => {
 router.post("/", async (request, response) => {
   const schema = {
     project_name: Joi.string().alphanum().min(3).max(25).required(),
-    is_public: Joi.boolean().alphanum().required(),
+    is_public: Joi.boolean().required(),
   }
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
       response.status(400).json(error);
     } else {
-      await project_api.createProject(request.body.project_name, request.body.is_public).then((results) => {
-        response.status(200).json(results);
+      await project_api.createProject(request.body.project_name, request.body.is_public).then(async(results) => {
+        const project_id = results.rows[0].project_id
+
+        await project_settings_api.createProjectSettings(project_id).then(async() => {
+          await folder_api.createFolder(project_id).then(async(results) => {
+
+            await folder_api.renameFolder(results.rows[0].folder_id, 'ROOT').then((results) => {
+              response.status(200).json(results)
+            })
+            .catch((error) => {
+              debug(error)
+              response.status(400).json(error)
+            })
+
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+        })
+        .catch((error) => {
+          debug(error)
+          response.status(400).json(error)
+        })
       })
       .catch((error) => {
         response.status(400).json(error);
@@ -69,8 +94,26 @@ router.post("/:id", async (request, response) => {
 })
 
 router.delete("/:id", async (request, response) => {
-  await project_api.deleteProject(parseInt(request.params.id)).then((results) => {
-    response.status(200).json(results);
+  await project_api.deleteProject(parseInt(request.params.id)).then(async() => {
+    
+    await project_settings_api.deleteProjectSettings(parseInt(request.params.id)).then(async() => {
+
+      await folder_api.deleteFoldersByProject(parseInt(request.params.id)).then(async() => {
+
+        await file_api.deleteFilesByProject(parseInt(request.params.id)).then(async(results) => {
+          response.status(200).json(results)
+        })
+        .catch((error) => {
+          response.status(400).json(error);
+        })
+      })
+      .catch((error) => {
+        response.status(400).json(error);
+      })
+    })
+    .catch((error) => {
+      response.status(400).json(error);
+    })
   })
   .catch((error) => {
     response.status(400).json(error);

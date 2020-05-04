@@ -53,7 +53,7 @@ const createProject = (project_name, is_public) => {
   debug(project_name, is_public);
   
   return new Promise((resolve, reject) => {
-    pool.query("INSERT INTO projects (project_name, is_public, created_on) VALUES ($1, $2, NOW())", [project_name, is_public], (error, results) => {
+    pool.query("INSERT INTO projects (project_name, is_public, created_on) VALUES ($1, $2, NOW()) RETURNING project_id", [project_name, is_public], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);
