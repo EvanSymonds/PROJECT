@@ -74,7 +74,7 @@ const Breadcrumbs = (props) => {
 
   return (
 
-    <MaterialBreadcrumbs className={classes.root}>
+    <MaterialBreadcrumbs separator="›" className={classes.root}>
       <div onClick={() => onClick(-1)} className={classes.crumb}>
         Home
       </div>

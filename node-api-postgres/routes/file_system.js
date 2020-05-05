@@ -177,13 +177,49 @@ router.post("/delete/:id", async(request, response) => {
       response.status(400).json(error);
     } else {
       await folder_children_api.deleteRelation(request.body.folder_id, parseInt(request.params.id), request.body.type).then(async(results) => {
-        await file_api.deleteFile(parseInt(request.params.id)).then((results) => {
-          response.status(200).json(results)
-        })
-        .catch((error) => {
-          debug(error)
-          response.status(400).json(error)
-        })
+
+        if (request.body.type === "file") {
+          await file_api.deleteFile(parseInt(request.params.id)).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+        } else {
+
+          const deleteFolderLayer = async(folder_id) => {
+            return new Promise(async(resolve) => {
+              await folder_children_api.getRelationsByFolder(folder_id).then(async(children) => {
+
+                await folder_api.deleteFolder(folder_id).then(async() => {
+
+                  children.rows.forEach(async(child) => {
+
+                    if (child.child_type === "file") {
+                      await folder_children_api.deleteRelation(folder_id, child.child_id, "file").then(() => {
+                        file_api.deleteFile(child.child_id)
+                      })
+                    } else {
+                      await folder_children_api.deleteRelation(folder_id, child.child_id, "folder").then(() => {
+                        deleteFolderLayer(child.child_id)
+                      })
+                    }
+                  })
+
+                  resolve()
+                })
+  
+              })
+            })
+
+          }
+
+          await deleteFolderLayer(parseInt(request.params.id)).then(() => {
+            response.status(200).send("Folder deleted")
+          })
+            
+        }
       })
       .catch((error) => {
         debug(error)

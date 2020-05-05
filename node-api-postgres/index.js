@@ -11,10 +11,6 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config({path:"./.env"})
   require("config");
 }
-let corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200,
-}
 if(!config.get("database.db_password")) {
   console.error("FATAL ERROR: DB_PASSWORD is not defined")
   process.exit(1)
@@ -27,7 +23,6 @@ if(!config.get("jwtPrivateKey")) {
 app.use(fileupload({
   useTempFiles: false,
 }));
-app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,
@@ -40,7 +35,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Headers', '*');
   res.header('Access-Control-Expose-Headers', 'x-auth-token')
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  next();
+  next()
 });
 
 //Routes

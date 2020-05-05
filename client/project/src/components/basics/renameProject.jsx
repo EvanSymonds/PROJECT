@@ -2,24 +2,37 @@ import React, { useState } from "react"
 import Card from "@material-ui/core/card"
 import TextField from "@material-ui/core/TextField"
 import Button from "@material-ui/core/Button"
+import { makeStyles } from "@material-ui/styles";
 import axios from "axios"
 
-const CreateRole = (props) => {
-  const [roleName, setRoleName] = useState("")
+const RenameProject = (props) => {
+  const [projectName, setProjectName] = useState(props.defaultValue)
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      position: "absolute",
+        width: 300,
+        height: 200,
+        left: "50%",
+        top: "50%",
+        marginLeft: -150,
+        marginTop: -105,
+    }
+  }))
+  const classes = useStyles()
 
   const onChange = (event) => {
-    setRoleName(event.target.value)
+    setProjectName(event.target.value)
   }
 
   const onSubmit = (event) => {
     event.preventDefault()
 
     let formData = new FormData()
-    formData.append("project_id", parseInt(props.project_id))
-    formData.append("role_name", roleName)
+    formData.append("new_name", projectName)
 
-    axios.post("http://localhost:3001/roles/new", formData).then((results) => {
-      props.onAddRole(roleName)
+    axios.post("http://localhost:3001/folders/" + props.folder_id, formData).then(() => {
+      props.close()
     })
     .catch((error) => {
       console.log(error)
@@ -29,15 +42,7 @@ const CreateRole = (props) => {
   return (
 
     <Card
-      style={{
-        position: "absolute",
-        width: 300,
-        height: 200,
-        left: "50%",
-        top: "50%",
-        marginLeft: -150,
-        marginTop: -105
-      }}
+      className={classes.root}
     >
       <form onSubmit={onSubmit} style={{
         display: "flex",
@@ -50,10 +55,10 @@ const CreateRole = (props) => {
           marginBottom: 40
         }}>
           <TextField 
-            label="Role name"
+            label="Project name"
             variant="filled"
             color="primary"
-            value={roleName}
+            value={projectName}
             onChange={onChange}
           />
         </div>
@@ -62,7 +67,7 @@ const CreateRole = (props) => {
           color="primary"
           type="submit"
         >
-          Create role
+          Rename
         </Button>
       </form>
     </Card>
@@ -71,4 +76,4 @@ const CreateRole = (props) => {
 
 }
 
-export default CreateRole
+export default RenameProject

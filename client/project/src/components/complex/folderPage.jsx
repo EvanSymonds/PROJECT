@@ -49,12 +49,21 @@ const FolderPage = (props) => {
     })
   }
 
+  const onDeleteFolder = (folder_id) => {
+    let formData = new FormData()
+    formData.append("type", "folder")
+    formData.append ("folder_id", props.folder.folder_id)
+
+    axios.post("http://localhost:3001/file_system/delete/" + folder_id, formData).then(() => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const renderFiles = () => {
@@ -122,6 +131,8 @@ const FolderPage = (props) => {
             folder_name={folder.folder_name}
             handleEnterFolder={handleEnterFolder}
             folder_id={folder.folder_id}
+            onDelete={onDeleteFolder}
+            rerender={props.rerender}
           />
         </Grid>
       )
@@ -156,7 +167,7 @@ const FolderPage = (props) => {
       <Modal
         data-test="component-fileUpload"
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
       >
         <div>
           <FileUpload 
