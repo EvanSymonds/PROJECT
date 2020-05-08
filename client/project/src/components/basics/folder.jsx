@@ -47,7 +47,7 @@ const Folder = (props) => {
     },
     folderIcon: {
       fontSize: 40,
-      color: theme.palette.secondary.main
+      color: props.folderColor === null ? theme.palette.secondary.main : props.folderColor
     },
     name: {
       height: 30,
@@ -87,7 +87,7 @@ const Folder = (props) => {
       props.selectFolder(null)
       return
     }
-    if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element") {
+    if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "toolbar-element" && event.target.parentNode.id !== "toolbar-element") {
       props.selectFolder(null)
     }
   }
@@ -145,7 +145,7 @@ const Folder = (props) => {
   const canEditAuth = () => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
-    
+
     if (token.authLevel >= props.projectSettings.editFilesAuth){
       return true
     } else {

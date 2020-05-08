@@ -84,14 +84,12 @@ const FolderPage = (props) => {
     let formData = new FormData()
     formData.append("new_auth", 1)
 
-    if (selected.authorisation_level === 0) {
-      axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
-        props.rerender()
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    }
+    axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
   
   const renderFiles = () => {
@@ -136,6 +134,19 @@ const FolderPage = (props) => {
     })
   }
 
+  const onColorChange = (color) => {
+    let formData = new FormData()
+    formData.append("color", color)
+
+    axios.post("http://localhost:3001/file_system/color/" + selected.folder_id, formData).then(() => {
+      props.rerender()
+      setSelected(null)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   const handleEnterFolder = (folder_id, authorisation_level) => {
     let folder_name
 
@@ -160,6 +171,7 @@ const FolderPage = (props) => {
             authorisation_level={folder.authorisation_level}
             handleEnterFolder={handleEnterFolder}
             folder_id={folder.folder_id}
+            folderColor={folder.folder_color}
             onDelete={onDeleteFolder}
             rerender={props.rerender}
             selectFolder={handleFolderSelect}
@@ -178,6 +190,7 @@ const FolderPage = (props) => {
         onCreateFolder={onCreateFolder}
         onAddAuth={onAddAuth}
         selectedFolder={selected}
+        onColorChange={onColorChange}
       />
       <Breadcrumbs ancestry={props.ancestry} onReturn={props.onReturn}/>
       <Card 

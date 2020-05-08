@@ -190,6 +190,31 @@ router.post("/auth/:id", async(request, response) => {
   })
 })
 
+router.post("/color/:id", async(request, response) => {
+  if (request.body.color === "") {
+    request.body.color = null
+  }
+
+  const schema = {
+    color: Joi.string().alphanum().allow(null).required()
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug("ERROR: ", error)
+      response.status(400).json(error);
+    } else {
+      folder_api.changeFolderColor(parseInt(request.params.id), request.body.color).then((results) => {
+        response.status(200).json(results)
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+    }
+  })
+})
+
 router.post("/delete/:id", async(request, response) => {
   const schema = {
     folder_id: Joi.number().integer().max(100000000).required(),

@@ -5,8 +5,9 @@ import Grid from "@material-ui/core/grid"
 import Divider from "@material-ui/core/divider"
 import Button from "../basics/button"
 import IconButton from "@material-ui/core/iconButton"
-import { Add, Description, Folder } from "@material-ui/icons"
+import { Add, Description, Folder, FormatColorFill } from "@material-ui/icons"
 import Popper from '@material-ui/core/Popper';
+import ColorPicker from "../basics/colorPicker"
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -14,8 +15,10 @@ import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 
 const FileSystemMenu = (props) => {
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [colorOpen, setColorOpen] = useState(false);
+  const addAnchorRef = useRef(null);
+  const colorAnchorRef = useRef(null);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,22 +36,28 @@ const FileSystemMenu = (props) => {
   }))
   const classes = useStyles()
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+  const handleAddToggle = () => {
+    setAddOpen((prevAddOpen) => !prevAddOpen);
+  };
+
+  const handleColorToggle = () => {
+    setColorOpen((prevColorOpen) => !prevColorOpen);
   };
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (addAnchorRef.current && addAnchorRef.current.contains(event.target) || colorAnchorRef.current && colorAnchorRef.current.contains(event.target)) {
       return;
     }
 
-    setOpen(false);
+    setAddOpen(false);
+    setColorOpen(false);
   };
 
   function handleListKeyDown(event) {
     if (event.key === 'Tab') {
       event.preventDefault();
-      setOpen(false);
+      setAddOpen(false);
+      setColorOpen(false);
     }
   }
 
@@ -62,9 +71,14 @@ const FileSystemMenu = (props) => {
     props.onCreateFolder()
   }
 
-  const handleAddAuth = () => [
+  const handleAddAuth = () => {
     props.onAddAuth()
-  ]
+  }
+
+  const onColorChange = (color) => {
+    props.onColorChange(color)
+    setColorOpen(false)
+  }
 
   return (
 
@@ -82,17 +96,17 @@ const FileSystemMenu = (props) => {
           item
         >
           <IconButton
-            ref={anchorRef}
-            aria-controls={open ? 'menu-list-grow' : undefined}
+            ref={addAnchorRef}
+            aria-controls={addOpen ? 'menu-list-grow' : undefined}
             aria-haspopup="true"
-            onClick={handleToggle}
+            onClick={handleAddToggle}
             variant="contained"
           >
             <Add fontSize="default" />
           </IconButton>
           <Popper 
-            open={open} 
-            anchorEl={anchorRef.current} 
+            open={addOpen} 
+            anchorEl={addAnchorRef.current} 
             placement="bottom-start"
             role={undefined} 
             transition 
@@ -105,7 +119,7 @@ const FileSystemMenu = (props) => {
                 <Paper className={classes.popper}>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList 
-                      autoFocusItem={open} 
+                      autoFocusItem={addOpen} 
                       id="menu-list-grow"
                       onKeyDown={handleListKeyDown}
                       style={{
@@ -141,21 +155,52 @@ const FileSystemMenu = (props) => {
             icon="Lock"
             variant="contained"
             color="default"
-            disabled={props.selectedFolder === null}
+            disabled={props.selectedFolder === null || props.selectedFolder.authorisation_level !== 0}
             onClick={handleAddAuth}
           />
         </Grid>
         <Grid
           item
         >
-          <Button
-            type="icon"
-            icon="Fill"
-            variant="contained"
-            color="default"
-            fillColor={props.fillColor}
+          <IconButton
+            id="toolbar-element"
             disabled={props.selectedFolder === null}
-          />
+            onClick={handleColorToggle}
+            ref={colorAnchorRef}
+            aria-controls={colorOpen ? 'menu-list-grow' : undefined}
+            aria-haspopup="true"
+          >
+            <FormatColorFill fontSize="default" id="toolbar-element"/>
+            {props.selectedFolder !== null ? props.selectedFolder.folder_color !== null ? <div style={{
+              width: 24,
+              height: 4,
+              background: props.selectedFolder.folder_color,
+              position: "absolute",
+              bottom: 12,
+            }} /> : null : null}
+          </IconButton>
+          <Popper 
+            open={colorOpen} 
+            anchorEl={colorAnchorRef.current} 
+            placement="bottom"
+            role={undefined} 
+            transition 
+            disablePortal
+          >
+            {({ TransitionProps }) => (
+              <Grow
+                {...TransitionProps}
+              >
+                <Paper className={classes.popper}>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <div>
+                      <ColorPicker colorChange={onColorChange}/>
+                    </div>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </Grid>
       </Grid>
       <Divider variant="middle" />

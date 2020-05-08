@@ -121,13 +121,6 @@ const Button = (props) => {
         fill={props.fill}
         >
           {returnIcon(props.icon, props.size)}
-          {props.fillColor ? <div style={{
-            width: 24,
-            height: 4,
-            background: "blue",
-            position: "absolute",
-            bottom: 12,
-          }} /> : null}
         </IconButton>
     }
   }

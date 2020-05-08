@@ -86,6 +86,20 @@ const changeFolderAuth = (folder_id, new_auth) => {
   })
 }
 
+const changeFolderColor = (folder_id, folder_color) => {
+  return new Promise((resolve, reject) => {
+    pool.query("UPDATE folders SET folder_color = $2 where folder_id = $1", [folder_id, folder_color], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error)
+        reject(error)
+      } else {
+        dbDebugger("Folder auth changed")
+        resolve(results)
+      }
+    })
+  })
+}
+
 const deleteFolder = (folder_id) => {
   return new Promise((resolve, reject) => {
     pool.query("DELETE FROM folders WHERE folder_id = $1", [folder_id], (error, results) => {
@@ -120,6 +134,7 @@ module.exports = {
   createFolder,
   renameFolder,
   changeFolderAuth,
+  changeFolderColor,
   deleteFolder,
   deleteFoldersByProject
 }

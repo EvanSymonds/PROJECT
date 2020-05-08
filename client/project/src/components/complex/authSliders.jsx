@@ -52,7 +52,6 @@ const AuthSliders = (props) => {
   }
 
   const onSliderChange = (setting, value) => {
-    console.log("Called")
     switch (setting) {
       case "changeSettingsAuth":
         updateSetting(setting, value)
