@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/styles";
 import FolderPage from "./folderPage"
 import axios from "axios"
 
+var jwt = require("jsonwebtoken")
+
 const FileSystem = (props) => {
   const [folder, setFolder] = useState()
   const [folderViewed, setFolderViewed] = useState([])
@@ -14,12 +16,17 @@ const FileSystem = (props) => {
     getProjectFiles(props.project_id)
   }
 
-  const handleEnterFolder = (folder_id, folder_name) => {
-    setFolderViewed([...folderViewed, {
-      folder_id: folder_id,
-      folder_name: folder_name
-    }])
-    rerender()
+  const handleEnterFolder = (folder_id, folder_name, authorisation_level) => {
+    const encrypted = window.localStorage.getItem("authToken")
+    const token = jwt.decode(JSON.parse(encrypted))
+
+    if (token.authLevel >= authorisation_level){
+      setFolderViewed([...folderViewed, {
+        folder_id: folder_id,
+        folder_name: folder_name
+      }])
+      rerender()
+    }
   }
 
   const getFolderRendered = () => {

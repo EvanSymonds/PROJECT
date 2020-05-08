@@ -146,6 +146,7 @@ const FileSystemMenu = (props) => {
             icon="Lock"
             variant="contained"
             color="default"
+            disabled={props.selectedFolder === null}
           />
         </Grid>
         <Grid
@@ -157,17 +158,7 @@ const FileSystemMenu = (props) => {
             variant="contained"
             color="default"
             fillColor={props.fillColor}
-          />
-        </Grid>
-        <Grid
-          item
-        >
-          <Button
-            type="icon"
-            icon="TextColor"
-            variant="contained"
-            color="default"
-            fillColor={props.textColor}
+            disabled={props.selectedFolder === null}
           />
         </Grid>
       </Grid>

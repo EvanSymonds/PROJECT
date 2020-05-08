@@ -13,14 +13,15 @@ import axios from "axios"
 
 const FolderPage = (props) => {
   const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(null)
 
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "90%",
-      marginLeft: 10
+      marginLeft: 10,
     },
     folderContainer: {
-      marginLeft: 30
+      marginLeft: 30,
     },
     fileContainer: {
       marginTop: 30
@@ -66,6 +67,18 @@ const FolderPage = (props) => {
     setOpen(true);
   };
 
+  const handleFolderSelect = (folder_id) => {
+    if (folder_id === null) {
+      setSelected(null)
+    } else {
+      props.folder.folders.forEach((childFolder) => {
+        if (childFolder.folder_id === folder_id) {
+          setSelected(childFolder)
+        }
+      })
+    }
+  }
+
   const renderFiles = () => {
     return props.folder.files.map((file, i) => {
         if (props.folder.files.length === i + 1){
@@ -108,7 +121,7 @@ const FolderPage = (props) => {
     })
   }
 
-  const handleEnterFolder = (folder_id) => {
+  const handleEnterFolder = (folder_id, authorisation_level) => {
     let folder_name
 
     props.folder.folders.forEach((childFolder) => {
@@ -117,7 +130,7 @@ const FolderPage = (props) => {
       }
     })
 
-    props.handleEnterFolder(folder_id, folder_name)
+    props.handleEnterFolder(folder_id, folder_name, authorisation_level)
   }
 
   const renderFolders = () => {
@@ -129,10 +142,12 @@ const FolderPage = (props) => {
         >
           <Folder
             folder_name={folder.folder_name}
+            authorisation_level={folder.authorisation_level}
             handleEnterFolder={handleEnterFolder}
             folder_id={folder.folder_id}
             onDelete={onDeleteFolder}
             rerender={props.rerender}
+            selectFolder={handleFolderSelect}
           />
         </Grid>
       )
@@ -142,7 +157,11 @@ const FolderPage = (props) => {
   return (
 
     <React.Fragment>
-      <FileSystemMenu onClickUpload={handleOpen} onCreateFolder={onCreateFolder}/>
+      <FileSystemMenu 
+        onClickUpload={handleOpen} 
+        onCreateFolder={onCreateFolder}
+        selectedFolder={selected}
+      />
       <Breadcrumbs ancestry={props.ancestry} onReturn={props.onReturn}/>
       <Card 
         className={classes.root}

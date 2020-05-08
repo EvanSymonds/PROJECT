@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import RenameProject from "../basics/renameProject"
 import Modal from "@material-ui/core/modal"
+import AuthorisationMarker from "../basics/authorisationMarker"
 import { Edit, Delete } from "@material-ui/icons"
 
 const initialState = {
@@ -33,7 +34,7 @@ const Folder = (props) => {
       width: 100,
       height: 100,
       borderRadius: 50,
-      marginTop: 40,
+      marginTop: props.authorisation_level !== 0 ? -30 : 30,
       backgroundColor: theme.palette.background.default,
       display: "flex",
       justifyContent: "center",
@@ -47,9 +48,19 @@ const Folder = (props) => {
       height: 30,
       width: 150,
       marginTop: 10,
+      marginBottom: 10,
       overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
       textAlign: "center",
-      fontSize: 20,
+      fontSize: 18,
+      WebkitUserSelect: "none",
+      msUserSelect: "none",
+      userSelect: "none",
+    },
+    authMarker: {
+      marginLeft: 105,
+      marginBottom: 10,
       WebkitUserSelect: "none",
       msUserSelect: "none",
       userSelect: "none",
@@ -59,10 +70,19 @@ const Folder = (props) => {
 
   const onSelect = () => {
     setSelected(true)
+    props.selectFolder(props.folder_id)
   }
 
-  const onDeselect = () => {
-    setSelected(false)
+  const onDeselect = (event) => {
+    if (event === undefined) {
+      setSelected(false)
+      props.selectFolder(null)
+      return
+    }
+    if (event.target.id !== "folder-element") {
+      setSelected(false)
+      props.selectFolder(null)
+    }
   }
 
   const handleClick = (event) => {
@@ -76,12 +96,12 @@ const Folder = (props) => {
 
   const handleClose = () => {
     setState(initialState);
-    setSelected(false)
+    onDeselect()
   };
 
   const handleDoubleClick = () => {
-    props.handleEnterFolder(props.folder_id)
-    setSelected(false)
+    props.handleEnterFolder(props.folder_id, props.authorisation_level)
+    onDeselect()
   }
   
   const handleRename = () => {
@@ -102,18 +122,26 @@ const Folder = (props) => {
   return (
 
     <div>
-      <ClickAwayListener onClickAway={onDeselect}>
+      <ClickAwayListener 
+        onClickAway={onDeselect}
+      >
         <Card
+          id="folder-element"
           className={classes.root}
           onClick={onSelect}
           onDoubleClick={handleDoubleClick}
           onContextMenu={handleClick} 
           style={{ cursor: state.mouseY === null ? "pointer" : 'context-menu' }}
         >
-          <div className={classes.centralCircle}>
-            <FolderIcon className={classes.folderIcon}/>
+          {props.authorisation_level !== 0 ? <div
+          id="folder-element"
+          className={classes.authMarker}>
+            <AuthorisationMarker markerId="folder-element" level={props.authorisation_level}/>
+          </div> : null}
+          <div className={classes.centralCircle} id="folder-element">
+            <FolderIcon className={classes.folderIcon} id="folder-element"/>
           </div>
-          <div className={classes.name}>
+          <div className={classes.name} id="folder-element">
             {props.folder_name}
           </div>
         </Card>

@@ -48,6 +48,10 @@ router.get("/:id", async(request, response) => {
                       parent_id: parent_id,
   
                       folder_name: folder_detail.rows[0].folder_name,
+
+                      authorisation_level: folder_detail.rows[0].authorisation_level,
+
+                      folder_color: folder_detail.rows[0].folder_color,
   
                       files: [],
   
