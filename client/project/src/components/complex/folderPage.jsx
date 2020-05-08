@@ -71,12 +71,25 @@ const FolderPage = (props) => {
     if (folder_id === null) {
       setSelected(null)
     } else {
+      setSelected(null)
       props.folder.folders.forEach((childFolder) => {
         if (childFolder.folder_id === folder_id) {
           setSelected(childFolder)
         }
       })
     }
+  }
+
+  const onAddAuth = () => {
+    let formData = new FormData()
+    formData.append("new_auth", 1)
+
+    axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   const renderFiles = () => {
@@ -148,6 +161,7 @@ const FolderPage = (props) => {
             onDelete={onDeleteFolder}
             rerender={props.rerender}
             selectFolder={handleFolderSelect}
+            selected={selected === null ? false : selected.folder_id === folder.folder_id}
           />
         </Grid>
       )
@@ -160,6 +174,7 @@ const FolderPage = (props) => {
       <FileSystemMenu 
         onClickUpload={handleOpen} 
         onCreateFolder={onCreateFolder}
+        onAddAuth={onAddAuth}
         selectedFolder={selected}
       />
       <Breadcrumbs ancestry={props.ancestry} onReturn={props.onReturn}/>

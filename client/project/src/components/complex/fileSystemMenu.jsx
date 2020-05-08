@@ -62,14 +62,9 @@ const FileSystemMenu = (props) => {
     props.onCreateFolder()
   }
 
-  const prevOpen = useRef(open);
-  useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
-
-    prevOpen.current = open;
-  }, [open]);
+  const handleAddAuth = () => [
+    props.onAddAuth()
+  ]
 
   return (
 
@@ -147,6 +142,7 @@ const FileSystemMenu = (props) => {
             variant="contained"
             color="default"
             disabled={props.selectedFolder === null}
+            onClick={handleAddAuth}
           />
         </Grid>
         <Grid

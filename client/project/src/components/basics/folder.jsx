@@ -8,7 +8,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import RenameProject from "../basics/renameProject"
 import Modal from "@material-ui/core/modal"
 import AuthorisationMarker from "../basics/authorisationMarker"
-import { Edit, Delete } from "@material-ui/icons"
+import { Edit, Delete, Lock } from "@material-ui/icons"
+import axios from "axios"
 
 const initialState = {
   mouseX: null,
@@ -16,25 +17,24 @@ const initialState = {
 };
 
 const Folder = (props) => {
-  const [selected, setSelected] = useState(false)
   const [state, setState] = React.useState(initialState);
   const [renameOpen, setRenameOpen] = useState(false)
+  const [editAuth, setEditAuth] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
       width: 170,
       height: 200,
-      backgroundColor: selected ? theme.palette.secondary.main : theme.palette.secondary.light,
+      backgroundColor: props.selected ? theme.palette.secondary.main : theme.palette.secondary.light,
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
       alignItems: "center",
     },
     centralCircle: {
       width: 100,
       height: 100,
       borderRadius: 50,
-      marginTop: props.authorisation_level !== 0 ? -30 : 30,
+      marginTop: props.authorisation_level !== 0 ? -35 : 40,
       backgroundColor: theme.palette.background.default,
       display: "flex",
       justifyContent: "center",
@@ -60,34 +60,35 @@ const Folder = (props) => {
     },
     authMarker: {
       marginLeft: 105,
-      marginBottom: 10,
+      marginBottom: 15,
+      marginTop: 5,
       WebkitUserSelect: "none",
       msUserSelect: "none",
       userSelect: "none",
+    },
+    arrowDropUp: {
+      position: "relative",
+      top: "-20px"
     }
   }))
   const classes = useStyles()
 
   const onSelect = () => {
-    setSelected(true)
     props.selectFolder(props.folder_id)
   }
 
   const onDeselect = (event) => {
     if (event === undefined) {
-      setSelected(false)
       props.selectFolder(null)
       return
     }
-    if (event.target.id !== "folder-element") {
-      setSelected(false)
+    if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element") {
       props.selectFolder(null)
     }
   }
 
   const handleClick = (event) => {
     event.preventDefault();
-    setSelected(true)
     setState({
       mouseX: event.clientX - 2,
       mouseY: event.clientY - 4,
@@ -119,6 +120,22 @@ const Folder = (props) => {
     handleClose()
   }
 
+  const onEditAuth = () => {
+    setEditAuth(true)
+  }
+
+  const onChangeAuth = (new_auth) => {
+    let formData = new FormData()
+    formData.append("new_auth", new_auth)
+
+    axios.post("http://localhost:3001/file_system/auth/" + props.folder_id, formData).then(() => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   return (
 
     <div>
@@ -136,7 +153,8 @@ const Folder = (props) => {
           {props.authorisation_level !== 0 ? <div
           id="folder-element"
           className={classes.authMarker}>
-            <AuthorisationMarker markerId="folder-element" level={props.authorisation_level}/>
+            <AuthorisationMarker markerId="folder-element"
+            level={props.authorisation_level}/>
           </div> : null}
           <div className={classes.centralCircle} id="folder-element">
             <FolderIcon className={classes.folderIcon} id="folder-element"/>
@@ -165,6 +183,14 @@ const Folder = (props) => {
           <Edit style={{ marginRight: 10 }}/>
           Rename
         </MenuItem>
+        {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+          <Lock style={{ marginRight: 10 }}/>
+          Edit authorisation
+        </MenuItem> : null}
         <MenuItem onClick={handleDelete} style={{
           display: "flex",
           flexDirection: "row",
@@ -183,6 +209,18 @@ const Folder = (props) => {
             close={handleRenameClose}
             defaultValue={props.folder_name}
             folder_id={props.folder_id}  
+          />
+        </div>
+      </Modal>
+      <Modal
+        open={editAuth}
+        onClose={() => setEditAuth(false)}
+      >
+        <div>
+          <AuthorisationMarker
+            mode="edit"
+            level={props.authorisation_level}
+            changeAuth={onChangeAuth}
           />
         </div>
       </Modal>

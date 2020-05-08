@@ -12,7 +12,6 @@ const FileSystem = (props) => {
   useEffect(() => {getProjectFiles(props.project_id)}, [])
 
   const rerender = () => {
-    console.log("Rerender")
     getProjectFiles(props.project_id)
   }
 
