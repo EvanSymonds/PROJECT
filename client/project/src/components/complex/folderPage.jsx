@@ -84,14 +84,16 @@ const FolderPage = (props) => {
     let formData = new FormData()
     formData.append("new_auth", 1)
 
-    axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
-      props.rerender()
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+    if (selected.authorisation_level === 0) {
+      axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
+        props.rerender()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
   }
-
+  
   const renderFiles = () => {
     return props.folder.files.map((file, i) => {
         if (props.folder.files.length === i + 1){

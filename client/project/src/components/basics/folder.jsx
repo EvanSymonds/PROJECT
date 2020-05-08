@@ -11,6 +11,11 @@ import AuthorisationMarker from "../basics/authorisationMarker"
 import { Edit, Delete, Lock } from "@material-ui/icons"
 import axios from "axios"
 
+import { connect } from "react-redux"
+import { changeSettingsAuth } from "../../actions"
+
+var jwt = require("jsonwebtoken")
+
 const initialState = {
   mouseX: null,
   mouseY: null,
@@ -88,6 +93,7 @@ const Folder = (props) => {
   }
 
   const handleClick = (event) => {
+    props.selectFolder(props.folder_id)
     event.preventDefault();
     setState({
       mouseX: event.clientX - 2,
@@ -134,6 +140,17 @@ const Folder = (props) => {
     .catch((error) => {
       console.log(error)
     })
+  }
+
+  const canEditAuth = () => {
+    const encrypted = window.localStorage.getItem("authToken")
+    const token = jwt.decode(JSON.parse(encrypted))
+    
+    if (token.authLevel >= props.projectSettings.editFilesAuth){
+      return true
+    } else {
+      return false
+    }
   }
 
   return (
@@ -183,7 +200,7 @@ const Folder = (props) => {
           <Edit style={{ marginRight: 10 }}/>
           Rename
         </MenuItem>
-        {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
+        {props.authorisation_level > 0 && canEditAuth() ? <MenuItem onClick={onEditAuth} style={{
           display: "flex",
           flexDirection: "row",
           alignItems: "center"
@@ -230,4 +247,8 @@ const Folder = (props) => {
 
 }
 
-export default Folder
+const mapStateToProps = state => {
+  return { projectSettings: state.projectSettings }
+}
+
+export default connect(mapStateToProps, { changeSettingsAuth })(Folder)
