@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useCallback } from "react"
+import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/card"
 import FolderIcon from "@material-ui/icons/Folder"
@@ -25,12 +26,14 @@ const Folder = (props) => {
   const [state, setState] = React.useState(initialState);
   const [renameOpen, setRenameOpen] = useState(false)
   const [editAuth, setEditAuth] = useState(false)
+  const [hover, setHover] = useState(false)
+  const [ref, position] = useDimensions();
 
   const useStyles = makeStyles((theme) => ({
     root: {
       width: 170,
       height: 200,
-      backgroundColor: props.selected ? theme.palette.secondary.main : theme.palette.secondary.light,
+      backgroundColor: props.selected || hover && props.listenForDrag !== false ? theme.palette.secondary.main : theme.palette.secondary.light,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -77,6 +80,51 @@ const Folder = (props) => {
     }
   }))
   const classes = useStyles()
+
+  const handleAddFile = (child) => {
+    let formData = new FormData()
+    formData.append("child_id", child.id)
+    formData.append("type", child.type)
+
+    axios.post("http://localhost:3001/file_system/" + props.folder_id, formData).then(() => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  const handleMouseUp = ev => {
+    if (props.listenForDrag) {
+      if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
+        if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
+          handleAddFile(props.listenForDrag)
+        }
+      }
+    }
+  }
+
+  const updateMousePosition = ev => {
+    if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
+      if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
+        setHover(true)
+      } else {
+        setHover(false)
+      }
+    } else {
+      setHover(false)
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", updateMousePosition);
+
+    return () => {
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mousemove", updateMousePosition)
+    };
+  }, [handleMouseUp, updateMousePosition]);
 
   const onSelect = () => {
     props.selectFolder(props.folder_id)
@@ -155,7 +203,9 @@ const Folder = (props) => {
 
   return (
 
-    <div>
+    <div
+      ref={ref}
+    >
       <ClickAwayListener 
         onClickAway={onDeselect}
       >
@@ -183,7 +233,7 @@ const Folder = (props) => {
       </ClickAwayListener>
       <Menu
         keepMounted
-        open={state.mouseY !== null}
+        open={state.mouseY !== null && canEditAuth()}
         onClose={handleClose}
         anchorReference="anchorPosition"
         anchorPosition={
@@ -200,7 +250,7 @@ const Folder = (props) => {
           <Edit style={{ marginRight: 10 }}/>
           Rename
         </MenuItem>
-        {props.authorisation_level > 0 && canEditAuth() ? <MenuItem onClick={onEditAuth} style={{
+        {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
           display: "flex",
           flexDirection: "row",
           alignItems: "center"

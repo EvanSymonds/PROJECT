@@ -61,8 +61,8 @@ const AuthorisationMarker = (props) => {
           <Button
             type="icon"
             icon="ArrowLeft"
-            color="secondary"
             onClick={onDecrease}
+            disabled={props.level === 0}
           />
           {props.level === 0 ? <NoEncryptionIcon fontSize="large"/> : <img
             id={props.markerId}
@@ -72,8 +72,8 @@ const AuthorisationMarker = (props) => {
           <Button
             type="icon"
             icon="ArrowRight"
-            color="secondary"
             onClick={onIncrease}
+            disabled={props.level === 9}
           />
         </Card>
       )

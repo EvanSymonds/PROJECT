@@ -149,7 +149,7 @@ router.post("/folder", async(request, response) => {
 
 router.post("/:id", async (request, response) => {
   const schema = {
-    new_folder_id: Joi.number().integer().max(100000000).required(),
+    child_id: Joi.number().integer().max(100000000).required(),
     type: Joi.string().valid(...["file", "folder"])
   }
 
@@ -158,7 +158,7 @@ router.post("/:id", async (request, response) => {
       debug(error)
       response.status(400).json(error);
     } else {
-      await folder_children_api.updateRelation(request.body.new_folder_id, parseInt(request.params.id), request.body.type).then((results) => {
+      await folder_children_api.updateRelation(parseInt(request.params.id), request.body.child_id, request.body.type).then((results) => {
         response.status(200).json(results)
       })
       .catch((error) => {

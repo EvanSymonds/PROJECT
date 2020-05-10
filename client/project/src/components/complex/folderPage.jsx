@@ -14,6 +14,7 @@ import axios from "axios"
 const FolderPage = (props) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null)
+  const [listenForDrag, setListenForDrag] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -92,6 +93,10 @@ const FolderPage = (props) => {
     })
   }
   
+  const handleDragStart = (child_id) => {
+    setListenForDrag(child_id)
+  }
+
   const renderFiles = () => {
     return props.folder.files.map((file, i) => {
         if (props.folder.files.length === i + 1){
@@ -108,6 +113,7 @@ const FolderPage = (props) => {
                 file_id={file.file_id} 
                 updateParent={onDeleteFile}
                 folder_id={props.folder.folder_id}
+                onDragStart={handleDragStart}
               />
             </div>
           )
@@ -125,6 +131,7 @@ const FolderPage = (props) => {
                   file_id={file.file_id} 
                   updateParent={onDeleteFile}
                   folder_id={props.folder.folder_id}  
+                  onDragStart={handleDragStart}
                 />
               </div>
               <Divider light key={"divider"+i}/>
@@ -167,6 +174,7 @@ const FolderPage = (props) => {
           key={i}
         >
           <Folder
+            listenForDrag={listenForDrag}
             folder_name={folder.folder_name}
             authorisation_level={folder.authorisation_level}
             handleEnterFolder={handleEnterFolder}

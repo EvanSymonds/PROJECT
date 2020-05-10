@@ -7,12 +7,13 @@ const ColorPicker = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      width: 150,
+      width: 170,
       height: 50,
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor: theme.palette.type === "light" ? theme.palette.background.default : theme.palette.secondary.light
     },
     cube: {
       width: 16,
@@ -34,7 +35,7 @@ const ColorPicker = (props) => {
   }))
   const classes = useStyles()
 
-  const colors = ["red", "orange", "yellow", "green", "blue", "purple"]
+  const colors = ["red", "orange", "yellow", "LimeGreen", "green", "blue", "purple"]
 
   const onChangeColor = (event) => {
     props.colorChange(event.target.id)

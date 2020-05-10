@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid"
+import Paper from "@material-ui/core/paper"
 import Typography from "@material-ui/core/Typography"
 import LayersIcon from '@material-ui/icons/LayersOutlined';
 import ImageIcon from '@material-ui/icons/ImageOutlined';
@@ -17,6 +19,57 @@ import axios from "axios"
 const File = (props) => {
   const [anchorEl, setAnchorEl] = useState (null)
   const [selected, setSelected] = useState(false)
+  const [ref, position] = useDimensions();
+  const [translate, setTranslate] = useState({
+    isDragging: false,
+    translateX: null,
+    translateY: null
+  })
+
+  useEffect(() => {
+    setTranslate({
+      ...translate,
+      translateX: position.x,
+      translateY: position.y
+    })
+  }, [position])
+
+  const handleMouseMove = useCallback(
+    ({ clientX, clientY }) => {
+      if (translate.isDragging) {
+        setTranslate(prevTranslate => ({
+          ...prevTranslate,
+          translateX: clientX,
+          translateY: clientY
+        }));
+      }
+    },
+    [translate.isDragging]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (translate.isDragging) {
+      setTranslate(prevTranslate => ({
+        ...prevTranslate,
+        isDragging: false
+      }));
+    }
+  }, [translate.isDragging]);
+
+  const handleDragStart = () => {
+    setTranslate({...translate, isDragging: true})
+    props.onDragStart({id: props.file_id, type: "file"})
+  }
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const onSelect = () => {
     setSelected(true)
@@ -24,7 +77,7 @@ const File = (props) => {
 
   const onDeselect = () => {
     setSelected(false)
-  }
+  } 
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,6 +89,9 @@ const File = (props) => {
       WebkitUserSelect: "none",
       msUserSelect: "none",
       userSelect: "none",
+    },
+    draggable: {
+      backgroundColor: theme.palette.secondary.light
     }
   }))
   const classes = useStyles()
@@ -65,6 +121,10 @@ const File = (props) => {
     }
   }
 
+  const onMore = (e) => {
+    setAnchorEl(e.currentTarget)
+  }
+
   const onDelete = () => {
     let formData = new FormData()
 
@@ -80,10 +140,6 @@ const File = (props) => {
         props.updateParent(props.fileIndex)
       }
     })
-  }
-
-  const onMore = (e) => {
-    setAnchorEl(e.currentTarget)
   }
 
   const onDownload = () => {
@@ -102,60 +158,102 @@ const File = (props) => {
     setAnchorEl(null)
   }
 
-
-
   return (
-    <ClickAwayListener onClickAway={onDeselect}>
-      <Grid 
-        container 
-        direction="row" 
-        justify="center" 
-        alignItems="center"
-        className={classes.root}
-        onClick={onSelect}
-      >
-        <Grid item xs={1} style={{ marginTop: 2 }}>
-          {renderIcon()}
-        </Grid>
-        <Grid item xs={8} style={{ marginTop: 2 }}>
-          <Typography className={classes.text}>
-            {props.fileName}
-          </Typography>
-        </Grid>
-        <Grid item xs={2}>
-          <Typography className={classes.text}>
-            {props.fileType}
-          </Typography>
-        </Grid>
-        <Grid item xs={1}>
-          <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
-          <Menu
-            anchorEl = {anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            getContentAnchorEl={null}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
+    <div
+      ref={ref}
+      onDragStart={handleDragStart}
+      style={{
+        position: translate.isDragging  && translate.translateX !== null ? "absolute" : null,
+        left: translate.translateX,
+        top: translate.translateY
+      }}
+      draggable
+    >
+      {
+        
+        translate.isDragging === false ? 
+        <ClickAwayListener onClickAway={onDeselect}>
+          <Grid 
+            container 
+            direction="row" 
+            justify="center" 
+            alignItems="center"
+            className={classes.root}
+            onClick={onSelect}
           >
-            <MenuItem onClick={onDelete}>
-              <DeleteIcon fontSize="small" color="secondary"/>
-              Delete
-            </MenuItem>
-            <MenuItem onClick={onDownload}>
-              <GetAppIcon fontSize="small" color="secondary"/>
-              Download
-            </MenuItem>
-          </Menu>
-        </Grid>
-      </Grid>
-    </ClickAwayListener>
+            <Grid item xs={1} style={{ marginTop: 2 }}>
+              {renderIcon()}
+            </Grid>
+            <Grid item xs={8} style={{ marginTop: 2 }}>
+              <Typography className={classes.text}>
+                {props.fileName}
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography className={classes.text}>
+                {props.fileType}
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
+              <Menu
+                anchorEl = {anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                getContentAnchorEl={null}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <MenuItem onClick={onDelete}>
+                  <DeleteIcon fontSize="small" color="secondary"/>
+                  Delete
+                </MenuItem>
+                <MenuItem onClick={onDownload}>
+                  <GetAppIcon fontSize="small" color="secondary"/>
+                  Download
+                </MenuItem>
+              </Menu>
+            </Grid>
+          </Grid>
+        </ClickAwayListener>
+
+        :
+
+        <Paper
+          style={{ padding: 5 }}
+          className={classes.draggable}
+        >
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid
+              item
+              style={{ marginRight: 5 }}
+            >
+              {renderIcon()}
+            </Grid>
+            <Grid
+              item
+            >
+              <div>
+                {props.fileName}
+              </div>
+            </Grid>
+          </Grid>
+        </Paper>
+
+      }
+    </div>
   )
 
 }

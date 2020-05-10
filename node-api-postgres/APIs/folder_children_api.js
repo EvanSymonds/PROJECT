@@ -91,9 +91,10 @@ const createRelation = (folder_id, child_id, type) => {
   })
 }
 
-const updateRelation = (folder_id, new_folder_id, type) => {
+const updateRelation = (folder_id, child_id, type) => {
+  dbDebugger(folder_id, child_id, type)
   return new Promise((resolve, reject) => {
-    pool.query("UPDATE folder_children SET folder_id = $1 WHERE child_id = $2 AND child_type = $3", [folder_id, new_folder_id, type], (error, results) => {
+    pool.query("UPDATE folder_children SET folder_id = $1 WHERE child_id = $2 AND child_type = $3", [folder_id, child_id, type], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error)
         reject(error)
