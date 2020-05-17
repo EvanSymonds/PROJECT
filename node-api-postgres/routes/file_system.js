@@ -158,7 +158,7 @@ router.post("/:id", async (request, response) => {
       debug(error)
       response.status(400).json(error);
     } else {
-      await folder_children_api.updateRelation(parseInt(request.params.id), request.body.child_id, request.body.type).then((results) => {
+      await folder_children_api.updateRelation(parseInt(request.params.id), parseInt(request.body.child_id), request.body.type).then((results) => {
         response.status(200).json(results)
       })
       .catch((error) => {

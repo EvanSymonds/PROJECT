@@ -34,29 +34,27 @@ const File = (props) => {
     })
   }, [position])
 
-  const handleMouseMove = useCallback(
-    ({ clientX, clientY }) => {
-      if (translate.isDragging) {
-        setTranslate(prevTranslate => ({
-          ...prevTranslate,
-          translateX: clientX,
-          translateY: clientY
-        }));
-      }
-    },
-    [translate.isDragging]
-  );
-
-  const handleMouseUp = useCallback(() => {
+  const handleMouseMove = ev => {
     if (translate.isDragging) {
       setTranslate(prevTranslate => ({
         ...prevTranslate,
-        isDragging: false
+        translateX: ev.clientX,
+        translateY: ev.clientY
       }));
     }
-  }, [translate.isDragging]);
+  }
 
-  const handleDragStart = () => {
+  const handleMouseUp = ev => {
+    console.log("MOUSE UP" + props.file_id)
+    setTranslate(prevTranslate => ({
+      ...prevTranslate,
+      isDragging: false
+    }));
+    props.onDragStop()
+  }
+
+  const handleDragStart = (event) => {
+    event.preventDefault()
     setTranslate({...translate, isDragging: true})
     props.onDragStart({id: props.file_id, type: "file"})
   }
@@ -163,7 +161,7 @@ const File = (props) => {
       ref={ref}
       onDragStart={handleDragStart}
       style={{
-        position: translate.isDragging  && translate.translateX !== null ? "absolute" : null,
+        position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
         left: translate.translateX,
         top: translate.translateY
       }}

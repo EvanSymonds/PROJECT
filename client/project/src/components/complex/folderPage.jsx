@@ -97,6 +97,10 @@ const FolderPage = (props) => {
     setListenForDrag(child_id)
   }
 
+  const handleDragStop = () => {
+    setListenForDrag(false)
+  }
+
   const renderFiles = () => {
     return props.folder.files.map((file, i) => {
         if (props.folder.files.length === i + 1){
@@ -114,6 +118,7 @@ const FolderPage = (props) => {
                 updateParent={onDeleteFile}
                 folder_id={props.folder.folder_id}
                 onDragStart={handleDragStart}
+                onDragStop={handleDragStop}
               />
             </div>
           )
@@ -132,6 +137,7 @@ const FolderPage = (props) => {
                   updateParent={onDeleteFile}
                   folder_id={props.folder.folder_id}  
                   onDragStart={handleDragStart}
+                  onDragStop={handleDragStop}
                 />
               </div>
               <Divider light key={"divider"+i}/>
@@ -175,6 +181,7 @@ const FolderPage = (props) => {
         >
           <Folder
             listenForDrag={listenForDrag}
+            onDragStart={handleDragStart}
             folder_name={folder.folder_name}
             authorisation_level={folder.authorisation_level}
             handleEnterFolder={handleEnterFolder}
@@ -200,7 +207,12 @@ const FolderPage = (props) => {
         selectedFolder={selected}
         onColorChange={onColorChange}
       />
-      <Breadcrumbs ancestry={props.ancestry} onReturn={props.onReturn}/>
+      <Breadcrumbs 
+        ancestry={props.ancestry}
+        onReturn={props.onReturn}
+        listenForDrag={listenForDrag}
+        rerender={props.rerender}
+      />
       <Card 
         className={classes.root}
         square

@@ -1,6 +1,7 @@
 import React from "react"
 import { makeStyles } from "@material-ui/styles";
 import MaterialBreadcrumbs from "@material-ui/core/Breadcrumbs"
+import Breadcrumb from "./breadcrumb"
 
 const Breadcrumbs = (props) => {
 
@@ -20,21 +21,6 @@ const Breadcrumbs = (props) => {
         paddingTop: 2,
       }
     },
-    crumb: {
-      WebkitUserSelect: "none",
-      msUserSelect: "none",
-      userSelect: "none",
-      cursor: "pointer",
-      height: 20,
-      borderRadius: 10,
-      paddingBottom: 2,
-      width: "100%",
-      marginRight: 15,
-      textAlign: "center",
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.secondary.light,
-      },
-    },
     finalCrumb: {
       WebkitUserSelect: "none",
       msUserSelect: "none",
@@ -50,10 +36,6 @@ const Breadcrumbs = (props) => {
   }))
   const classes = useStyles()
 
-  const onClick = (value) => {
-    props.onReturn(value)
-  }
-
   const renderCrumbs = () => {
     return props.ancestry.map((folder, i) => {
       if (i === props.ancestry.length - 1) {
@@ -64,9 +46,15 @@ const Breadcrumbs = (props) => {
         )
       } else {
         return (
-          <div onClick={() => onClick(folder.folder_id)} key={i} className={classes.crumb}>
-            {folder.folder_name}
-          </div>
+          <Breadcrumb
+            onReturn={props.onReturn}
+            folder_id={folder.folder_id}
+            folder_name={folder.folder_name}
+            key={i}
+            listenForDrag={props.listenForDrag}
+            ancestry={props.ancestry}
+            rerender={props.rerender}
+          />
         )
       }
     })
@@ -74,12 +62,14 @@ const Breadcrumbs = (props) => {
 
   return (
 
-    <MaterialBreadcrumbs separator="›" className={classes.root}>
-      <div onClick={() => onClick(-1)} className={classes.crumb}>
-        Home
-      </div>
-      {renderCrumbs()}
-    </MaterialBreadcrumbs>
+    <div>
+      <MaterialBreadcrumbs
+        separator="›"
+        className={classes.root}
+      >
+        {renderCrumbs()}
+      </MaterialBreadcrumbs>
+    </div>
 
   )
 

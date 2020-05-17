@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/card"
@@ -28,6 +28,69 @@ const Folder = (props) => {
   const [editAuth, setEditAuth] = useState(false)
   const [hover, setHover] = useState(false)
   const [ref, position] = useDimensions();
+  const [translate, setTranslate] = useState({
+    isDragging: false,
+    translateX: null,
+    translateY: null
+  })
+
+  useEffect(() => {
+    setTranslate({
+      ...translate,
+      translateX: position.x,
+      translateY: position.y
+    })
+  }, [position])
+
+  const handleMouseMove = ev => {
+    if (translate.isDragging) {
+      setTranslate(prevTranslate => ({
+        ...prevTranslate,
+        translateX: ev.clientX,
+        translateY: ev.clientY
+      }));
+    }
+    if (props.listenForDrag !== false) {
+      if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
+        if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
+          setHover(true)
+        } else {
+          setHover(false)
+        }
+      } else {
+        setHover(false)
+      }
+    }
+  }
+
+  const handleMouseUp = ev => {
+    if (translate.isDragging) {
+      setTranslate(prevTranslate => ({
+        ...prevTranslate,
+        isDragging: false
+      }));
+    }
+    if (props.listenForDrag) {
+      if (hover) {
+        handleAddFile(props.listenForDrag)
+      }
+    }
+  }
+  
+  const handleDragStart = () => {
+    setTranslate({...translate, isDragging: true})
+    props.onDragStart({id: props.file_id, type: "file"})
+  }
+
+  useEffect(() => {
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mousemove", handleMouseMove)
+    };
+  }, [handleMouseUp, handleMouseMove]);
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -93,38 +156,6 @@ const Folder = (props) => {
       console.log(error)
     })
   }
-
-  const handleMouseUp = ev => {
-    if (props.listenForDrag) {
-      if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
-        if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
-          handleAddFile(props.listenForDrag)
-        }
-      }
-    }
-  }
-
-  const updateMousePosition = ev => {
-    if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
-      if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
-        setHover(true)
-      } else {
-        setHover(false)
-      }
-    } else {
-      setHover(false)
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("mouseup", handleMouseUp);
-    window.addEventListener("mousemove", updateMousePosition);
-
-    return () => {
-      window.removeEventListener("mouseup", handleMouseUp);
-      window.removeEventListener("mousemove", updateMousePosition)
-    };
-  }, [handleMouseUp, updateMousePosition]);
 
   const onSelect = () => {
     props.selectFolder(props.folder_id)
@@ -204,12 +235,19 @@ const Folder = (props) => {
   return (
 
     <div
-      ref={ref}
+      onDragStart={handleDragStart}
+      style={{
+        position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
+        left: translate.translateX,
+        top: translate.translateY
+      }}
+      draggable
     >
       <ClickAwayListener 
         onClickAway={onDeselect}
       >
         <Card
+          ref={ref}
           id="folder-element"
           className={classes.root}
           onClick={onSelect}

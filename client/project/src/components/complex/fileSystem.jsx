@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/styles";
 import FolderPage from "./folderPage"
 import axios from "axios"
 
@@ -7,7 +6,7 @@ var jwt = require("jsonwebtoken")
 
 const FileSystem = (props) => {
   const [folder, setFolder] = useState()
-  const [folderViewed, setFolderViewed] = useState([])
+  const [ancestry, setAncestry] = useState(null)
 
   useEffect(() => {getProjectFiles(props.project_id)}, [])
 
@@ -20,7 +19,7 @@ const FileSystem = (props) => {
     const token = jwt.decode(JSON.parse(encrypted))
 
     if (token.authLevel >= authorisation_level){
-      setFolderViewed([...folderViewed, {
+      setAncestry([...ancestry, {
         folder_id: folder_id,
         folder_name: folder_name
       }])
@@ -31,10 +30,10 @@ const FileSystem = (props) => {
   const getFolderRendered = () => {
     let targetFolder = folder
 
-    if (folderViewed.length === 0) {
+    if (ancestry.length === 1) {
       return folder
     } else {
-      folderViewed.forEach((folderId) => {
+      ancestry.forEach((folderId) => {
         targetFolder.folders.forEach((childFolder) => {
           if (childFolder.folder_id === folderId.folder_id) {
             targetFolder = childFolder
@@ -46,19 +45,15 @@ const FileSystem = (props) => {
   }
 
   const handleReturn = (value) => {
-    if (value === -1) {
-      setFolderViewed([])
-    } else {
-      let destination
+    let destination
 
-      folderViewed.forEach((folder, i) => {
-        if (folder.folder_id === value){
-          destination = i + 1
-        }
-      })
+    ancestry.forEach((folder, i) => {
+      if (folder.folder_id === value){
+        destination = i + 1
+      }
+    })
 
-      setFolderViewed([...folderViewed].slice(0, destination))
-    }
+    setAncestry([...ancestry].slice(0, destination))
   }
 
   const getProjectFiles = async (project_id) => {
@@ -70,6 +65,12 @@ const FileSystem = (props) => {
       } else {
         if (results.status === 200) {
           setFolder(results.data)
+          if (ancestry === null) {
+            setAncestry([{
+              folder_id: results.data.folder_id,
+              folder_name: results.data.folder_name
+            }])
+          }
         }
       }
     })
@@ -77,9 +78,9 @@ const FileSystem = (props) => {
 
   return (
     <div>
-      {folder !== undefined && folderViewed !== [] ? <FolderPage 
+      {folder !== undefined && ancestry !== null ? <FolderPage 
         onReturn={handleReturn}
-        ancestry={folderViewed}
+        ancestry={ancestry}
         folder={getFolderRendered()} 
         rerender={rerender}
         handleEnterFolder={handleEnterFolder}
