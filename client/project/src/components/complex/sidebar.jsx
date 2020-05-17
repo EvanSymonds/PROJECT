@@ -262,7 +262,7 @@ const Sidebar = (props) => {
       return (
         <div style={{
           width: 48,
-          display: "inline",
+          position: "fixed",
         }}>
           <Button className={classes.menuButton} type="icon" icon="Menu" color="primary" onClick={handleOpen}/>
           <Modal

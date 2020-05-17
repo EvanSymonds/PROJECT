@@ -45,16 +45,27 @@ const ProjectPage = (props) => {
   }, [])
 
   const useStyles = makeStyles((theme) => ({
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: 16,
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.secondary.main,
+        width: 6,
+        border: "4px solid rgba(0, 0, 0, 0)",
+        backgroundClip: "padding-box",
+        borderRadius: 10
+      }
+    },
     page: {
-      height: window.innerHeight - 96,
       marginLeft: permanentSidebar ? 250 : 0,
     },
     background:{
       position: "absolute",
       top: 0,
       right: 0,
-      width: width,
-      height: "100%"
+      width: "100%",
+      height: "calc(100% + 10px)"
     },
     title: {
       marginLeft: permanentSidebar ? 250 : 0,
@@ -82,13 +93,11 @@ const ProjectPage = (props) => {
 
   const renderPages = () => {
     switch (page) {
-      case 0:
-        return <ProjectHome project_id={project_id}/>
-      case 1: 
+      case 0: 
         return <FileSystem project_id={project_id}/>
-      case 2: 
+      case 1: 
         return <Team project_id={project_id}/>
-      case 3: 
+      case 2: 
         return <ProjectSettings project_id={project_id}/>
     }
   }

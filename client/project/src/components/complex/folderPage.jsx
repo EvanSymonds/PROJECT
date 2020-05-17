@@ -18,7 +18,7 @@ const FolderPage = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      width: "90%",
+      width: "95%",
       marginLeft: 10,
     },
     folderContainer: {

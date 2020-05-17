@@ -6,20 +6,29 @@ import { useHistory } from "react-router-dom";
 
 const Support = () => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
-  const [width, setWidth] = React.useState(window.innerWidth);
 
   const useStyles = makeStyles((theme) => ({
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: 16,
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.secondary.main,
+        width: 6,
+        border: "4px solid rgba(0, 0, 0, 0)",
+        backgroundClip: "padding-box",
+        borderRadius: 10
+      }
+    },
     page: {
-      height: window.innerHeight - 96,
       marginLeft: permanentSidebar ? 250 : 0,
-      marginTop: permanentSidebar ? 48 : 0
     },
     background:{
       position: "absolute",
       top: 0,
       right: 0,
-      width: width,
-      height: "100%"
+      width: "100%",
+      height: "calc(100% + 10px)"
     }
   }));
   const classes = useStyles();
@@ -27,10 +36,8 @@ const Support = () => {
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
-      setWidth(window.innerWidth)
       setPermanentSidebar(false)
     } else if (window.innerWidth > 1000) {
-      setWidth(window.innerWidth)
       setPermanentSidebar(true)
     }
   }

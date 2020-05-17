@@ -7,14 +7,24 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const Login = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
-  const [width, setWidth] = React.useState(window.innerWidth);
 
   const useStyles = makeStyles((theme) => ({
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: 16,
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.secondary.main,
+        width: 6,
+        border: "4px solid rgba(0, 0, 0, 0)",
+        backgroundClip: "padding-box",
+        borderRadius: 10
+      }
+    },
     page: {
-      height: window.innerHeight - 96,
       marginLeft: permanentSidebar ? 250 : 0,
-      marginTop: permanentSidebar ? 48 : 0,
       display: "flex",
+      height: "100%",
       justifyContent: "center",
       alignItems: "center"
     },
@@ -22,7 +32,7 @@ const Login = (props) => {
       position: "absolute",
       top: 0,
       right: 0,
-      width: width,
+      width: "100%",
       height: "100%"
     }
   }));
@@ -36,10 +46,8 @@ const Login = (props) => {
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
-      setWidth(window.innerWidth)
       setPermanentSidebar(false)
     } else if (window.innerWidth > 1000) {
-      setWidth(window.innerWidth)
       setPermanentSidebar(true)
     }
   }

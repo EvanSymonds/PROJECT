@@ -12,34 +12,54 @@ var jwt = require("jsonwebtoken")
 const Projects = () => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
   const [projects, setProjects] = useState([])
-  const [width, setWidth] = React.useState(window.innerWidth);
 
   useEffect(() => {renderProjectCards()}, [])
 
   const useStyles = makeStyles((theme) => ({
+    '@global': {
+      '*::-webkit-scrollbar': {
+        width: 16,
+      },
+      '*::-webkit-scrollbar-thumb': {
+        backgroundColor: theme.palette.secondary.main,
+        width: 6,
+        border: "4px solid rgba(0, 0, 0, 0)",
+        backgroundClip: "padding-box",
+        borderRadius: 10
+      }
+    },
     page: {
-      height: window.innerHeight - 96,
       marginLeft: permanentSidebar ? 250 : 0,
-      marginTop: permanentSidebar ? 48 : 0,
+      marginTop: 48,
     },
     background:{
       position: "absolute",
       top: 0,
       right: 0,
-      width: width,
-      height: "100%"
+      width: "100%",
+      height: "calc(100% + 10px)"
     }
   }));
   const classes = useStyles();
   const history = useHistory();
 
+  const handleNewProject = () => {
+    const encrypted = window.localStorage.getItem("authToken")
+    const token = jwt.decode(JSON.parse(encrypted))
+
+    axios.post("http://localhost:3001/projects/create/" + token.user_id).then(() => {
+      setProjects([])
+      renderProjectCards()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
-      setWidth(window.innerWidth)
       setPermanentSidebar(false)
     } else if (window.innerWidth > 1000) {
-      setWidth(window.innerWidth)
       setPermanentSidebar(true)
     }
   }
@@ -50,20 +70,24 @@ const Projects = () => {
     
     axios.get("http://localhost:3001/roles/user/" + token.user_id).then((roles) => {  
 
+      let projectArray = []
+
       roles.data.forEach((role) => {
         if (role.user_id !== "-1") {
           axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
-          
+
           axios.get("http://localhost:3001/roles/project/" + project.data[0].project_id).then((users) => {
             const realUsers = users.data.filter((user) => user.user_id !== "-1")
             
-            setProjects([...projects, {
+            projectArray = [...projectArray, {
               project_id: project.data[0].project_id,
               project_name: project.data[0].project_name,
               isPublic: project.data[0].is_public,
               members: realUsers.length,
               memberList: realUsers
-            }])
+            }]
+
+            setProjects(projectArray)
           })
 
         })
@@ -74,17 +98,32 @@ const Projects = () => {
   }
 
   return (
-    <Paper square className={classes.background}>
+    <Paper
+      square
+      elevation={0}
+      className={classes.background}
+    >
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
-        <Grid container style={{
-          marginLeft: 50,
-          marginTop: 20,
-          width: width,
-          maxWidth: 500,
-        }}>
+        <Grid 
+          container
+          spacing={6}
+          style={{
+            marginLeft: 50,
+            marginTop: 20,
+            width: "calc(100% - 50px)",
+          }}
+        >
+          <Grid
+            item
+          >
+            <ProjectCard 
+              project_id={-1}
+              onClick={handleNewProject}
+            />
+          </Grid>
           {projects.map((project, i) => 
-            <Grid item xs={3} key={i} >
+            <Grid item key={i} >
               <ProjectCard 
                 key={i} 
                 project_id={project.project_id} 

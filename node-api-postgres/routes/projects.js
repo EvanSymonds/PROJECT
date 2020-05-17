@@ -4,6 +4,7 @@ const project_api = require("../APIs/project_api");
 const project_settings_api = require("../APIs/project_settings_api");
 const folder_api = require("../APIs/folder_api")
 const file_api = require("../APIs/file_api")
+const role_api = require("../APIs/role_api")
 const Joi = require("joi");
 
 //Setting up debugging channels
@@ -30,28 +31,19 @@ router.get("/:id", async (request, response) => {
   })
 })
 
-router.post("/", async (request, response) => {
-  const schema = {
-    project_name: Joi.string().alphanum().min(3).max(25).required(),
-    is_public: Joi.boolean().required(),
-  }
+router.post("/create/:id", async (request, response) => {
+  await project_api.createProject("Project", true).then(async(results) => {
+    const project_id = results.rows[0].project_id
 
-  Joi.validate(request.body, schema, async (error) => {
-    if (error) {
-      response.status(400).json(error);
-    } else {
-      await project_api.createProject(request.body.project_name, request.body.is_public).then(async(results) => {
-        const project_id = results.rows[0].project_id
+    await project_settings_api.createProjectSettings(project_id).then(async() => {
+      await folder_api.createFolder(project_id).then(async(results) => {
 
-        await project_settings_api.createProjectSettings(project_id).then(async() => {
-          await folder_api.createFolder(project_id).then(async(results) => {
-
-            await folder_api.renameFolder(results.rows[0].folder_id, 'Home').then((results) => {
-              response.status(200).json(results)
-            })
-            .catch((error) => {
-              debug(error)
-              response.status(400).json(error)
+        await folder_api.renameFolder(results.rows[0].folder_id, 'Home').then(async (results) => {
+          
+          await role_api.createRole(project_id, "Admin").then(async(results) => {
+            
+            await role_api.assignRole(project_id, "Admin", parseInt(request.params.id)).then((results) => {
+              response.status(200).send(results)
             })
 
           })
@@ -59,16 +51,26 @@ router.post("/", async (request, response) => {
             debug(error)
             response.status(400).json(error)
           })
+
         })
         .catch((error) => {
           debug(error)
           response.status(400).json(error)
         })
+
       })
       .catch((error) => {
-        response.status(400).json(error);
+        debug(error)
+        response.status(400).json(error)
       })
-    }
+    })
+    .catch((error) => {
+      debug(error)
+      response.status(400).json(error)
+    })
+  })
+  .catch((error) => {
+    response.status(400).json(error);
   })
 })
 

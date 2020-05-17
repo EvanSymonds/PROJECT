@@ -6,14 +6,13 @@ import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import CardMedia from '@material-ui/core/CardMedia';
 import Paper from "@material-ui/core/paper"
-import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import Typography from "@material-ui/core/Typography"
 import { useOverShadowStyles } from '@mui-treasury/styles/shadow/over';
 import { useBouncyShadowStyles } from '@mui-treasury/styles/shadow/bouncy';
 import Avatar from '@material-ui/core/Avatar';
 import ProfilePicture from "./profilePicture"
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
-import { Lock, Public} from "@material-ui/icons"
+import { Lock, Public, AddRounded, ImageOutlined } from "@material-ui/icons"
 import Grid from "@material-ui/core/Grid"
 import axios from "axios"
 
@@ -28,16 +27,19 @@ const ProjectCard = (props) => {
       return window.btoa(binary);
     };
 
-    axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
-      const base64Flag = 'data:image/png;base64,'
-      const imageStr = arrayBufferToBase64(data.data.data.data)
-      setThumbnail(((base64Flag + imageStr).toString()))
-    })
-    .catch((error) => {
-      if (error.response.data === "No thumbnail"){
-        setThumbnail(null)
-      }
-    })
+    if (props.project_id !== -1) {
+      console.log(props.project_id)
+      axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
+        const base64Flag = 'data:image/png;base64,'
+        const imageStr = arrayBufferToBase64(data.data.data.data)
+        setThumbnail(((base64Flag + imageStr).toString()))
+      })
+      .catch((error) => {
+        if (error.response.data === "No thumbnail"){
+          setThumbnail(null)
+        }
+      })
+    }
   }, [])
 
   const useStyles = makeStyles((theme) => ({
@@ -120,6 +122,19 @@ const ProjectCard = (props) => {
         borderRadius: theme.spacing(2),
         opacity: 0.5,
       },
+    },
+    addIcon: {
+      fontSize: 120,
+      color: theme.palette.secondary.dark
+    },
+    createText: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 50,
+      fontSize: 25,
+      fontWeight: "bold",
+      color: theme.palette.secondary.dark
     }
   }));
   const classes = useStyles();
@@ -154,7 +169,17 @@ const ProjectCard = (props) => {
         <Paper
           className={classes.placeholder}
         >
-          <ImageOutlinedIcon style={{ fontSize: 70 }}/>
+          <ImageOutlined style={{ fontSize: 70 }}/>
+        </Paper>
+      )
+    } else if (props.project_id === -1) {
+      return (
+        <Paper
+          className={classes.placeholder}
+        >
+          <AddRounded 
+            className={classes.addIcon}
+          />
         </Paper>
       )
     } else {
@@ -175,7 +200,7 @@ const ProjectCard = (props) => {
           <Card className={classes.mediaContainer}>
             {renderMedia()}
           </Card>
-          <div style={{
+          {props.project_id !== -1 ?<div style={{
             textAlign: "left",
             marginTop: 20,
             width: "85%",
@@ -194,8 +219,13 @@ const ProjectCard = (props) => {
                   {`${props.members} members`}
               </Typography>
             </div>
-          </div>
-          <Grid container style={{
+          </div> : 
+          <div
+            className={classes.createText}
+          >
+            Create project
+          </div>}
+          {props.project_id !== -1 ? <Grid container style={{
             marginTop: 15,
             marginLeft: 60
           }}>
@@ -207,7 +237,7 @@ const ProjectCard = (props) => {
             <Grid item xs={2}>
               {renderIcon()}
             </Grid>
-          </Grid>
+          </Grid> : null}
       </Card>
     </div>
   )
