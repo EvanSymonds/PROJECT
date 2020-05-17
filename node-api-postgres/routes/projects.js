@@ -46,7 +46,7 @@ router.post("/", async (request, response) => {
         await project_settings_api.createProjectSettings(project_id).then(async() => {
           await folder_api.createFolder(project_id).then(async(results) => {
 
-            await folder_api.renameFolder(results.rows[0].folder_id, 'ROOT').then((results) => {
+            await folder_api.renameFolder(results.rows[0].folder_id, 'Home').then((results) => {
               response.status(200).json(results)
             })
             .catch((error) => {

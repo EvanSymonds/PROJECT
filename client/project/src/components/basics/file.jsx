@@ -45,12 +45,13 @@ const File = (props) => {
   }
 
   const handleMouseUp = ev => {
-    console.log("MOUSE UP" + props.file_id)
-    setTranslate(prevTranslate => ({
-      ...prevTranslate,
-      isDragging: false
-    }));
-    props.onDragStop()
+    if (translate.isDragging) {
+      setTranslate(prevTranslate => ({
+        ...prevTranslate,
+        isDragging: false
+      }));
+      props.onDragStop()
+    }
   }
 
   const handleDragStart = (event) => {
@@ -135,7 +136,7 @@ const File = (props) => {
         console.log(error)
       } else {
         setAnchorEl(null)
-        props.updateParent(props.fileIndex)
+        props.updateParent(`props.fileIndex`)
       }
     })
   }

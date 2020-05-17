@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/card"
+import Paper from "@material-ui/core/paper"
+import Grid from "@material-ui/core/grid"
 import FolderIcon from "@material-ui/icons/Folder"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -11,7 +13,6 @@ import Modal from "@material-ui/core/modal"
 import AuthorisationMarker from "../basics/authorisationMarker"
 import { Edit, Delete, Lock } from "@material-ui/icons"
 import axios from "axios"
-
 import { connect } from "react-redux"
 import { changeSettingsAuth } from "../../actions"
 
@@ -70,6 +71,7 @@ const Folder = (props) => {
         isDragging: false
       }));
     }
+    props.onDragStop()
     if (props.listenForDrag) {
       if (hover) {
         handleAddFile(props.listenForDrag)
@@ -77,9 +79,10 @@ const Folder = (props) => {
     }
   }
   
-  const handleDragStart = () => {
+  const handleDragStart = (event) => {
+    event.preventDefault()
     setTranslate({...translate, isDragging: true})
-    props.onDragStart({id: props.file_id, type: "file"})
+    props.onDragStart({id: props.folder_id, type: "folder"})
   }
 
   useEffect(() => {
@@ -140,21 +143,26 @@ const Folder = (props) => {
     arrowDropUp: {
       position: "relative",
       top: "-20px"
+    },
+    draggable: {
+      backgroundColor: theme.palette.secondary.light
     }
   }))
   const classes = useStyles()
 
   const handleAddFile = (child) => {
-    let formData = new FormData()
-    formData.append("child_id", child.id)
-    formData.append("type", child.type)
+    if (child.id !== props.folder_id) {
+      let formData = new FormData()
+      formData.append("child_id", parseInt(child.id))
+      formData.append("type", child.type)
 
-    axios.post("http://localhost:3001/file_system/" + props.folder_id, formData).then(() => {
-      props.rerender()
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      axios.post("http://localhost:3001/file_system/" + props.folder_id, formData).then(() => {
+        props.rerender()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
   }
 
   const onSelect = () => {
@@ -233,102 +241,147 @@ const Folder = (props) => {
   }
 
   return (
+    <div>
+      {translate.isDragging ? <Card
+        style={{
+          borderWidth: 1,
+          borderStyle: "solid",
+          width: 168,
+          height: 198,
+        }}
+      /> : null }
+      <div
+        onDragStart={handleDragStart}
+        style={{
+          position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
+          left: translate.translateX,
+          top: translate.translateY
+        }}
+        draggable
+      >
+        {!translate.isDragging ?
+          <div>
+            <ClickAwayListener 
+              onClickAway={onDeselect}
+            >
+              <Card
+                ref={ref}
+                id="folder-element"
+                className={classes.root}
+                onClick={onSelect}
+                onDoubleClick={handleDoubleClick}
+                onContextMenu={handleClick} 
+                style={{ cursor: state.mouseY === null ? "pointer" : 'context-menu' }}
+              >
+                {props.authorisation_level !== 0 ? <div
+                id="folder-element"
+                className={classes.authMarker}>
+                  <AuthorisationMarker markerId="folder-element"
+                  level={props.authorisation_level}/>
+                </div> : null}
+                <div className={classes.centralCircle} id="folder-element">
+                  <FolderIcon className={classes.folderIcon} id="folder-element"/>
+                </div>
+                <div className={classes.name} id="folder-element">
+                  {props.folder_name}
+                </div>
+              </Card>
+            </ClickAwayListener>
+            <Menu
+              keepMounted
+              open={state.mouseY !== null && canEditAuth()}
+              onClose={handleClose}
+              anchorReference="anchorPosition"
+              anchorPosition={
+                state.mouseY !== null && state.mouseX !== null
+                  ? { top: state.mouseY, left: state.mouseX }
+                  : undefined
+              }
+            >
+              <MenuItem onClick={handleRename} style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <Edit style={{ marginRight: 10 }}/>
+                Rename
+              </MenuItem>
+              {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <Lock style={{ marginRight: 10 }}/>
+                Edit authorisation
+              </MenuItem> : null}
+              <MenuItem onClick={handleDelete} style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center"
+              }}>
+                <Delete style={{ marginRight: 10 }}/>
+                Delete
+              </MenuItem>
+            </Menu>
+            <Modal
+              open={renameOpen}
+              onClose={() => setRenameOpen(false)}
+            >
+              <div>
+                <RenameProject 
+                  close={handleRenameClose}
+                  defaultValue={props.folder_name}
+                  folder_id={props.folder_id}  
+                />
+              </div>
+            </Modal>
+            <Modal
+              open={editAuth}
+              onClose={() => setEditAuth(false)}
+            >
+              <div>
+                <AuthorisationMarker
+                  mode="edit"
+                  level={props.authorisation_level}
+                  changeAuth={onChangeAuth}
+                />
+              </div>
+            </Modal>
+          </div>
 
-    <div
-      onDragStart={handleDragStart}
-      style={{
-        position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
-        left: translate.translateX,
-        top: translate.translateY
-      }}
-      draggable
-    >
-      <ClickAwayListener 
-        onClickAway={onDeselect}
-      >
-        <Card
-          ref={ref}
-          id="folder-element"
-          className={classes.root}
-          onClick={onSelect}
-          onDoubleClick={handleDoubleClick}
-          onContextMenu={handleClick} 
-          style={{ cursor: state.mouseY === null ? "pointer" : 'context-menu' }}
-        >
-          {props.authorisation_level !== 0 ? <div
-          id="folder-element"
-          className={classes.authMarker}>
-            <AuthorisationMarker markerId="folder-element"
-            level={props.authorisation_level}/>
-          </div> : null}
-          <div className={classes.centralCircle} id="folder-element">
-            <FolderIcon className={classes.folderIcon} id="folder-element"/>
+          :
+
+          <div>
+            <Paper
+              style={{ padding: 5 }}
+              draggable
+              className={classes.draggable}
+            >
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justify="center"
+              >
+                <Grid
+                  item
+                  style={{ marginRight: 5 }}
+                >
+                  <FolderIcon fontSize="large" color="secondary" />
+                </Grid>
+                <Grid
+                  item
+                >
+                  <div>
+                    {props.folder_name}
+                  </div>
+                </Grid>
+              </Grid>
+            </Paper>
           </div>
-          <div className={classes.name} id="folder-element">
-            {props.folder_name}
-          </div>
-        </Card>
-      </ClickAwayListener>
-      <Menu
-        keepMounted
-        open={state.mouseY !== null && canEditAuth()}
-        onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          state.mouseY !== null && state.mouseX !== null
-            ? { top: state.mouseY, left: state.mouseX }
-            : undefined
+
         }
-      >
-        <MenuItem onClick={handleRename} style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center"
-        }}>
-          <Edit style={{ marginRight: 10 }}/>
-          Rename
-        </MenuItem>
-        {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center"
-        }}>
-          <Lock style={{ marginRight: 10 }}/>
-          Edit authorisation
-        </MenuItem> : null}
-        <MenuItem onClick={handleDelete} style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center"
-        }}>
-          <Delete style={{ marginRight: 10 }}/>
-          Delete
-        </MenuItem>
-      </Menu>
-      <Modal
-        open={renameOpen}
-        onClose={() => setRenameOpen(false)}
-      >
-        <div>
-          <RenameProject 
-            close={handleRenameClose}
-            defaultValue={props.folder_name}
-            folder_id={props.folder_id}  
-          />
-        </div>
-      </Modal>
-      <Modal
-        open={editAuth}
-        onClose={() => setEditAuth(false)}
-      >
-        <div>
-          <AuthorisationMarker
-            mode="edit"
-            level={props.authorisation_level}
-            changeAuth={onChangeAuth}
-          />
-        </div>
-      </Modal>
+      </div>
     </div>
 
   )

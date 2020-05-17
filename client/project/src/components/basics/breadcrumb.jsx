@@ -25,9 +25,7 @@ const Breadcrumb = (props) => {
   }
 
   const handleMouseUp = ev => {
-    console.log("MOUSE UP")
     if (props.listenForDrag !== false) {
-      console.log("CHECK")
       if (ev.clientX >= position.x && ev.clientX <= position.x + position.width) {
         if (ev.clientY >= position.y && ev.clientY <= position.y + position.height) {
           handleAddFile(props.listenForDrag)

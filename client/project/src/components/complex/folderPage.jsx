@@ -127,10 +127,10 @@ const FolderPage = (props) => {
             <div key={i}>
               <div 
                 data-testid='component-file'
+                key={i}
               >
                 <File 
-                  key={i} 
-                  fileIndex={i} 
+                  fileIndex={i}
                   fileType={file.file_type} 
                   fileName={file.file_name} 
                   file_id={file.file_id} 
@@ -182,6 +182,7 @@ const FolderPage = (props) => {
           <Folder
             listenForDrag={listenForDrag}
             onDragStart={handleDragStart}
+            onDragStop={handleDragStop}
             folder_name={folder.folder_name}
             authorisation_level={folder.authorisation_level}
             handleEnterFolder={handleEnterFolder}
