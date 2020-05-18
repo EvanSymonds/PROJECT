@@ -107,7 +107,7 @@ const Projects = () => {
       <div className={classes.page}>
         <Grid 
           container
-          spacing={6}
+          spacing={8}
           style={{
             marginLeft: 50,
             marginTop: 20,

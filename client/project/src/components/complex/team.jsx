@@ -17,8 +17,6 @@ const Team = (props) => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
 
-    console.log(token)
-
     if (token.authLevel === 9) {
       setMode("admin")
     }

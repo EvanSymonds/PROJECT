@@ -28,7 +28,6 @@ const ProjectCard = (props) => {
     };
 
     if (props.project_id !== -1) {
-      console.log(props.project_id)
       axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
         const base64Flag = 'data:image/png;base64,'
         const imageStr = arrayBufferToBase64(data.data.data.data)
@@ -47,6 +46,7 @@ const ProjectCard = (props) => {
       backgroundColor: theme.palette.type === "dark" ? theme.palette.secondary.light : null,
       marginLeft: 'auto',
       marginRight: 'auto',
+      marginBottom: 50,
       height: 350,
       width: 350,
       borderRadius: theme.spacing(4),

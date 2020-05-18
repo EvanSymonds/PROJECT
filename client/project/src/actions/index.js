@@ -5,6 +5,13 @@ export const selectTheme = (theme) => {
   }
 }
 
+export const updateProjectFunctions = (functions) => {
+  return {
+    type: "UPDATE_PROJECT_FUNCTIONS",
+    payload: functions
+  }
+}
+
 export const changeSettingsAuth = (auth) => {
   return {
     type: "CHANGE_SETTINGS_AUTH",

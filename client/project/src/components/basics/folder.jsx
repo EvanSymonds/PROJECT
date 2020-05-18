@@ -69,9 +69,9 @@ const Folder = (props) => {
       setTranslate(prevTranslate => ({
         ...prevTranslate,
         isDragging: false
-      }));
+      }))
+      props.onDragStop()
     }
-    props.onDragStop()
     if (props.listenForDrag) {
       if (hover) {
         handleAddFile(props.listenForDrag)

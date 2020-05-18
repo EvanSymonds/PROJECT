@@ -53,6 +53,13 @@ router.post("/:id", async(request, response) => {
     } else {
       debug(request.body.setting_name)
       switch (request.body.setting_name) {
+        case "updateProjectFunctions":
+          await project_settings_api.updateProjectFunctions(parseInt(request.params.id), request.body.new_value).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            response.status(400).json(error)
+          })
         case "changeSettingsAuth":
           await project_settings_api.changeSettingsAuth(parseInt(request.params.id), request.body.new_value).then((results) => {
             response.status(200).json(results)
