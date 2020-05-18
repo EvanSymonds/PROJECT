@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 import SelectThumbnail from "../basics/selectThumbnail"
 import ProjectName from "../basics/projectName"
 import AuthSliders from "./authSliders"
+import DeleteProject from "../basics/deleteProject"
 import Grid from "@material-ui/core/grid"
 
 import { connect } from "react-redux"
@@ -16,8 +17,6 @@ const ProjectSettings = (props) => {
   useEffect(() => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
-
-    console.log()
 
     if (token.authLevel >= props.projectSettings.changeSettingsAuth) {
       setMode("admin")
@@ -39,7 +38,7 @@ const ProjectSettings = (props) => {
         container
         spacing={8}
         className={classes.grid}
-        justify="center"
+        style={{ marginLeft: 50, width: "calc(100% - 50px)" }}
       >
         <Grid item>
           <SelectThumbnail 
@@ -51,6 +50,11 @@ const ProjectSettings = (props) => {
           <ProjectName 
             project_id={props.project_id}
             mode={mode}
+          />
+        </Grid>
+        <Grid item>
+          <DeleteProject 
+            project_id={props.project_id}
           />
         </Grid>
         <Grid item>

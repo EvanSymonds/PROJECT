@@ -216,7 +216,7 @@ const ProjectCard = (props) => {
               <Typography
                 className={classes.textBody}
                 noWrap variant="body2">
-                  {`${props.members} members`}
+                  {`${props.members} ${props.members > 1 ? "members" : "member"}`}
               </Typography>
             </div>
           </div> : 
