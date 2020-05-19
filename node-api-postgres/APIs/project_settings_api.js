@@ -69,19 +69,6 @@ const editFilesAuth = async (project_id, new_value) => {
   })
 }
 
-const updateProjectFunctions = async (project_id, project_functions) => {
-  return new Promise((resolve, reject) => {
-    pool.query("UPDATE project_settings SET project_functions = $2 WHERE project_id = $1", [project_id, project_functions]).then((results) => {
-      dbDebugger("Settings updates")
-      resolve(results)
-    })
-    .catch((error) => {
-      dbDebugger("Error: ", error)
-      reject(error)
-    })
-  })
-}
-
 const deleteProjectSettings = async (project_id) => {
   return new Promise((resolve, reject) => {
     pool.query("DELETE FROM project_settings WHERE project_id = $1", [project_id]).then((results) => {
@@ -100,6 +87,5 @@ module.exports = {
   createProjectSettings,
   changeSettingsAuth,
   editFilesAuth,
-  updateProjectFunctions,
   deleteProjectSettings,
 }

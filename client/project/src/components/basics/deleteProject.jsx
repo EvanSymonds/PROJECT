@@ -71,7 +71,7 @@ const DeleteProject = (props) => {
             item
           >
             <div
-              style={{ fontSize: 25, fontWeight: "bold" }}
+              style={{ fontSize: 20, fontWeight: "bold" }}
             >
               Delete Project
             </div>

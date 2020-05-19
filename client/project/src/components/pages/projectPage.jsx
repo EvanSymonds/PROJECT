@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import Team from "../complex/team"
 import FileSystem from "../complex/fileSystem"
-import ProjectHome from "../complex/projectHome"
 import ProjectSettings from "../complex/projectSettings"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
@@ -10,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios"
 
 import { connect } from "react-redux"
-import { changeSettingsAuth, editFilesAuth, updateProjectFunctions } from "../../actions"
+import { changeSettingsAuth, editFilesAuth } from "../../actions"
 
 var jwt = require("jsonwebtoken")
 
@@ -34,13 +33,6 @@ const ProjectPage = (props) => {
       axios.get("http://localhost:3001/project_settings/" + project_id).then((response) => {
         props.changeSettingsAuth(response.data.rows[0].change_settings_auth)
         props.editFilesAuth(response.data.rows[0].edit_files_auth)
-
-        let functions = response.data.rows[0].project_functions
-
-        if (functions === {}) {
-          functions = []
-        }
-        props.updateProjectFunctions(functions)
       })
       .catch((error) => {
         console.log(error)
@@ -55,6 +47,7 @@ const ProjectPage = (props) => {
     '@global': {
       '*::-webkit-scrollbar': {
         width: 16,
+        backgroundColor: theme.palette.background.default,
       },
       '*::-webkit-scrollbar-thumb': {
         backgroundColor: theme.palette.secondary.main,
@@ -100,13 +93,11 @@ const ProjectPage = (props) => {
 
   const renderPages = () => {
     switch (page) {
-      case 0:
-        return <ProjectHome project_id={project_id} />
-      case 1: 
+      case 0: 
         return <FileSystem project_id={project_id}/>
-      case 2: 
+      case 1: 
         return <Team project_id={project_id}/>
-      case 3: 
+      case 2: 
         return <ProjectSettings project_id={project_id}/>
     }
   }
@@ -134,4 +125,4 @@ const mapStateToProps = state => {
   return { projectSettings: state.projectSettings }
 }
 
-export default connect(mapStateToProps, { changeSettingsAuth , editFilesAuth , updateProjectFunctions })(ProjectPage)
+export default connect(mapStateToProps, { changeSettingsAuth , editFilesAuth })(ProjectPage)

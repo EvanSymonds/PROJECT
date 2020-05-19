@@ -58,6 +58,9 @@ const ProjectCard = (props) => {
     },
     mediaContainer: {
       width: '88%',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       marginLeft: 'auto',
       marginRight: 'auto',
       height: 200,
@@ -69,10 +72,7 @@ const ProjectCard = (props) => {
       width: "100%",
       marginLeft: 'auto',
       marginRight: 'auto',
-      marginTop: "auto",
-      marginBotton: "auto",
       height: 200,
-      paddingBottom: '60%',
       borderRadius: theme.spacing(4),
       [theme.breakpoints.up('md')]: {
         width: '100%',

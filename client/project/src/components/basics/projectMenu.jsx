@@ -29,12 +29,6 @@ const ProjectMenu = (props) => {
     };
   }
 
-  const renderProjectFunctions = () => {
-    return props.projectSettings.projectFunctions.map((projectFunction, i) => {
-      return (<Tab key={i} label={projectFunction} {...tabProps(i + 1)} />)
-    })
-  }
-
   return (
 
     <div className={classes.root}>
@@ -46,10 +40,9 @@ const ProjectMenu = (props) => {
         variant="scrollable"
         scrollButtons="auto"
       >
-        <Tab label="Home" {...tabProps(0)} />
-        {renderProjectFunctions()}
-        <Tab label="Team" {...tabProps(props.projectSettings.projectFunctions.length + 2)} />
-        <Tab label="Settings" {...tabProps(props.projectSettings.projectFunctions.length + 3)} />
+        <Tab label="Files" {...tabProps(0)} />
+        <Tab label="Team" {...tabProps(1)} />
+        <Tab label="Settings" {...tabProps(2)} />
       </Tabs>
     </div>
 

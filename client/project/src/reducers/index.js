@@ -13,10 +13,6 @@ const projectSettingsReducer = (projectSettings = {
   editFilesAuth: 9,
   projectFunctions: []
 },action) => {
-
-  if (action.type === "UPDATE_PROJECT_FUNCTIONS") {
-    return {...projectSettings, projectFunctions: action.payload}
-  }
   
   if (action.type === "CHANGE_SETTINGS_AUTH") {
     return {...projectSettings, changeSettingsAuth: action.payload}

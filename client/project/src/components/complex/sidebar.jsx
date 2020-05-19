@@ -9,16 +9,30 @@ import Paper from "@material-ui/core/Paper"
 import Modal from '@material-ui/core/Modal';
 import Avatar from "@material-ui/core/Avatar"
 import Grid from "@material-ui/core/Grid"
-import Link from '@material-ui/core/Link';
 import { Typography } from '@material-ui/core';
 import ProfilePicture from "../basics/profilePicture"
+import { AssessmentOutlined, SettingsOutlined, HelpOutlineOutlined } from '@material-ui/icons/';
 
 var jwt = require("jsonwebtoken")
 
 const Sidebar = (props) => {
   const [permanent, setPermanent] = useState(window.innerWidth > 1000 ? true : false)
   const [open, setOpen] = useState(false);
-  const [menuItemsList] = useState(["Projects", "Settings", "Support"])
+  
+  const menuItemsList = [
+    { 
+      name: "Projects",
+      icon: <AssessmentOutlined/>
+    },
+    { 
+      name: "Settings",
+      icon: <SettingsOutlined/>
+    },
+    { 
+      name: "Support",
+      icon: <HelpOutlineOutlined/>
+    }
+  ]
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,11 +41,12 @@ const Sidebar = (props) => {
     },
     itemText: {
       fontSize: 20,
-      marginLeft: 30,
+      marginLeft: 10,
     },
     menuItem: {
       backgroundColor: theme.palette.secondary.light,
       height: 50,
+      paddingLeft: 20,
       display: "flex",
       alignItems: "center",
       cursor: 'pointer',
@@ -42,6 +57,7 @@ const Sidebar = (props) => {
     menuItemSelected: {
       background: theme.palette.secondary.menuGradient,
       height: 50,
+      paddingLeft: 20,
       display: "flex",
       alignItems: "center",
       cursor: 'pointer',
@@ -192,17 +208,18 @@ const Sidebar = (props) => {
 
   const renderMenuItems = () => {
 
-    const menuItems = menuItemsList.map((itemName, i) => {
+    const menuItems = menuItemsList.map((item, i) => {
       return (
         <Paper 
           square
           key={i}
-          className={getLinkColor(itemName)}
+          className={getLinkColor(item.name)}
           elevation={0}
-          onClick={() => history.push(`/${itemName.toLowerCase()}`)}
+          onClick={() => history.push(`/${item.name.toLowerCase()}`)}
         >
+          {item.icon}
           <Typography variant="body2" className={classes.itemText}>
-            {itemName}
+            {item.name}
           </Typography>
         </Paper>
       )

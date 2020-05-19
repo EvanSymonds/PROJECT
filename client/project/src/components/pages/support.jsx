@@ -11,6 +11,7 @@ const Support = () => {
     '@global': {
       '*::-webkit-scrollbar': {
         width: 16,
+        backgroundColor: theme.palette.background.default,
       },
       '*::-webkit-scrollbar-thumb': {
         backgroundColor: theme.palette.secondary.main,
