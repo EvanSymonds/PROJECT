@@ -55,6 +55,7 @@ const ThemeChooser = (props) => {
           alignItems: "center",
           width: 100,
           margin: 10,
+          marginTop: 50,
         }}>
           <Paper 
             elevation={5} 
@@ -86,11 +87,24 @@ const ThemeChooser = (props) => {
     <div style={{
       display: "flex",
       flexDirection: "row",
-      justifyContent: "center",
       alignItems: "center",
-
     }}>
-      {renderRadios()}
+      <div style={{
+        fontSize: 18,
+        marginLeft: 20
+      }}>
+        Site theme
+      </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        width: 240,
+        marginLeft: "calc(100% - 500px)"
+      }}>
+        {renderRadios()}
+      </div>
     </div>
 
   )
