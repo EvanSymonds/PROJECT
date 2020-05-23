@@ -4,7 +4,7 @@ import ThemeChooser from "../basics/themeChooser"
 import UserDetails from "../basics/userDetails"
 import Divider from "@material-ui/core/divider"
 
-const SiteSettings = () => {
+const UserSettings = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,15 +24,13 @@ const SiteSettings = () => {
 
     <div className={classes.root}>
       <div className={classes.titleText}>
-        Site settings
+        User settings
       </div>
-      <Divider variant="middle" />
-      <ThemeChooser />
-      <Divider variant="middle" />
+      <UserDetails user={props.user}/>
     </div>
 
   )
 
 }
 
-export default SiteSettings
+export default UserSettings

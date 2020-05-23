@@ -82,8 +82,6 @@ const createUser = (username, password, email) => {
 const updateUser = (user_id, username, password, email) => {
   //Updates the information of a user
 
-  debug(username);
-
   return new Promise((resolve, reject) => {
     pool.query("UPDATE users SET username=$1, password=$2, email=$3 WHERE user_id = $4", [username, password, email, user_id], (error, results) => {
       if (error){

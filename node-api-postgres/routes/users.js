@@ -32,36 +32,38 @@ router.get("/:id", async (request, response) => {
 router.post("/:id", async (request, response) => {
   const schema = {
     username: Joi.string().alphanum().min(3).max(25).required(),
-    password: Joi.string().alphanum().min(3).max(25).required(),
     email: Joi.string().email({ minDomainAtoms: 2 })
   }
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
+      debug(error)
       response.status(400).json(error);
     } else {
-      const username = request.body.username
-      await user_api.getUserById(parseInt(request.params.id)).then((error, user) => {
-        if (error) {
-          response.status(400).json(error);
-        } else {
-          if (user.username.substring(0, user.username.length - 5) != username){
-            username = request.body.username + "#" + randomize("0", 4);
-          }
-        }
-      })
+      await user_api.getUserById(parseInt(request.params.id)).then(async(user) => {
+        let username = request.body.username
 
-      debug(username);
-
-      await bcrypt.genSalt(10).then(async (salt) => {
-        await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
-          await user_api.updateUser(parseInt(request.params.id), username, hashed, request.body.email).then((user) => {
+        if (user[0].username.substring(0, user[0].username.length - 5) != username){
+          await user_api.updateUser(parseInt(request.params.id), username + "#" + randomize("0", 4), user[0].password, request.body.email).then((user) => {
             response.status(200).json(user);
           })
           .catch((error) => {
+            debug(error)
             response.status(400).json(error);
           })
-        })
+        } else {
+          await user_api.updateUser(parseInt(request.params.id), user[0].username, user[0].password, request.body.email).then((user) => {
+            response.status(200).json(user);
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error);
+          })
+        }
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
       })
     }
   })

@@ -38,7 +38,7 @@ const Projects = () => {
       top: 0,
       right: 0,
       width: "100%",
-      height: "calc(100% + 10px)"
+      backgroundSize: "cover"
     }
   }));
   const classes = useStyles();
@@ -108,7 +108,6 @@ const Projects = () => {
       <div className={classes.page}>
         <Grid 
           container
-          spacing={8}
           style={{
             marginLeft: 50,
             marginTop: 20,

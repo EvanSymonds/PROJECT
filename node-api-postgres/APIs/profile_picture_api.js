@@ -62,13 +62,32 @@ const getProfilePictureByUser = (user_id) => {
 const storeProfilePicture = async (data, user_id) => {
   return new Promise( async (resolve, reject) => {
 
-      pool.query("INSERT INTO profile_pictures (profile_picture_data_id, user_id) VALUES (lo_from_bytea(0, $1), $2)", [data, user_id], (error, results) => {
+      pool.query("SELECT * FROM profile_pictures WHERE user_id = $1", [user_id], (error, results) => {
         if (error) {
-          dbDebugger("Error: ", error);
+          dbDebugger("Error: ", error)
           reject(error)
-        } else{
-          dbDebugger("Profile picture uploaded to database")
-          resolve(results)
+        } else {
+          if (results.rows.length > 0) {
+            pool.query("UPDATE profile_pictures SET profile_picture_data_id = (lo_from_bytea(0, $1)) WHERE user_id = $2", [data, user_id], (error, results) => {
+              if (error) {
+                dbDebugger("Error: ", error);
+                reject(error)
+              } else{
+                dbDebugger("Profile picture uploaded to database")
+                resolve(results)
+              }
+            })
+          } else {
+            pool.query("INSERT INTO profile_pictures (profile_picture_data_id, user_id) VALUES (lo_from_bytea(0, $1), $2)", [data, user_id], (error, results) => {
+              if (error) {
+                dbDebugger("Error: ", error);
+                reject(error)
+              } else{
+                dbDebugger("Profile picture uploaded to database")
+                resolve(results)
+              }
+            })
+          }
         }
       })
   })

@@ -129,7 +129,6 @@ const Button = (props) => {
 
   return(
     <div
-      data-test='component-button'
       style={{
         display: "flex",
         flexDirection: "row",

@@ -44,8 +44,8 @@ const ProjectCard = (props) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       backgroundColor: theme.palette.type === "dark" ? theme.palette.secondary.light : null,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      marginLeft: 50,
+      marginRight: "auto",
       marginBottom: 50,
       height: 350,
       width: 350,
