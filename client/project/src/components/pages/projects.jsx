@@ -38,7 +38,8 @@ const Projects = () => {
       top: 0,
       right: 0,
       width: "100%",
-      backgroundSize: "cover"
+      height: "100%",
+      overflow: "auto"
     }
   }));
   const classes = useStyles();
