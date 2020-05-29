@@ -4,13 +4,14 @@ const fileupload = require("express-fileupload");
 const cors = require('cors')
 const express = require("express");
 const app = express();
-const config = require("config");
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({path:"./.env"})
-  require("config");
+  require('dotenv').config()
 }
+
+const config = require("config");
+
 if(!config.get("database.db_password")) {
   console.error("FATAL ERROR: DB_PASSWORD is not defined")
   process.exit(1)
@@ -50,6 +51,7 @@ const file_system = require("./routes/file_system");
 const thumbnails = require("./routes/thumbnails");
 const profile_pictures = require("./routes/profile_pictures");
 const user_settings = require("./routes/user_settings");
+const email = require("./routes/email")
 
 //Routing
 app.use("/auth", auth);
@@ -63,6 +65,7 @@ app.use("/file_system", file_system);
 app.use("/thumbnails", thumbnails);
 app.use("/profile_pictures", profile_pictures);
 app.use("/user_settings", user_settings);
+app.use("/email", email)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

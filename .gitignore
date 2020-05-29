@@ -5,7 +5,7 @@
 /node-api-postgres/Temp_storage
 
 #Environment variables file
-/node-api-postgres/.env
+.env
 
 #Client side node_modules folder
 /node-api-postgres/client/node_modules

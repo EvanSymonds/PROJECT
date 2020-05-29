@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import SupportForm from "../complex/supportForm"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,6 +24,9 @@ const Support = () => {
     },
     page: {
       marginLeft: permanentSidebar ? 250 : 0,
+      display: "flex",
+      justifyContent: "center",
+      paddingTop: 50,
     },
     background:{
       position: "absolute",
@@ -47,6 +51,7 @@ const Support = () => {
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
+        <SupportForm />
       </div>
     </Paper> 
   )
