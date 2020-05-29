@@ -51,7 +51,6 @@ const file_system = require("./routes/file_system");
 const thumbnails = require("./routes/thumbnails");
 const profile_pictures = require("./routes/profile_pictures");
 const user_settings = require("./routes/user_settings");
-const email = require("./routes/email")
 
 //Routing
 app.use("/auth", auth);
@@ -65,7 +64,6 @@ app.use("/file_system", file_system);
 app.use("/thumbnails", thumbnails);
 app.use("/profile_pictures", profile_pictures);
 app.use("/user_settings", user_settings);
-app.use("/email", email)
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/styles";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Card from "@material-ui/core/card"
 import Paper from "@material-ui/core/paper"
 import InputBase from "@material-ui/core/InputBase"
@@ -9,6 +10,7 @@ const SupportForm = (props) => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [message, setMessage] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -52,6 +54,25 @@ const SupportForm = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    setLoading(true)
+
+    window.emailjs.send(
+      "gmail",
+      "feedback",
+      {
+        message_html: message,
+        from_name: name,
+        reply_to: email
+      }
+    ).then(() => {
+      setName("")
+      setEmail("")
+      setMessage("")
+      setLoading(false)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   return (
@@ -106,13 +127,31 @@ const SupportForm = (props) => {
           marginTop: 10
         }}
       >
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: loading ? 40 : 0
+          }}
         >
-          Submit
-        </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+          >
+            Submit
+          </Button>
+          {loading ? 
+          <CircularProgress 
+            color="primary"
+            size={30}
+            style={{
+              marginLeft: 10
+            }}
+          /> : null}
+        </div>
       </div>
     </Card>
 

@@ -16,6 +16,6 @@ ReactDOM.render(
   <Provider store={store}>
     <AppRouter />
   </Provider>
-  ,document.getElementById('root'))
+,document.getElementById('root'))
 
 serviceWorker.unregister();
