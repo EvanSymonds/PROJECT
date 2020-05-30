@@ -12,14 +12,13 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.get("/user/:id", async (request, response) => {
-  await profile_picture_api.getProfilePictureByUser(parseInt(request.params.id)).then((profile_picture, error) => {
-    if (error){
-      debug("Error: ", error)
-      response.status(400).json(error)
-    } else {
-      debug("Thumbnail retrieved")
-      response.send(profile_picture)
-    }
+  await profile_picture_api.getProfilePictureByUser(parseInt(request.params.id)).then((profile_picture) => {
+    debug("Profile picture retrieved")
+    response.send(profile_picture)
+  })
+  .catch((error) => {
+    debug("Error: ", error)
+    response.status(400).send(error)
   })
 })
 
@@ -36,13 +35,12 @@ router.post("/", async (request, response) => {
         debug(error)
         response.status(400).json(error);
       } else {
-        await profile_picture_api.storeProfilePicture(request.files.file.data, request.body.user_id).then((results, error) => {
-          if (error) {
-            debug(error)
-            response.status(400).json(error)
-          } else {
-            response.status(200).json(results)
-          }
+        await profile_picture_api.storeProfilePicture(request.files.file.data, request.body.user_id).then((results) => {
+          response.status(200).json(results)
+        })
+        .catch((error) => {
+          debug("Error: ", error)
+          response.status(400).json(error)
         })
       }
     })
@@ -50,12 +48,12 @@ router.post("/", async (request, response) => {
 })
 
 router.delete("/user/:id", (async (request, response) => {
-  await profile_picture_api.deleteProfilePicture(parseInt(request.params.id)).then((results, error) => {
-    if (error) {
-      response.status(400).json(error)
-    } else {
-      response.status(200).json(results)
-    }
+  await profile_picture_api.deleteProfilePicture(parseInt(request.params.id)).then((results) => {
+    response.status(200).json(results)
+  })
+  .catch((error) => {
+    debug("Error: ", error)
+    response.status(400).json(error)
   })
 }))
 

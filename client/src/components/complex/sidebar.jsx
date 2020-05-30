@@ -143,7 +143,7 @@ const Sidebar = (props) => {
 
   const renderUserZone = () => {
 
-    if (window.localStorage.getItem("authToken") === "undefined" || !window.localStorage.getItem("authToken")){
+    if (!window.localStorage.getItem("authToken")){
       return (
         <div style={{
           display: "flex",

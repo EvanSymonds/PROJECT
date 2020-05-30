@@ -1,11 +1,31 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from "../basics/button"
+import socketIOClient from "socket.io-client";
+
+var jwt = require("jsonwebtoken")
 
 const Main = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:3001");
+    socket.on("PROJECT_INVITE", (data) => {
+      if (window.localStorage.getItem("authToken")) {
+        const encrypted = window.localStorage.getItem("authToken")
+        const token = jwt.decode(JSON.parse(encrypted))
+
+        if (parseInt(token.user_id) === data) {
+          setNotificationOpen(true)
+        }
+      }
+    });
+  }, [])
 
   const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -30,6 +50,13 @@ const Main = (props) => {
       right: 0,
       width: "100%",
       height: "calc(100% + 10px)"
+    },
+    notification: {
+      backgroundColor: theme.palette.secondary.light,
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      padding: '0px 5px 0px 10px',
     }
   }));
   const classes = useStyles();
@@ -48,6 +75,34 @@ const Main = (props) => {
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
       </div>
+      <Snackbar
+        className={classes.snackbar}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        open={notificationOpen}
+        autoHideDuration={3000}
+        onClose={() => setNotificationOpen(false)}
+      >
+        <Paper
+          className={classes.notification}
+        >
+          <div
+            style={{
+              fontSize: 15,
+              marginRight: 15
+            }}
+          >
+            New project invite!
+          </div>
+          <Button
+            type="icon"
+            icon="Close"
+            onClick={() => setNotificationOpen(false)}
+          />
+        </Paper>
+      </Snackbar>
     </Paper>
   )
 }

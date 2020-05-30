@@ -41,30 +41,29 @@ const AppRouter = (props) => {
       const token = jwt.decode(JSON.parse(encrypted))
 
       const getSettings = async() => {
-        await axios.get("http://localhost:3001/user_settings/" + token.user_id).then((settings, error) => {
-          if (error) {
-            console.log(error)
-          } else {
+        await axios.get("http://localhost:3001/user_settings/" + token.user_id).then((settings) => {
 
-            const getThemeId = () => {
-              switch (settings.data.rows[0].theme){
-                case "redGreyTheme":
-                  return 0
-                case "darkModeTheme":
-                  return 1
-                case "orangeBlackTheme":
-                  return 2
-              }
+          const getThemeId = () => {
+            switch (settings.data.rows[0].theme){
+              case "redGreyTheme":
+                return 0
+              case "darkModeTheme":
+                return 1
+              case "orangeBlackTheme":
+                return 2
             }
-
-            const theme = {
-              name: settings.data.rows[0].theme,
-              id: getThemeId()
-            }
-
-
-            props.selectTheme(theme)
           }
+
+          const theme = {
+            name: settings.data.rows[0].theme,
+            id: getThemeId()
+          }
+
+
+          props.selectTheme(theme)
+        })
+        .catch((error) => {
+          console.log(error)
         })
       }
       getSettings()

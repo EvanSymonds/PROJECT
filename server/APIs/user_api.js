@@ -67,7 +67,7 @@ const createUser = (username, password, email) => {
   //Stores a user in the users table
 
   return new Promise((resolve, reject) =>{
-    pool.query("INSERT INTO users (username, password, email, created_on) VALUES ($1, $2, $3, NOW())", [username, password, email], (error, results) => {
+    pool.query("INSERT INTO users (username, password, email, created_on) VALUES ($1, $2, $3, NOW()) RETURNING user_id", [username, password, email], (error, results) => {
       if (error) {
         dbDebugger("Error: ", error);
         reject(error);

@@ -34,7 +34,7 @@ const getProfilePictureByUser = (user_id) => {
       var profile_picture = results.rows;
 
       if (profile_picture.length === 0) {
-        reject(profile_picture)
+        reject("Profile picture not found")
       } else {
         pool.query("SELECT lo_get($1)", [profile_picture[0].profile_picture_data_id], async (error, results) => {
           if (error){

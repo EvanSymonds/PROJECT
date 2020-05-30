@@ -3,7 +3,8 @@ import Grid from "@material-ui/core/grid"
 import Avatar from "@material-ui/core/avatar"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from "@material-ui/core/button"
+import MuiButton from "@material-ui/core/button"
+import Button from "./button"
 import ProfilePicture from "./profilePicture"
 import { makeStyles } from '@material-ui/core/styles';
 import {ArrowDropDown} from "@material-ui/icons"
@@ -95,7 +96,7 @@ const RoleUser = (props) => {
       </Grid>
       {props.onChangeMode === true ? <div>
           <Grid item>
-            <Button 
+            <MuiButton 
               className={classes.button}
               color="primary"
               variant="outlined"
@@ -105,7 +106,7 @@ const RoleUser = (props) => {
               <div className={classes.buttonText}>
                 {props.userRole}
               </div>
-            </Button>
+            </MuiButton>
           </Grid>
           <Menu
             open={open}
@@ -115,6 +116,15 @@ const RoleUser = (props) => {
             {renderMenuItems()}
           </Menu>
         </div> : null}
+      {props.onChangeMode === true ?
+        <Grid item className={classes.deleteButton}>
+          <Button
+            type="icon"
+            icon="Delete"
+            color="primary"
+          />
+        </Grid>
+      : null}
     </Grid>
 
   )

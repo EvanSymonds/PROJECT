@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const user_api = require("../APIs/user_api");
+const user_settings_api = require("../APIs/user_settings_api")
 const role_api = require("../APIs/role_api")
 const randomize = require("randomatic");
 const bcrypt = require("bcrypt");
@@ -21,22 +22,52 @@ router.post("/", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
+      debug(error)
       response.status(400).json(error);
     } else {
-      await user_api.getUserByCredential(request.body.credential).then(async (user) => {
-        if (user.length === 0) {
+      await user_api.getUserByCredential(request.body.credential).then(async (users) => {
+        if (users.length === 0) {
           return response.status(401).send("Invalid username or password")
         } else {
-          const validPassword = await bcrypt.compare(request.body.password, user[0].password);
-      
-          if (!validPassword) return response.status(401).send("Invalid username or password");
-      
-          debug("Successfully logged in");
 
-          const token = jwt.sign({ name: user[0].username, user_id: user[0].user_id }, config.get("jwtPrivateKey"))
+          const checkForUser = () => {
+            return new Promise((resolve, reject) => {
+              let token, username
 
-          response.header("x-auth-token", token).status(200).send(user[0].username)
+              users.forEach((user, i) => {
+
+                const validPassword = bcrypt.compare(request.body.password, user.password)
+                if (validPassword) {
+                  debug("Successfully logged in");
+    
+                  token = jwt.sign({ name: user.username, user_id: user.user_id }, config.get("jwtPrivateKey"))
+    
+                  username = user.username
+
+                  debug(token, username)
+                  resolve([token, username])
+                }
+
+              })
+
+              if (token === undefined && username == undefined ) {
+                reject()
+              }
+
+            })
+          }
+          await checkForUser().then((results) => {
+            console.log(results)
+            response.header("x-auth-token", results[0]).status(200).send(results[1])
+          })
+          .catch((error) => {
+            response.status(400).send("Invalid username or password")
+          })
         }
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
       })
     }
   })
@@ -69,22 +100,27 @@ router.post("/signup", async(request, response) => {
     } else {
       const username = request.body.username + "#" + randomize("0", 4);
 
-      try{
-        await bcrypt.genSalt(10).then(async (salt) => {
-          await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
-            await user_api.createUser(username, hashed, request.body.email).then((result) => {
-              const token = jwt.sign({ name: username, user_id: user[0].user_id }, config.get("jwtPrivateKey"))
+      await bcrypt.genSalt(10).then(async (salt) => {
+        await bcrypt.hash(request.body.password, salt).then(async (hashed) => {
+          await user_api.createUser(username, hashed, request.body.email).then(async(result) => {
+            const token = jwt.sign({ name: username, user_id: result.rows[0].user_id }, config.get("jwtPrivateKey"))
 
+            await user_settings_api.createUserSettings(result.rows[0].user_id).then(() => {
               response.header("x-auth-token", token).status(200).send(username)
             })
+            .catch((error) => {
+              debug(error)
+              response.status(400).json(error)
+            })
+          })
+          .catch((error) => {
+            console.log(error)
+            if (error.detail.substring(0,11) === "Key (email)") {
+              response.status(409).json({detail:"Email already exists"})
+            }
           })
         })
-      }
-      catch (error) {
-        if (error.detail.substring(0,11) === "Key (email)") {
-          response.status(409).json({detail:"Email already exists"})
-        }
-      }
+      })
     }
   })
 })

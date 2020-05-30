@@ -2,8 +2,16 @@ const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const fileupload = require("express-fileupload");
 const cors = require('cors')
+
 const express = require("express");
+const http = require('http')
+const socketIo = require('socket.io')
+
+const port = process.env.PORT || 3001;
 const app = express();
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -65,7 +73,17 @@ app.use("/thumbnails", thumbnails);
 app.use("/profile_pictures", profile_pictures);
 app.use("/user_settings", user_settings);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
+
+io.on("connection", (socket) => {
+  console.log("New connection")
+
+  socket.emit("PROJECT_INVITE", (14))
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected")
+  })
+})
+
+server.listen(port, () => {
   console.log(`App running on port ${port}`);
 })

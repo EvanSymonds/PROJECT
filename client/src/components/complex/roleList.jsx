@@ -7,14 +7,12 @@ import Divider from "@material-ui/core/divider"
 import Modal from "@material-ui/core/modal"
 import Button from "../basics/button"
 import CreateRole from "../basics/createRole"
-import { Edit, Stars } from "@material-ui/icons"
+import { Edit, Add } from "@material-ui/icons"
 
 const RoleList = (props) => {
   const [open, setOpen] = useState(false);
 
   const useStyles = makeStyles((theme) => ({
-    root: {
-    },
     role: {
       height: 50,
       display: "flex",
@@ -25,7 +23,7 @@ const RoleList = (props) => {
         backgroundColor: theme.palette.secondary.light
       }
     },
-    changeRoles: {
+    actionRole: {
       height: 50,
       display: "flex",
       alignItems: "center",
@@ -35,7 +33,7 @@ const RoleList = (props) => {
         backgroundColor: theme.palette.secondary.light
       }
     },
-    changeRolesSelected: {
+    actionRoleSelected: {
       height: 50,
       display: "flex",
       alignItems: "center",
@@ -94,20 +92,32 @@ const RoleList = (props) => {
     setOpen(false);
   };
 
+  const handleAddMember = () => {
+
+  }
+
   return (
     <Grid container style={{ height: "100%" }}>
       <Grid item style={{ width: "100%" }}>
         <Card
-          style={{ height: window.innerHeight - (props.mode === "admin" ? 200 : 142) }}
+          style={{ height: window.innerHeight - (props.mode === "admin" ? 250 : 142) }}
           square
           elevation={0}
-          className={classes.root}
           value={props.selected}
         >
           {renderRoles()}
         </Card>
         {props.mode === "admin" ? <Card
-          className={props.selected === props.roles.length - 1 ? classes.changeRolesSelected : classes.changeRoles}
+          className={classes.actionRole}
+          elevation={0}
+          square
+          onClick={props.handleAddMember}
+        >
+          Add member
+          <Add style={{ marginLeft: 10 }} color="primary"/>
+        </Card> : null}
+        {props.mode === "admin" ? <Card
+          className={props.selected === props.roles.length - 1 ? classes.actionRoleSelected : classes.actionRole}
           elevation={0}
           square
           onClick={props.onChangeMode}

@@ -7,6 +7,9 @@ import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import ProjectMenu from "../basics/projectMenu"
 import { makeStyles } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from "../basics/button"
+import socketIOClient from "socket.io-client";
 import axios from "axios"
 
 import { connect } from "react-redux"
@@ -19,6 +22,21 @@ const ProjectPage = (props) => {
   const [width, setWidth] = React.useState(window.innerWidth);
   const [page, setPage] = useState(0)
   const [project_id] = useState(parseInt(props.match.params.project_id))
+  const [notificationOpen, setNotificationOpen] = useState(false)
+
+  useEffect(() => {
+    const socket = socketIOClient("http://localhost:3001");
+    socket.on("PROJECT_INVITE", (data) => {
+      if (window.localStorage.getItem("authToken")) {
+        const encrypted = window.localStorage.getItem("authToken")
+        const token = jwt.decode(JSON.parse(encrypted))
+
+        if (parseInt(token.user_id) === data) {
+          setNotificationOpen(true)
+        }
+      }
+    });
+  }, [])
 
   useEffect(() => {
     const token = window.localStorage.getItem("authToken")
@@ -75,6 +93,13 @@ const ProjectPage = (props) => {
       justifyContent: "center",
       alignItems: "center",
     },
+    notification: {
+      backgroundColor: theme.palette.secondary.light,
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      padding: '0px 5px 0px 10px',
+    }
   }));
   const classes = useStyles();
 
@@ -119,6 +144,34 @@ const ProjectPage = (props) => {
       <div className={classes.page}>
         {renderPages()}
       </div>
+      <Snackbar
+        className={classes.snackbar}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        open={notificationOpen}
+        autoHideDuration={3000}
+        onClose={() => setNotificationOpen(false)}
+      >
+        <Paper
+          className={classes.notification}
+        >
+          <div
+            style={{
+              fontSize: 15,
+              marginRight: 15
+            }}
+          >
+            New project invite!
+          </div>
+          <Button
+            type="icon"
+            icon="Close"
+            onClick={() => setNotificationOpen(false)}
+          />
+        </Paper>
+      </Snackbar>
     </Paper> 
   )
 

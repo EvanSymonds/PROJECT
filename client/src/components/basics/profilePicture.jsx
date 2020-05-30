@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/styles"
 import { Edit } from '@material-ui/icons/';
 import Modal from "@material-ui/core/modal"
 import FileUpload from "../complex/fileUpload"
+import { AccountCircle } from "@material-ui/icons"
 import axios from "axios"
 
 const ProfilePicture = (props) => {
@@ -16,7 +17,8 @@ const ProfilePicture = (props) => {
       borderRadius: props.shape === "circle" ? props.width / 2 : 0,
       overflow: "hidden",
       cursor: props.mode === "edit" ? "pointer" : "auto",
-      opacity: props.mode === "edit" ? 0.8 : 1
+      opacity: props.mode === "edit" ? 0.8 : 1,
+      backgroundColor: theme.palette.background.default
     },
     edit: {
       width: props.width,
@@ -45,6 +47,10 @@ const ProfilePicture = (props) => {
       const imageStr = arrayBufferToBase64(data.data.data.data)
       setProfilePicture(((base64Flag + imageStr).toString()))
     })
+    .catch((error) => {
+      setProfilePicture("")
+      console.log(error)
+    })
   }, [props.user_id])
 
   const updateProfilePicture = () => {
@@ -60,6 +66,10 @@ const ProfilePicture = (props) => {
       const imageStr = arrayBufferToBase64(data.data.data.data)
       setProfilePicture(((base64Flag + imageStr).toString()))
     })
+    .catch((error) => {
+      setProfilePicture("")
+      console.log(error)
+    })
   }
 
   return (
@@ -68,7 +78,10 @@ const ProfilePicture = (props) => {
         className={classes.root}
         onClick={() => props.mode === "edit" ? setUploading(true) : null}
       >
-        {profilePicture === "" ? null : <img src={profilePicture} className={classes.root}/>}
+        {profilePicture === "" ? 
+        <AccountCircle className={classes.root} color="secondary"/>
+        : 
+        <img src={profilePicture} className={classes.root}/>}
         {props.mode === "edit" ? 
           <div 
             className={classes.edit}
