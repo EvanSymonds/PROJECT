@@ -276,7 +276,7 @@ router.delete("/", async (request, response) => {
 
           const highestAuthRole = roleRemoved.filter((role) => role.authorisation_level === highestAuth)
 
-          role_api.updateRoleAuth(highestAuthRole[0].role_name ,request.body.project_id, 9)
+          role_api.updateRoleAuth(highestAuthRole[0].role_name, request.body.project_id, 9)
         }
         await role_api.deleteRole(request.body.role_name, request.body.project_id).then((results) => {
           response.status(200).json(results);
@@ -289,6 +289,27 @@ router.delete("/", async (request, response) => {
   })
   .catch((error) => {
     response.status(400).json(error)
+  })
+})
+
+router.post("/delete/:id", async(request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error)
+    } else {
+      await role_api.deleteUserRole(parseInt(request.params.id), request.body.project_id).then((results) => {
+        response.status(200).json(results)
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+    }
   })
 })
 

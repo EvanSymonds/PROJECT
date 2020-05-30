@@ -222,6 +222,22 @@ const deleteRole = (role_name, project_id) => {
   })
 }
 
+const deleteUserRole = (role_id, project_id) => {
+  //Deletes a role
+  
+  return new Promise((resolve, reject) => {
+    pool.query("DELETE FROM project_roles WHERE role_id = $1 AND project_id = $2", [role_id, project_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error);
+      } else {
+        dbDebugger("Role deleted");
+        resolve(results);
+      }
+    })
+  })
+}
+
 const deleteRolesByProject = (project_id) => {
   return new Promise((resolve, reject) => {
     pool.query("DELETE FROM project_roles WHERE project_id = $1", [project_id], (error, results) => {
@@ -247,5 +263,6 @@ module.exports = {
   changeRole,
   updateRoleAuth,
   deleteRole,
+  deleteUserRole,
   deleteRolesByProject
 }

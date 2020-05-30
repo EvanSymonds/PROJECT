@@ -1,17 +1,31 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Grid from "@material-ui/core/grid"
 import Avatar from "@material-ui/core/avatar"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MuiButton from "@material-ui/core/button"
+import Modal from "@material-ui/core/modal"
+import Card from "@material-ui/core/card"
 import Button from "./button"
 import ProfilePicture from "./profilePicture"
 import { makeStyles } from '@material-ui/core/styles';
 import {ArrowDropDown} from "@material-ui/icons"
+import axios from "axios"
+
+var jwt = require("jsonwebtoken")
 
 const RoleUser = (props) => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [userId, setUserId] = useState()
+
+  useEffect(() => {
+    const encrypted = window.localStorage.getItem("authToken")
+    const token = jwt.decode(JSON.parse(encrypted))
+
+    setUserId(token.user_id)
+  }, [])
 
   const useStyles = makeStyles((theme) => ({
     user: {
@@ -47,6 +61,15 @@ const RoleUser = (props) => {
       width: 160,
       overflow: "hidden",
       textAlign: "left"
+    },
+    confirm: {
+      width: 200,
+      height: 150,
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: "-75px",
+      marginLeft: "-100px",
     }
   }));
   const classes = useStyles();
@@ -55,6 +78,23 @@ const RoleUser = (props) => {
     props.onChangeRole(props.user.role_id, event.currentTarget.textContent)
     handleClose()
   };
+
+  const handleDeleteUser = () => {
+
+    console.log(props.project_id)
+
+    let formData = new FormData()
+    formData.append("project_id", props.project_id)
+
+    axios.post("http://localhost:3001/roles/delete/" + props.user.role_id, formData).then(() => {
+      props.rerender()
+      setConfirmOpen(false)
+    })
+    .catch((error) => {
+      console.log(error)
+      setConfirmOpen(false)
+    })
+  }
 
   const handleClickOpen = (event) => {
     setOpen(true);
@@ -116,15 +156,60 @@ const RoleUser = (props) => {
             {renderMenuItems()}
           </Menu>
         </div> : null}
-      {props.onChangeMode === true ?
+      {props.onChangeMode === true && props.user.user_id !== userId ?
         <Grid item className={classes.deleteButton}>
           <Button
             type="icon"
             icon="Delete"
             color="primary"
+            onClick={() => setConfirmOpen(true)}
           />
         </Grid>
       : null}
+      <Modal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+      >
+        <div>
+          <Card
+            className={classes.confirm}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              spacing={4}
+            >
+              <Grid
+                item
+              >
+                <div
+                  style={{ fontSize: 15, fontWeight: "bold" }}
+                >
+                  This action is permanent
+                </div>
+              </Grid>
+              <Grid
+                item
+              >
+                <Button
+                  type="normal"
+                  variant="contained"
+                  buttonText="Remove user"
+                  color="primary"
+                  onClick={handleDeleteUser}
+                />
+              </Grid>
+            </Grid>
+          </Card>
+        </div>
+      </Modal>
     </Grid>
 
   )

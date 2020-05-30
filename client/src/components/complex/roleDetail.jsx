@@ -23,6 +23,8 @@ const RoleDetail = (props) => {
 
         return (
           <RoleUser
+            rerender={props.rerender}
+            project_id={props.project_id}
             roles={props.roles}
             role={props.role}
             user={user}

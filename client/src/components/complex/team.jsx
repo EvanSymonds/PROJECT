@@ -172,6 +172,7 @@ const Team = (props) => {
           onChangeRole={handleChangeUserRole}
           handleDelete={onDeleteRole}
           mode={mode}
+          rerender={onAddRole}
           onChangeMode={selected === roles.length -1 ? true : false}
         />}
         {selected === roles.length -1 ? null : <Divider orientation="vertical"/>}
