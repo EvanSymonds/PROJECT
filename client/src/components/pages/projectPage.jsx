@@ -31,7 +31,9 @@ const ProjectPage = (props) => {
         const encrypted = window.localStorage.getItem("authToken")
         const token = jwt.decode(JSON.parse(encrypted))
 
-        if (parseInt(token.user_id) === data) {
+        console.log("Someone invited")
+
+        if (parseInt(token.user_id) === parseInt(data)) {
           setNotificationOpen(true)
         }
       }
@@ -122,7 +124,7 @@ const ProjectPage = (props) => {
       case 0: 
         return <FileSystem project_id={project_id}/>
       case 1: 
-        return <Team project_id={project_id}/>
+        return <Team project_id={project_id} setNotificationOpen={setNotificationOpen}/>
       case 2: 
         return <ProjectSettings project_id={project_id}/>
     }

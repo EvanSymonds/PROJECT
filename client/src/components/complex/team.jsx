@@ -157,6 +157,7 @@ const Team = (props) => {
           onAddRole={onAddRole}
           mode={mode}
           onChangeMode={onChangeMode}
+          setNotificationOpen={props.setNotificationOpen}
         />
         <Divider orientation="vertical"/>
       </Grid>

@@ -82,6 +82,8 @@ const getRolesById = (role_id) => {
 const assignRole = (project_id, role_name, user_id) => {
   //Creates a role relation between a user and a project
 
+  console.log(project_id, role_name, user_id)
+
   return new Promise((resolve, reject) => {
     pool.query("SELECT * FROM project_roles WHERE project_id = $1", [project_id], (error, results) => {
       if (error) {
@@ -102,6 +104,22 @@ const assignRole = (project_id, role_name, user_id) => {
             resolve(results);
           }
         })
+      }
+    })
+  })
+}
+
+const inviteUser = (project_id, user_id) => {
+  //Creates a role relation between a user and a project
+
+  return new Promise((resolve, reject) => {
+    pool.query("INSERT INTO project_roles (project_id, role_name, user_id, authorisation_level) VALUES ($1, 'INVITED', $2, -1)", [project_id, user_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error);
+        reject(error);
+      } else {
+        dbDebugger("UserInvited");
+        resolve(results);
       }
     })
   })
@@ -224,7 +242,9 @@ const deleteRole = (role_name, project_id) => {
 
 const deleteUserRole = (role_id, project_id) => {
   //Deletes a role
-  
+
+  console.log(role_id, project_id)
+
   return new Promise((resolve, reject) => {
     pool.query("DELETE FROM project_roles WHERE role_id = $1 AND project_id = $2", [role_id, project_id], (error, results) => {
       if (error) {
@@ -259,6 +279,7 @@ module.exports = {
   getRolesById,
   assignRole,
   createRole,
+  inviteUser,
   renameRole,
   changeRole,
   updateRoleAuth,

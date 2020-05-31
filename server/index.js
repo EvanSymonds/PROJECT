@@ -77,6 +77,10 @@ app.use("/user_settings", user_settings);
 io.on("connection", (socket) => {
   console.log("New connection")
 
+  socket.on("INVITE_SENT", (user_id) => {
+    socket.emit("PROJECT_INVITE", parseInt(user_id))
+  })
+
   socket.on("disconnect", () => {
     console.log("Client disconnected")
   })

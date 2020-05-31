@@ -15,6 +15,7 @@ var jwt = require("jsonwebtoken")
 const Projects = () => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
   const [projects, setProjects] = useState([])
+  const [invites, setInvites] = useState([])
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {renderProjectCards()}, [])
@@ -92,19 +93,41 @@ const Projects = () => {
   }
 
   const renderProjectCards = () => {
+    setInvites([])
+    setProjects([])
+
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
     
     axios.get("http://localhost:3001/roles/user/" + token.user_id).then((roles) => {  
+      let invitedArray = []
+
+      roles.data.forEach((role) => {
+        if (role.role_name === "INVITED") {
+          axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
+            setInvites([...invitedArray, {
+              project_id: project.data[0].project_id,
+              project_name: project.data[0].project_name,
+              isPublic: project.data[0].is_public,
+              role_id: role.role_id
+            }])
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        }
+      })
+
+      roles = roles.data.filter((role) => role.role_name !== "INVITED")
 
       let projectArray = []
 
-      roles.data.forEach((role) => {
+      roles.forEach((role) => {
         if (role.user_id !== "-1") {
           axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
 
           axios.get("http://localhost:3001/roles/project/" + project.data[0].project_id).then((users) => {
-            const realUsers = users.data.filter((user) => user.user_id !== "-1")
+            const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
             
             projectArray = [...projectArray, {
               project_id: project.data[0].project_id,
@@ -135,7 +158,7 @@ const Projects = () => {
         <Grid 
           container
           style={{
-            marginLeft: 50,
+            marginLeft: 30,
             marginTop: 20,
             width: "calc(100% - 50px)",
           }}
@@ -148,9 +171,24 @@ const Projects = () => {
               onClick={handleNewProject}
             />
           </Grid>
+          {invites.map((project, i) => 
+            <ProjectCard
+              type="invite"
+              key={i} 
+              role_id={project.role_id}
+              project_id={project.project_id} 
+              project_name={project.project_name} 
+              members={project.members}
+              memberList={project.memberList}
+              rerender={renderProjectCards}
+              isPublic={project.isPublic}
+              onClick={() => history.push(project.project_name + "/" + project.project_id)}
+            />
+          )}
           {projects.map((project, i) => 
             <Grid item key={i} >
-              <ProjectCard 
+              <ProjectCard
+                type="normal"
                 key={i} 
                 project_id={project.project_id} 
                 project_name={project.project_name} 

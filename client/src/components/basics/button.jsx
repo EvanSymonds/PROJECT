@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/styles";
-import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropUp, ArrowDropDown, ArrowLeft, ArrowRight, Folder, FormatColorFill, FormatColorText, Add, Close } from "@material-ui/icons"
+import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropUp, ArrowDropDown, ArrowLeft, ArrowRight, Folder, FormatColorFill, FormatColorText, Add, Close, Done } from "@material-ui/icons"
 
 export const returnIcon = (icon, size) => {
   switch (icon) {
@@ -44,6 +44,8 @@ export const returnIcon = (icon, size) => {
       return <Add fontSize={size}/>
     case "Close":
       return <Close fontSize={size}/>
+    case "Done":
+      return <Done fontSize={size}/>
   }
 }
 

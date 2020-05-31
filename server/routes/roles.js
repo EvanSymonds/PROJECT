@@ -33,6 +33,8 @@ router.get("/project/:id", async (request, response) => {
 router.get("/allusers/:id", async (request, response) => {
   await role_api.getRolesByProject(parseInt(request.params.id)).then(async(roles) => {
 
+    roles = roles.filter((role) => role.role_name !== "INVITED")
+
     let rolesWithUsers = []
 
     roles.forEach( async(role) => {
@@ -146,6 +148,102 @@ router.post("/add", async(request, response) => {
           response.status(400).json(error)
         })
 
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+
+    }
+  })
+})
+
+router.post("/invite", async (request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+    user_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      
+      await role_api.inviteUser(request.body.project_id, request.body.user_id).then(() => {
+        response.status(200).send("User invited")
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+
+    }
+  })
+})
+
+router.post("/invite/accept", async (request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+    role_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      
+      await role_api.getRolesByProject(request.body.project_id).then(async(roles) => {
+
+        let lowestAuth = [10, ""]
+
+        roles.forEach((role) => {
+          if (role.authorisation_level <= lowestAuth[0] && role.authorisation_level > 0) {
+            lowestAuth = [role.authorisation_level, role.role_name]
+          }
+        })
+
+        let user_id = roles.filter((role) => role.role_id === request.body.role_id && role.user_id !== -1)[0].user_id
+
+        await role_api.deleteUserRole(request.body.role_id, request.body.project_id).then(async() => {
+
+          await role_api.assignRole(request.body.project_id, lowestAuth[1], user_id).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+
+        })
+        .catch((error) => {
+          debug(error)
+          response.status(400).json(error)
+        })
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+
+    }
+  })
+})
+
+router.post("/invite/decline", async (request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+    role_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      await role_api.deleteUserRole(request.body.role_id, request.body.project_id).then(() => {
+        response.status(200).send("Invite declined")
       })
       .catch((error) => {
         debug(error)

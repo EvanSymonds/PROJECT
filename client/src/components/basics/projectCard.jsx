@@ -4,6 +4,7 @@ import cx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
+import Button from "./button"
 import CardMedia from '@material-ui/core/CardMedia';
 import Paper from "@material-ui/core/paper"
 import Typography from "@material-ui/core/Typography"
@@ -192,10 +193,36 @@ const ProjectCard = (props) => {
     }
   }
 
+  const handleAcceptInvite = () => {
+    let formData = new FormData()
+    formData.append("project_id", props.project_id)
+    formData.append("role_id", props.role_id)
+
+    axios.post("http://localhost:3001/roles/invite/accept", formData).then((results) => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  const handleDeclineInvite = () => {
+    let formData = new FormData()
+    formData.append("project_id", props.project_id)
+    formData.append("role_id", props.role_id)
+
+    axios.post("http://localhost:3001/roles/invite/decline", formData).then((results) => {
+      props.rerender()
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
   return (
     <div>
       <Card className={cx(classes.root, props.selectedTheme.name === "darkModeTheme" ? darkModeShadowStyles.root : shadowStyles.root)}
-        onClick={props.onClick}
+        onClick={props.type === "normal" ? props.onClick : null}
       >
           <Card className={classes.mediaContainer}>
             {renderMedia()}
@@ -216,7 +243,7 @@ const ProjectCard = (props) => {
               <Typography
                 className={classes.textBody}
                 noWrap variant="body2">
-                  {`${props.members} ${props.members > 1 ? "members" : "member"}`}
+                  {props.type === "invite" ? "Invite" : `${props.members} ${props.members > 1 ? "members" : "member"}`}
               </Typography>
             </div>
           </div> : 
@@ -230,9 +257,34 @@ const ProjectCard = (props) => {
             marginLeft: 60
           }}>
             <Grid item xs={9}>
+              {props.type === "invite" ? 
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
+                <div style={{ marginRight: 10 }}>
+                  <Button
+                    type="icon"
+                    icon="Done"
+                    color="primary"
+                    onClick={handleAcceptInvite}
+                  />
+                </div>
+                <Button
+                  type="icon"
+                  icon="Close"
+                  color="primary"
+                  onClick={handleDeclineInvite}
+                />
+              </div>
+              :
               <AvatarGroup max={4} width="35" className={classes.avatarGroup}>
                 {renderAvatars()}
               </AvatarGroup>
+              }
             </Grid>
             <Grid item xs={2}>
               {renderIcon()}

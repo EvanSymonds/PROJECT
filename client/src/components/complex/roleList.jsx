@@ -10,7 +10,10 @@ import MuiButton from "@material-ui/core/Button"
 import InputBase from "@material-ui/core/InputBase"
 import CreateRole from "../basics/createRole"
 import { Edit, Add } from "@material-ui/icons"
+import socketIOClient from "socket.io-client";
 import axios from "axios"
+
+var jwt = require("jsonwebtoken")
 
 const RoleList = (props) => {
   const [open, setOpen] = useState(false);
@@ -153,7 +156,22 @@ const RoleList = (props) => {
             formData.append("project_id", props.project_id)
             formData.append("user_id", user.user_id)
 
-            axios.post("http://localhost:3001/roles/add", formData).then(() => {
+            axios.post("http://localhost:3001/roles/invite", formData).then(() => {
+              const socket = socketIOClient("http://localhost:3001");
+              socket.emit("INVITE_SENT", user.user_id)
+              socket.on("PROJECT_INVITE", (data) => {
+                if (window.localStorage.getItem("authToken")) {
+                  const encrypted = window.localStorage.getItem("authToken")
+                  const token = jwt.decode(JSON.parse(encrypted))
+          
+                  console.log("Someone invited")
+          
+                  if (parseInt(token.user_id) === parseInt(data)) {
+                    props.setNotificationOpen(true)
+                  }
+                }
+              });
+
               setUsername("")
               setTag("")
               setAddMemberOpen(false)
