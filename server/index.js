@@ -1,5 +1,4 @@
 const bodyParser = require("body-parser");
-const helmet = require("helmet");
 const fileupload = require("express-fileupload");
 const cors = require('cors')
 
@@ -17,6 +16,8 @@ const io = socketIo(server);
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+require("./startup/prod")(app)
 
 const config = require("config");
 
