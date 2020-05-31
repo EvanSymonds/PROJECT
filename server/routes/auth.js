@@ -30,29 +30,27 @@ router.post("/", async(request, response) => {
           return response.status(401).send("Invalid username or password")
         } else {
 
-          const checkForUser = () => {
-            return new Promise((resolve, reject) => {
+          const checkForUser = async() => {
+            return new Promise(async(resolve, reject) => {
               let token, username
 
-              users.forEach((user, i) => {
+              users.forEach(async(user, i) => {
 
-                const validPassword = bcrypt.compare(request.body.password, user.password)
-                if (validPassword) {
-                  debug("Successfully logged in");
-    
-                  token = jwt.sign({ name: user.username, user_id: user.user_id }, config.get("jwtPrivateKey"))
-    
-                  username = user.username
+                await bcrypt.compare(request.body.password, user.password).then((validPassword) => {
+                  debug(validPassword)
 
-                  debug(token, username)
-                  resolve([token, username])
-                }
+                  if (validPassword) {
+                    debug("Successfully logged in");
+      
+                    token = jwt.sign({ name: user.username, user_id: user.user_id }, config.get("jwtPrivateKey"))
+      
+                    username = user.username
+
+                    resolve([token, username])
+                  }
+                })
 
               })
-
-              if (token === undefined && username == undefined ) {
-                reject()
-              }
 
             })
           }
@@ -135,9 +133,10 @@ router.post("/authlevel/", async(request, response) => {
       let role = results.filter((result) => result.project_id === request.body.project_id)
 
       if (role.length === 1) {
-
+        
         const authToken = jwt.sign({
           name: token.name,
+          role_id: role[0].role_id,
           user_id: token.user_id,
           authLevel: role[0].authorisation_level
         }, config.get("jwtPrivateKey"))

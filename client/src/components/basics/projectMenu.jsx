@@ -42,8 +42,7 @@ const ProjectMenu = (props) => {
       >
         <Tab label="Files" {...tabProps(0)} />
         <Tab label="Team" {...tabProps(1)} />
-        <Tab label="Roadmap" {...tabProps(2)} />
-        <Tab label="Settings" {...tabProps(3)} />
+        <Tab label="Settings" {...tabProps(2)} />
       </Tabs>
     </div>
 

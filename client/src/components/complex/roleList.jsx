@@ -6,11 +6,17 @@ import Paper from "@material-ui/core/paper"
 import Divider from "@material-ui/core/divider"
 import Modal from "@material-ui/core/modal"
 import Button from "../basics/button"
+import MuiButton from "@material-ui/core/Button"
+import InputBase from "@material-ui/core/InputBase"
 import CreateRole from "../basics/createRole"
 import { Edit, Add } from "@material-ui/icons"
+import axios from "axios"
 
 const RoleList = (props) => {
   const [open, setOpen] = useState(false);
+  const [addMemberOpen, setAddMemberOpen] = useState(false)
+  const [username, setUsername] = useState("")
+  const [tag, setTag] = useState("")
 
   const useStyles = makeStyles((theme) => ({
     role: {
@@ -48,6 +54,39 @@ const RoleList = (props) => {
       paddingLeft: 20,
       cursor: 'pointer',
       backgroundColor: theme.palette.secondary.light,
+    },
+    addMember: {
+      width: 300,
+      height: 150,
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      marginTop: "-75px",
+      marginLeft: "-100px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      '&:focus': {
+        outlineStyle: "none"
+      }
+    },
+    usernameField: {
+      width: 150,
+      height: 50,
+      backgroundColor: theme.palette.secondary.light,
+      marginRight: 20,
+      display: "flex",
+      justifyContent: "center",
+      paddingLeft: 10,
+    },
+    tagField: {
+      width: 75,
+      height: 50,
+      backgroundColor: theme.palette.secondary.light,
+      display: "flex",
+      justifyContent: "center",
+      paddingLeft: 10,
     }
   }));
   const classes = useStyles();
@@ -92,8 +131,45 @@ const RoleList = (props) => {
     setOpen(false);
   };
 
-  const handleAddMember = () => {
+  const handleChangeTag = (event) => {
+    if (event.target.value.length < 5) {
+      if (event.target.value.length === 0) {
+        setTag(event.target.value)
+      } else if (isNaN(event.target.value) === false) {
+        setTag(event.target.value)
+      }
+    }
+  }
 
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    axios.get("http://localhost:3001/users/credential/" + username + "#" + tag).then((api_users) => {
+      
+      if (api_users.data.length > 0) {
+        api_users.data.forEach((user) => {
+          if (user.username === username + "#" + tag) {
+            let formData = new FormData()
+            formData.append("project_id", props.project_id)
+            formData.append("user_id", user.user_id)
+
+            axios.post("http://localhost:3001/roles/add", formData).then(() => {
+              setUsername("")
+              setTag("")
+              setAddMemberOpen(false)
+              props.onAddRole()
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+          }
+        })
+      }
+
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
   return (
@@ -111,7 +187,7 @@ const RoleList = (props) => {
           className={classes.actionRole}
           elevation={0}
           square
-          onClick={props.handleAddMember}
+          onClick={() => setAddMemberOpen(true)}
         >
           Add member
           <Add style={{ marginLeft: 10 }} color="primary"/>
@@ -140,6 +216,57 @@ const RoleList = (props) => {
           <div>
             <CreateRole project_id={props.project_id} onAddRole={onAddRole}/>
           </div>
+        </Modal>
+        <Modal
+          open={addMemberOpen}
+          onClose={() => setAddMemberOpen(false)}
+        >
+          <Card
+            className={classes.addMember}
+            component="form"
+            onSubmit={handleSubmit}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Paper
+                className={classes.usernameField}
+                square
+              >
+                <InputBase
+                  placeholder="Username"
+                  className={classes.input}
+                  value={username}
+                  onChange={(event) => event.target.value.length < 25 ? setUsername(event.target.value) : null}
+                />
+              </Paper>
+              <Paper
+                className={classes.tagField}
+                square
+              >
+                <InputBase
+                  placeholder="0000"
+                  className={classes.input}
+                  startAdornment="#"
+                  value={tag}
+                  onChange={handleChangeTag}
+                />
+              </Paper>
+            </div>
+            <MuiButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              style={{ marginTop: 10 }}
+            >
+              Add user
+            </MuiButton>
+          </Card>
         </Modal>
       </Grid>
     </Grid>

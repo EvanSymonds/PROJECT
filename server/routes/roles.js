@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const role_api = require("../APIs/role_api");
 const user_api = require("../APIs/user_api")
+const project_api = require("../APIs/project_api")
 const Joi = require("joi");
 
 //Setting up debugging channels
@@ -111,6 +112,46 @@ router.post("/new", async (request, response) => {
       .catch((error) => {
         response.status(400).json(error);
       })
+    }
+  })
+})
+
+router.post("/add", async(request, response) => {
+  const schema = {
+    project_id: Joi.number().integer().max(100000000).required(),
+    user_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      
+      await role_api.getRolesByProject(request.body.project_id).then(async(roles) => {
+
+        let lowestAuth = [10, ""]
+
+        roles.forEach((role) => {
+          if (role.authorisation_level <= lowestAuth[0]) {
+            lowestAuth = [role.authorisation_level, role.role_name]
+          }
+        })
+
+        await role_api.assignRole(request.body.project_id, lowestAuth[1], request.body.user_id).then((results) => {
+          response.status(200).json(results)
+        })
+        .catch((error) => {
+          debug(error)
+          response.status(400).json(error)
+        })
+
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+
     }
   })
 })
@@ -302,13 +343,130 @@ router.post("/delete/:id", async(request, response) => {
       debug(error)
       response.status(400).json(error)
     } else {
-      await role_api.deleteUserRole(parseInt(request.params.id), request.body.project_id).then((results) => {
-        response.status(200).json(results)
+      //MAKE ROLES WITH USERS
+      let final_roles = []
+
+      await role_api.getRolesByProject(request.body.project_id).then(async(projectRoles) => {
+
+        console.log
+
+        if (projectRoles.length < 3) {
+          project_api.deleteProject(request.body.project_id).then(() => {
+            
+            role_api.deleteRolesByProject(request.body.project_id).then(() => {
+              response.status(200).json("Project deleted")
+            })
+            .catch((error) => {
+              debug(error)
+              response.status(400).json(error)
+            })
+
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+        } else {
+
+          let api_roles = []
+
+          //get an array with every type of role
+          projectRoles.forEach((role) => {
+
+            const pos = api_roles.map((api_role) => { return api_role.role_name }).indexOf(role.role_name)
+
+            if (pos === -1) {
+              api_roles = [...api_roles, {
+                role_name: role.role_name,
+                authorisation_level: role.authorisation_level
+              }]
+            }
+          })
+          //get an array with every type of role
+
+          api_roles.forEach((api_role) => {
+            api_role_users = []
+
+            projectRoles.forEach((projectRole) => {
+              if (projectRole.role_name === api_role.role_name) {
+                api_role_users = [...api_role_users, projectRole.user_id]
+              }
+            })
+
+            final_roles = [...final_roles, {
+              api_role: api_role,
+              api_role_users: api_role_users
+            }]
+          })
+
+          //IS USER LEVEL 9
+          await role_api.getRolesById(parseInt(request.params.id)).then(async(role) => {
+            if (role[0].authorisation_level == 9){
+
+              let correspondingRole
+
+              final_roles.forEach((final_role) => {
+
+                if (final_role.api_role.role_name === role[0].role_name) {
+                  correspondingRole = final_role
+                }
+
+              })
+
+              //ARE THERE OTHER USERS IN THIS ROLE
+
+              if (correspondingRole.api_role_users.length < 3) {
+                
+                //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+                let highestAuth = 0
+
+                final_roles.forEach((final_role) => {
+                  if (final_role.api_role.authorisation_level > highestAuth && final_role.api_role.authorisation_level !== 9) {
+                    highestAuth = final_role.api_role.authorisation_level
+                  }
+                })
+
+                highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth && role.api_role_users.length > 1)
+
+                //FIND THE NEXT ROLE IN LINE TO BE ADMIN
+
+                //MAKE THAT ROLE LEVEL 9
+
+                role_api.updateRoleAuth(highestAuthRoles[0].api_role.role_name, request.body.project_id, 9)
+
+                //MAKE THAT ROLE LEVEL 9
+
+                //MAKE THE OTHER ROLE LEVEL 8
+
+                role_api.updateRoleAuth(correspondingRole.api_role.role_name, request.body.project_id, 8)
+
+                //MAKE THE OTHER ROLE LEVEL 8
+
+              }
+
+              //ARE THERE OTHER USERS IN THIS ROLE
+
+            }
+          })
+          //IS USER LEVEL 9
+
+          //EXECUTE CHANGE
+
+          role_api.deleteUserRole(parseInt(request.params.id), request.body.project_id).then((results) => {
+            response.status(200).json(results)
+          })
+          .catch((error) => {
+            response.status(400).json(error)
+          })
+
+          //EXECUTE CHANGE
+
+        }
+
       })
-      .catch((error) => {
-        debug(error)
-        response.status(400).json(error)
-      })
+      //MAKE ROLES WITH USERS
+
     }
   })
 })

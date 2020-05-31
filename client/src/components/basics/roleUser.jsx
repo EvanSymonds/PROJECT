@@ -81,8 +81,6 @@ const RoleUser = (props) => {
 
   const handleDeleteUser = () => {
 
-    console.log(props.project_id)
-
     let formData = new FormData()
     formData.append("project_id", props.project_id)
 

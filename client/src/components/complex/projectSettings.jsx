@@ -4,6 +4,7 @@ import SelectThumbnail from "../basics/selectThumbnail"
 import ProjectName from "../basics/projectName"
 import AuthSliders from "./authSliders"
 import DeleteProject from "../basics/deleteProject"
+import LeaveProject from "../basics/leaveProject"
 import Grid from "@material-ui/core/grid"
 
 import { connect } from "react-redux"
@@ -13,6 +14,7 @@ var jwt = require("jsonwebtoken")
 
 const ProjectSettings = (props) => {
   const [mode, setMode] = useState("view")
+  const [roleId, setRoleId] = useState()
 
   useEffect(() => {
     const encrypted = window.localStorage.getItem("authToken")
@@ -20,6 +22,7 @@ const ProjectSettings = (props) => {
 
     if (token.authLevel >= props.projectSettings.changeSettingsAuth) {
       setMode("admin")
+      setRoleId(token.role_id)
     }
   }, [])
 
@@ -56,6 +59,9 @@ const ProjectSettings = (props) => {
           <DeleteProject 
             project_id={props.project_id}
           />
+        </Grid>
+        <Grid item>
+          <LeaveProject project_id={props.project_id} role_id={roleId}/>
         </Grid>
         <Grid item>
           <AuthSliders project_id={props.project_id}/>

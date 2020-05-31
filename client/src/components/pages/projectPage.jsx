@@ -124,8 +124,6 @@ const ProjectPage = (props) => {
       case 1: 
         return <Team project_id={project_id}/>
       case 2: 
-        return <Roadmap project_id={project_id}/>
-      case 3: 
         return <ProjectSettings project_id={project_id}/>
     }
   }

@@ -29,6 +29,16 @@ router.get("/:id", async (request, response) => {
   })
 })
 
+router.get("/credential/:credential", async(request, response) => {
+  await user_api.getUserByCredential(request.params.credential).then((user) => {
+    response.status(200).json(user)
+  })
+  .catch((error) => {
+    debug(error)
+    response.status(400).json(error)
+  })
+})
+
 router.post("/:id", async (request, response) => {
   const schema = {
     username: Joi.string().alphanum().min(3).max(25).required(),
