@@ -35,7 +35,7 @@ const LeaveProject = (props) => {
     let formData = new FormData()
     formData.append("project_id", props.project_id)
 
-    axios.post("http://localhost:3001/roles/delete/" + props.role_id, formData).then(() => {
+    axios.post("/api/roles/delete/" + props.role_id, formData).then(() => {
       history.goBack()
       setConfirmOpen(false)
     })

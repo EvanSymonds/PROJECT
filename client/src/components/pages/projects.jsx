@@ -20,7 +20,7 @@ const Projects = () => {
 
   useEffect(() => {renderProjectCards()}, [])
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:3001");
+    const socket = socketIOClient("/api");
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
@@ -75,7 +75,7 @@ const Projects = () => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
 
-    axios.post("http://localhost:3001/projects/create/" + token.user_id).then(() => {
+    axios.post("/api/projects/create/" + token.user_id).then(() => {
       setProjects([])
       renderProjectCards()
     })
@@ -99,12 +99,12 @@ const Projects = () => {
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
     
-    axios.get("http://localhost:3001/roles/user/" + token.user_id).then((roles) => {  
+    axios.get("/api/roles/user/" + token.user_id).then((roles) => {  
       let invitedArray = []
 
       roles.data.forEach((role) => {
         if (role.role_name === "INVITED") {
-          axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
+          axios.get("/api/projects/" + role.project_id).then((project) => {
             setInvites([...invitedArray, {
               project_id: project.data[0].project_id,
               project_name: project.data[0].project_name,
@@ -124,9 +124,9 @@ const Projects = () => {
 
       roles.forEach((role) => {
         if (role.user_id !== "-1") {
-          axios.get("http://localhost:3001/projects/" + role.project_id).then((project) => {
+          axios.get("/api/projects/" + role.project_id).then((project) => {
 
-          axios.get("http://localhost:3001/roles/project/" + project.data[0].project_id).then((users) => {
+          axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
             const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
             
             projectArray = [...projectArray, {

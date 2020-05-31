@@ -43,7 +43,7 @@ const FolderPage = (props) => {
     formData.append("project_id", props.project_id)
     formData.append("folder_id", props.folder.folder_id)
 
-    axios.post("http://localhost:3001/file_system/folder", formData).then(() => {
+    axios.post("/api/file_system/folder", formData).then(() => {
       props.rerender()
     })
     .catch((error) => {
@@ -56,7 +56,7 @@ const FolderPage = (props) => {
     formData.append("type", "folder")
     formData.append ("folder_id", props.folder.folder_id)
 
-    axios.post("http://localhost:3001/file_system/delete/" + folder_id, formData).then(() => {
+    axios.post("/api/file_system/delete/" + folder_id, formData).then(() => {
       props.rerender()
     })
     .catch((error) => {
@@ -85,7 +85,7 @@ const FolderPage = (props) => {
     let formData = new FormData()
     formData.append("new_auth", 1)
 
-    axios.post("http://localhost:3001/file_system/auth/" + selected.folder_id, formData).then(() => {
+    axios.post("/api/file_system/auth/" + selected.folder_id, formData).then(() => {
       props.rerender()
     })
     .catch((error) => {
@@ -151,7 +151,7 @@ const FolderPage = (props) => {
     let formData = new FormData()
     formData.append("color", color)
 
-    axios.post("http://localhost:3001/file_system/color/" + selected.folder_id, formData).then(() => {
+    axios.post("/api/file_system/color/" + selected.folder_id, formData).then(() => {
       props.rerender()
       setSelected(null)
     })

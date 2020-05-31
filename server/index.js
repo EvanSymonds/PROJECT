@@ -61,17 +61,17 @@ const profile_pictures = require("./routes/profile_pictures");
 const user_settings = require("./routes/user_settings");
 
 //Routing
-app.use("/auth", auth);
-app.use("/users", users);
-app.use("/projects", projects);
-app.use("/project_settings", project_settings);
-app.use("/roles", roles);
-app.use("/files", files);
-app.use("/folders", folders);
-app.use("/file_system", file_system);
-app.use("/thumbnails", thumbnails);
-app.use("/profile_pictures", profile_pictures);
-app.use("/user_settings", user_settings);
+app.use("/api/auth", auth);
+app.use("/api/users", users);
+app.use("/api/projects", projects);
+app.use("/api/project_settings", project_settings);
+app.use("/api/roles", roles);
+app.use("/api/files", files);
+app.use("/api/folders", folders);
+app.use("/api/file_system", file_system);
+app.use("/api/thumbnails", thumbnails);
+app.use("/api/profile_pictures", profile_pictures);
+app.use("/api/user_settings", user_settings);
 
 
 io.on("connection", (socket) => {

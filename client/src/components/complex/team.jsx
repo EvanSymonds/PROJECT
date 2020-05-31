@@ -23,7 +23,7 @@ const Team = (props) => {
   }, [])
 
   const getAllRoles = () => {
-    axios.get("http://localhost:3001/roles/allusers/" + props.project_id).then((rolesWithUsers) => {
+    axios.get("/api/roles/allusers/" + props.project_id).then((rolesWithUsers) => {
       let api_roles = []
 
       rolesWithUsers.data.forEach((roleWithUser) => {
@@ -81,7 +81,7 @@ const Team = (props) => {
   }
 
   const onDeleteRole = (role) => {
-    axios.delete("http://localhost:3001/roles", {data: {role_name: role, project_id: props.project_id}}).then(() => {
+    axios.delete("/api/roles", {data: {role_name: role, project_id: props.project_id}}).then(() => {
       setSelected(selected => selected === 0 ? 0 : selected - 1)
       getAllRoles()
     })
@@ -101,7 +101,7 @@ const Team = (props) => {
     formData.append("new_role", newRole)
     formData.append("project_id", props.project_id)
 
-    axios.post("http://localhost:3001/roles/update", formData).then((response) => {
+    axios.post("/api/roles/update", formData).then((response) => {
       getAllRoles()
     })
     .catch((error) => {
@@ -115,7 +115,7 @@ const Team = (props) => {
     formData.append("project_id", props.project_id)
     formData.append("auth_level", auth_level)
 
-    axios.post("http://localhost:3001/roles/auth/update", formData).then(() => {
+    axios.post("/api/roles/auth/update", formData).then(() => {
 
       const newRoles = [...roles]
       const role = newRoles.filter((role) => role.api_role === role_name)

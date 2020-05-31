@@ -24,7 +24,7 @@ const SelectThumbnail = (props) => {
       return window.btoa(binary);
     };
 
-    axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
+    axios.get("/api/thumbnails/" + props.project_id).then((data) => {
       const base64Flag = 'data:image/png;base64,'
       const imageStr = arrayBufferToBase64(data.data.data.data)
       const image = (base64Flag + imageStr).toString()

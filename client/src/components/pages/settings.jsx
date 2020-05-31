@@ -17,7 +17,7 @@ const Settings = () => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:3001");
+    const socket = socketIOClient("/api");
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")

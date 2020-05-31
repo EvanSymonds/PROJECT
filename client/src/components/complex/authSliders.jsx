@@ -45,7 +45,7 @@ const AuthSliders = (props) => {
     formData.append("setting_name", setting)
     formData.append("new_value", newValue)
 
-    axios.post("http://localhost:3001/project_settings/" + props.project_id, formData)
+    axios.post("/api/project_settings/" + props.project_id, formData)
     .catch((error) => {
       console.log(error)
     })

@@ -29,7 +29,7 @@ const ProjectCard = (props) => {
     };
 
     if (props.project_id !== -1) {
-      axios.get("http://localhost:3001/thumbnails/" + props.project_id).then((data) => {
+      axios.get("/api/thumbnails/" + props.project_id).then((data) => {
         const base64Flag = 'data:image/png;base64,'
         const imageStr = arrayBufferToBase64(data.data.data.data)
         setThumbnail(((base64Flag + imageStr).toString()))
@@ -198,7 +198,7 @@ const ProjectCard = (props) => {
     formData.append("project_id", props.project_id)
     formData.append("role_id", props.role_id)
 
-    axios.post("http://localhost:3001/roles/invite/accept", formData).then((results) => {
+    axios.post("/api/roles/invite/accept", formData).then((results) => {
       props.rerender()
     })
     .catch((error) => {
@@ -211,7 +211,7 @@ const ProjectCard = (props) => {
     formData.append("project_id", props.project_id)
     formData.append("role_id", props.role_id)
 
-    axios.post("http://localhost:3001/roles/invite/decline", formData).then((results) => {
+    axios.post("/api/roles/invite/decline", formData).then((results) => {
       props.rerender()
     })
     .catch((error) => {

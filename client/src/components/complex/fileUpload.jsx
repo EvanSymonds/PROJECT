@@ -96,7 +96,7 @@ const FileUpload = (props) => {
           formData.append("folder_id", props.folder_id)
         }
 
-        const url = "http://localhost:3001" + props.endpoint
+        const url = "/api" + props.endpoint
 
         await axios.post(url, formData, config).then((response, error) => {
           if (error) {

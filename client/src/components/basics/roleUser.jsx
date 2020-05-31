@@ -84,7 +84,7 @@ const RoleUser = (props) => {
     let formData = new FormData()
     formData.append("project_id", props.project_id)
 
-    axios.post("http://localhost:3001/roles/delete/" + props.user.role_id, formData).then(() => {
+    axios.post("/api/roles/delete/" + props.user.role_id, formData).then(() => {
       props.rerender()
       setConfirmOpen(false)
     })

@@ -66,7 +66,7 @@ const UserDetails = (props) => {
 
   const getUser = () => {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:3001/users/" + props.user.user_id).then((user) => {
+      axios.get("/api/users/" + props.user.user_id).then((user) => {
         setUser(user.data[0])
         resolve()
       })
@@ -78,7 +78,7 @@ const UserDetails = (props) => {
   }
 
   useEffect(() => {
-    axios.get("http://localhost:3001/users/" + props.user.user_id).then((user) => {
+    axios.get("/api/users/" + props.user.user_id).then((user) => {
       setUser(user.data[0])
     })
     .catch((error) => {
@@ -101,7 +101,7 @@ const UserDetails = (props) => {
     formData.append("username", user.username)
     formData.append("email", user.email)
 
-    axios.post("http://localhost:3001/users/" + props.user.user_id, formData).then(async() => {
+    axios.post("/api/users/" + props.user.user_id, formData).then(async() => {
       await getUser().then(() => {
         setMode("view")
       })

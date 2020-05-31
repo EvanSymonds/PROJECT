@@ -31,7 +31,7 @@ const RenameProject = (props) => {
     let formData = new FormData()
     formData.append("new_name", projectName)
 
-    axios.post("http://localhost:3001/folders/" + props.folder_id, formData).then(() => {
+    axios.post("/api/folders/" + props.folder_id, formData).then(() => {
       props.close()
     })
     .catch((error) => {

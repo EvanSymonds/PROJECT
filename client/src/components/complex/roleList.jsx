@@ -147,7 +147,7 @@ const RoleList = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    axios.get("http://localhost:3001/users/credential/" + username + "#" + tag).then((api_users) => {
+    axios.get("/api/users/credential/" + username + "#" + tag).then((api_users) => {
       
       if (api_users.data.length > 0) {
         api_users.data.forEach((user) => {
@@ -156,8 +156,8 @@ const RoleList = (props) => {
             formData.append("project_id", props.project_id)
             formData.append("user_id", user.user_id)
 
-            axios.post("http://localhost:3001/roles/invite", formData).then(() => {
-              const socket = socketIOClient("http://localhost:3001");
+            axios.post("/api/roles/invite", formData).then(() => {
+              const socket = socketIOClient("/api");
               socket.emit("INVITE_SENT", user.user_id)
               socket.on("PROJECT_INVITE", (data) => {
                 if (window.localStorage.getItem("authToken")) {

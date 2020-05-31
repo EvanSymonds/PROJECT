@@ -25,7 +25,7 @@ const ProjectPage = (props) => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:3001");
+    const socket = socketIOClient("/api");
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
@@ -46,12 +46,12 @@ const ProjectPage = (props) => {
     formData.append("token", token)
     formData.append("project_id", project_id)
 
-    axios.post("http://localhost:3001/auth/authlevel", formData).then((response) => {
+    axios.post("/api/auth/authlevel", formData).then((response) => {
       const authToken = JSON.stringify(response.headers["x-auth-token"])
 
       window.localStorage.setItem("authToken", authToken)
 
-      axios.get("http://localhost:3001/project_settings/" + project_id).then((response) => {
+      axios.get("/api/project_settings/" + project_id).then((response) => {
         props.changeSettingsAuth(response.data.rows[0].change_settings_auth)
         props.editFilesAuth(response.data.rows[0].edit_files_auth)
       })

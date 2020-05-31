@@ -156,7 +156,7 @@ const Folder = (props) => {
       formData.append("child_id", parseInt(child.id))
       formData.append("type", child.type)
 
-      axios.post("http://localhost:3001/file_system/" + props.folder_id, formData).then(() => {
+      axios.post("/api/file_system/" + props.folder_id, formData).then(() => {
         props.rerender()
       })
       .catch((error) => {
@@ -221,7 +221,7 @@ const Folder = (props) => {
     let formData = new FormData()
     formData.append("new_auth", new_auth)
 
-    axios.post("http://localhost:3001/file_system/auth/" + props.folder_id, formData).then(() => {
+    axios.post("/api/file_system/auth/" + props.folder_id, formData).then(() => {
       props.rerender()
     })
     .catch((error) => {

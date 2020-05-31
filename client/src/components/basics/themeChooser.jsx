@@ -37,7 +37,7 @@ const ThemeChooser = (props) => {
       const encrypted = window.localStorage.getItem("authToken")
       const token = jwt.decode(JSON.parse(encrypted))
 
-      axios.post("http://localhost:3001/user_settings/" + token.user_id, { theme: theme.name }).then((results, error) => {
+      axios.post("/api/user_settings/" + token.user_id, { theme: theme.name }).then((results, error) => {
         if (error) {
           console.log(error)
         }

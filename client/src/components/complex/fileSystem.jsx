@@ -58,7 +58,7 @@ const FileSystem = (props) => {
 
   const getProjectFiles = async (project_id) => {
 
-    const url = "http://localhost:3001/file_system/" + project_id
+    const url = "/api/file_system/" + project_id
     await axios.get(url).then((results, error) => {
       if (error) {
         console.log(error)

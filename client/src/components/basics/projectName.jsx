@@ -13,7 +13,7 @@ const ProjectName = (props) => {
   const inputRef = React.useRef(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/projects/" + props.project_id).then((results) => {
+    axios.get("/api/projects/" + props.project_id).then((results) => {
       setProjectName(results.data[0].project_name)
     })
   }, [])
@@ -66,12 +66,12 @@ const ProjectName = (props) => {
     event.preventDefault()
     setActive(false)
 
-    axios.get("http://localhost:3001/projects/" + props.project_id).then((results, error) => {
+    axios.get("/api/projects/" + props.project_id).then((results, error) => {
       if (error) {
         console.log(error.response)
       } else {
 
-        axios.post("http://localhost:3001/projects/" + props.project_id, {
+        axios.post("/api/projects/" + props.project_id, {
           project_name: projectName,
           is_public: results.data[0].is_public
         })

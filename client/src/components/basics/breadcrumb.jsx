@@ -74,7 +74,7 @@ const Breadcrumb = (props) => {
     formData.append("child_id", parseInt(child.id))
     formData.append("type", child.type)
 
-    axios.post("http://localhost:3001/file_system/" + parseInt(props.folder_id), formData).then(() => {
+    axios.post("/api/file_system/" + parseInt(props.folder_id), formData).then(() => {
       props.rerender()
     })
     .catch((error) => {

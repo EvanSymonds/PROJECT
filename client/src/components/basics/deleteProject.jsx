@@ -46,7 +46,7 @@ const DeleteProject = (props) => {
   }
 
   const handleFullDelete = () => {
-    axios.delete("http://localhost:3001/projects/" + props.project_id).then(() => {
+    axios.delete("/api/projects/" + props.project_id).then(() => {
       history.goBack()
     })
     .catch((error) => {

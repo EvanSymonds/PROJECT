@@ -18,7 +18,7 @@ const CreateRole = (props) => {
     formData.append("project_id", parseInt(props.project_id))
     formData.append("role_name", roleName)
 
-    axios.post("http://localhost:3001/roles/new", formData).then((results) => {
+    axios.post("/api/roles/new", formData).then((results) => {
       props.onAddRole(roleName)
     })
     .catch((error) => {

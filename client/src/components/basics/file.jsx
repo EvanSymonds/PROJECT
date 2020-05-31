@@ -130,7 +130,7 @@ const File = (props) => {
     formData.append("folder_id", parseInt(props.folder_id))
     formData.append("type", 'file')
 
-    const url = "http://localhost:3001/file_system/delete/" + props.file_id
+    const url = "/api/file_system/delete/" + props.file_id
     axios.post(url, formData).then((response, error) => {
       if (error) {
         console.log(error)
@@ -142,7 +142,7 @@ const File = (props) => {
   }
 
   const onDownload = () => {
-    const url = "http://localhost:3001/files/" + props.file_id
+    const url = "/api/files/" + props.file_id
 
     axios.get(url).then((response, error) => {
       if (error) {
