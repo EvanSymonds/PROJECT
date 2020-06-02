@@ -105,6 +105,11 @@ const Projects = () => {
     axios.get("/api/roles/user/" + token.user_id).then((roles) => {  
       let invitedArray = []
 
+      if (roles.data.length === 0) {
+        setLoading(false)
+        return
+      }
+
       roles.data.forEach((role) => {
         if (role.role_name === "INVITED") {
           axios.get("/api/projects/" + role.project_id).then((project) => {

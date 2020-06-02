@@ -59,20 +59,19 @@ const FileSystem = (props) => {
   const getProjectFiles = async (project_id) => {
 
     const url = "/api/file_system/" + project_id
-    await axios.get(url).then((results, error) => {
-      if (error) {
-        console.log(error)
-      } else {
-        if (results.status === 200) {
-          setFolder(results.data)
-          if (ancestry === null) {
-            setAncestry([{
-              folder_id: results.data.folder_id,
-              folder_name: results.data.folder_name
-            }])
-          }
+    await axios.get(url).then((results) => {
+      if (results.status === 200) {
+        setFolder(results.data)
+        if (ancestry === null) {
+          setAncestry([{
+            folder_id: results.data.folder_id,
+            folder_name: results.data.folder_name
+          }])
         }
       }
+    })
+    .catch((error) => {
+      console.log(error)
     })
   }
 

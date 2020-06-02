@@ -13,6 +13,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "../basics/button"
+import Skeleton from '@material-ui/lab/Skeleton';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import axios from "axios"
 
@@ -158,13 +159,13 @@ const File = (props) => {
   return (
     <div
       ref={ref}
-      onDragStart={handleDragStart}
+      onDragStart={props.type === "normal" ? handleDragStart : null}
       style={{
         position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
         left: translate.translateX,
         top: translate.translateY
       }}
-      draggable
+      draggable={props.type === "normal"}
     >
       {
         
@@ -179,44 +180,67 @@ const File = (props) => {
             onClick={onSelect}
           >
             <Grid item xs={1} style={{ marginTop: 2 }}>
-              {renderIcon()}
+              {props.type === "skeleton" ?
+                <Skeleton variant="circle" width={40} height={40} />
+                :
+                renderIcon()
+              }
             </Grid>
             <Grid item xs={8} style={{ marginTop: 2 }}>
-              <Typography className={classes.text}>
-                {props.fileName}
-              </Typography>
+              {props.type === "skeleton" ?
+                <div style={{  width: "70%", marginTop: 2 }}>
+                  <Skeleton variant="text" />
+                  <Skeleton variant="text" />
+                </div>
+                :
+                <Typography className={classes.text}>
+                  {props.fileName}
+                </Typography>
+              }
             </Grid>
             <Grid item xs={2}>
-              <Typography className={classes.text}>
-                {props.fileType}
-              </Typography>
+              {props.type === "skeleton" ?
+                  <div style={{  width: "50%", marginTop: 2 }}>
+                    <Skeleton variant="text" />
+                    <Skeleton variant="text" />
+                  </div>
+                  :
+                  <Typography className={classes.text}>
+                    {props.fileType}
+                  </Typography>
+                }
             </Grid>
             <Grid item xs={1}>
-              <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
-              <Menu
-                anchorEl = {anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <MenuItem onClick={onDelete}>
-                  <DeleteIcon fontSize="small" color="secondary"/>
-                  Delete
-                </MenuItem>
-                <MenuItem onClick={onDownload}>
-                  <GetAppIcon fontSize="small" color="secondary"/>
-                  Download
-                </MenuItem>
-              </Menu>
+              {props.type === "normal" ?
+                <React.Fragment>
+                  <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
+                  <Menu
+                    anchorEl = {anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    getContentAnchorEl={null}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                  >
+                    <MenuItem onClick={onDelete}>
+                      <DeleteIcon fontSize="small" color="secondary"/>
+                      Delete
+                    </MenuItem>
+                    <MenuItem onClick={onDownload}>
+                      <GetAppIcon fontSize="small" color="secondary"/>
+                      Download
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
+                : null
+              }
             </Grid>
           </Grid>
         </ClickAwayListener>

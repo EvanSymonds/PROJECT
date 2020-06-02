@@ -59,10 +59,7 @@ const FileUpload = (props) => {
       return false
     }))
 
-    await uploadFiles(props.credential).then((results) => {
-      props.updateParent()
-      console.log(results)
-    })
+    await uploadFiles(props.credential)
   }
 
   const uploadFiles = async (credential) => {
@@ -83,6 +80,11 @@ const FileUpload = (props) => {
               state: "pending",
               percentage: percentCompleted
             }
+
+            if (percentCompleted === 100 && props.addSkeleton !== undefined) {
+              props.addSkeleton(files.length)
+            }
+
             await setUploadProgress((uploadProgress) => {
               return {...uploadProgress, ...copy}
             })
@@ -98,6 +100,7 @@ const FileUpload = (props) => {
 
         const url = "/api" + props.endpoint
 
+
         await axios.post(url, formData, config).then((response, error) => {
           if (error) {
             reject("Error: ", error)
@@ -112,6 +115,8 @@ const FileUpload = (props) => {
               if (successfullyUploaded.length > 0) {
                 if (successfullyUploaded.every(isEqualToTrue) === true) {
                   props.updateParent()
+                  props.onFileUploaded()
+                  resolve()
                 }
               }
             }

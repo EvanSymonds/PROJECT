@@ -74,7 +74,7 @@ router.get("/:id", async(request, response) => {
           }
 
           await getFolderContents(null, rootFolder.folder_id, rootFolder.folder_name).then((folderContents) => {
-            response.status(200).json(folderContents)
+            response.status(200).send(folderContents)
           })
         }
       })

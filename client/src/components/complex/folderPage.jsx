@@ -15,6 +15,7 @@ const FolderPage = (props) => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null)
   const [listenForDrag, setListenForDrag] = useState(false)
+  const [skeletons, setSkeletons] = useState([])
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,12 +31,27 @@ const FolderPage = (props) => {
   }))
   const classes = useStyles()
 
+  console.log(skeletons)
+
   const onDeleteFile = (e) => {
     props.rerender()
   }
 
   const onAddFile = () => {
     props.rerender()
+  }
+
+  const handleFileUploaded = () => {
+    console.log("Complete")
+    const skeletonCopy = [...skeletons]
+    skeletonCopy.shift()
+    setSkeletons(skeletonCopy)
+  }
+
+  const handleAddSkeletonFile = (maxFiles) => {
+    if (skeletons.length < maxFiles) {
+      setSkeletons((skeletons) => [...skeletons, 0])
+    }
   }
 
   const onCreateFolder = () => {
@@ -110,6 +126,7 @@ const FolderPage = (props) => {
               data-testid='component-file'
             >
               <File 
+                type="normal"
                 key={i} 
                 fileIndex={i} 
                 fileType={file.file_type} 
@@ -130,6 +147,7 @@ const FolderPage = (props) => {
                 key={i}
               >
                 <File 
+                  type="normal"
                   fileIndex={i}
                   fileType={file.file_type} 
                   fileName={file.file_name} 
@@ -230,6 +248,12 @@ const FolderPage = (props) => {
         </Grid>
 
         <div className={classes.fileContainer}>
+          {skeletons.map((skeleton, i) => 
+            <File
+              type="skeleton"
+              key={i}
+            />
+          )}
           {renderFiles()}
         </div>
 
@@ -242,6 +266,8 @@ const FolderPage = (props) => {
         <div>
           <FileUpload 
             updateParent={onAddFile}
+            onFileUploaded={handleFileUploaded}
+            addSkeleton={handleAddSkeletonFile}
             credentialType="project_id"
             credential={props.project_id}
             folder_id={props.folder.folder_id}
