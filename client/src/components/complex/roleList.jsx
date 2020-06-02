@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/grid"
 import Card from "@material-ui/core/card"
 import Paper from "@material-ui/core/paper"
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from "@material-ui/core/divider"
 import Modal from "@material-ui/core/modal"
 import Button from "../basics/button"
@@ -20,6 +21,8 @@ const RoleList = (props) => {
   const [addMemberOpen, setAddMemberOpen] = useState(false)
   const [username, setUsername] = useState("")
   const [tag, setTag] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     role: {
@@ -90,6 +93,10 @@ const RoleList = (props) => {
       display: "flex",
       justifyContent: "center",
       paddingLeft: 10,
+    },
+    errorMessage: {
+      color: theme.palette.primary.main,
+      fontSize: 15
     }
   }));
   const classes = useStyles();
@@ -145,49 +152,68 @@ const RoleList = (props) => {
   }
 
   const handleSubmit = (event) => {
+    setLoading(true)
     event.preventDefault()
 
-    axios.get("/api/users/credential/" + username + "#" + tag).then((api_users) => {
+    if (username.length < 1) {
+      setError("Please enter a username")
+      return
+    } else if (tag.length !== 4) {
+      setError("Please enter the user's 4 digit tag")
+      return
+    } else {
+      setError("")
+      axios.get("/api/users/credential/" + username + "#" + tag).then((api_users) => {
       
-      if (api_users.data.length > 0) {
-        api_users.data.forEach((user) => {
-          if (user.username === username + "#" + tag) {
-            let formData = new FormData()
-            formData.append("project_id", props.project_id)
-            formData.append("user_id", user.user_id)
-
-            axios.post("/api/roles/invite", formData).then(() => {
-              const socket = socketIOClient("/api");
-              socket.emit("INVITE_SENT", user.user_id)
-              socket.on("PROJECT_INVITE", (data) => {
-                if (window.localStorage.getItem("authToken")) {
-                  const encrypted = window.localStorage.getItem("authToken")
-                  const token = jwt.decode(JSON.parse(encrypted))
-          
-                  console.log("Someone invited")
-          
-                  if (parseInt(token.user_id) === parseInt(data)) {
-                    props.setNotificationOpen(true)
+        if (api_users.data.length > 0) {
+          api_users.data.forEach((user) => {
+            if (user.username === username + "#" + tag) {
+              let formData = new FormData()
+              formData.append("project_id", props.project_id)
+              formData.append("user_id", user.user_id)
+  
+              axios.post("/api/roles/invite", formData).then(() => {
+                setLoading(false)
+                const socket = socketIOClient("http://localhost:3001");
+                socket.emit("INVITE_SENT", user.user_id)
+                socket.on("PROJECT_INVITE", (data) => {
+                  if (window.localStorage.getItem("authToken")) {
+                    const encrypted = window.localStorage.getItem("authToken")
+                    const token = jwt.decode(JSON.parse(encrypted))
+            
+                    console.log("Someone invited")
+            
+                    if (parseInt(token.user_id) === parseInt(data)) {
+                      props.setNotificationOpen(true)
+                    }
                   }
+                });
+  
+                setUsername("")
+                setTag("")
+                setAddMemberOpen(false)
+                props.onAddRole()
+              })
+              .catch((error) => {
+                setLoading(false)
+                if (error.response.data.detail !== undefined) {
+                  setError(error.response.data.detail)
+                } else {
+                  console.log(error)
                 }
-              });
+              })
+            }
+          })
+        } else {
+          setError("User doesn't exist")
+        }
+  
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
 
-              setUsername("")
-              setTag("")
-              setAddMemberOpen(false)
-              props.onAddRole()
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-          }
-        })
-      }
-
-    })
-    .catch((error) => {
-      console.log(error)
-    })
   }
 
   return (
@@ -276,14 +302,37 @@ const RoleList = (props) => {
                 />
               </Paper>
             </div>
-            <MuiButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              style={{ marginTop: 10 }}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: loading ? 40 : 0
+              }}
             >
-              Add user
-            </MuiButton>
+              <MuiButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                style={{ marginTop: 10 }}
+              >
+                Add user
+              </MuiButton>
+              {loading ? 
+                <CircularProgress 
+                  color="primary"
+                  size={20}
+                  style={{
+                    marginLeft: 10
+                  }}
+                /> : null}
+            </div>
+            <div
+              className={classes.errorMessage}
+            >
+              {error}
+            </div>
           </Card>
         </Modal>
       </Grid>

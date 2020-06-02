@@ -15,7 +15,7 @@ const Support = () => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("/api");
+    const socket = socketIOClient("http://localhost:3001");
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
@@ -54,13 +54,6 @@ const Support = () => {
       right: 0,
       width: "100%",
       height: "calc(100% + 10px)"
-    },
-    notification: {
-      backgroundColor: theme.palette.secondary.light,
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      padding: '0px 5px 0px 10px',
     }
   }));
   const classes = useStyles();

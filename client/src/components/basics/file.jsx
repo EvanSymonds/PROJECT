@@ -142,15 +142,13 @@ const File = (props) => {
   }
 
   const onDownload = () => {
-    const url = "/api/files/" + props.file_id
+    const url = "http://localhost:3001/api/files/" + parseInt(props.file_id)
 
-    axios.get(url).then((response, error) => {
-      if (error) {
-        console.log(error)
-      } else {
-        window.location.assign(url)
-      }
-    })
+    const link = document.createElement('a')
+    link.href = url
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   const handleClose = () => {

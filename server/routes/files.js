@@ -4,6 +4,7 @@ const Joi = require("joi");
 const fs = require("fs")
 const fsExtra = require("fs-extra")
 const file_api = require("../APIs/file_api")
+const path = require('path');
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");
@@ -24,15 +25,20 @@ router.get("/", async (request, response) => {
 })
 
 router.get("/:id", async (request, response) => {
-  await file_api.getFileById(parseInt(request.params.id)).then(async (file, error) => {
-    if (error) {
-      debug("Error: ", error)
-      response.status(400).json(error)
-    } else  {
-      response.download(file.path, file.file[0].file_name, () => {
-        fsExtra.emptyDirSync("./Temp_storage");
-      })
-    }
+  debug(request.params.id)
+
+  await file_api.getFileById(parseInt(request.params.id)).then(async (file) => {
+    response.setHeader("Content-Disposition", "attachment; filename=" + file.file[0].file_name)
+    response.set('Content-Type', 'text/csv');
+    response.status(200)
+    
+    const file_path = path.join(__dirname, "..", "Temp_storage", file.file[0].file_name)
+    fs.createReadStream(file_path).pipe(response)
+    fsExtra.emptyDir(path.join(__dirname, "..", "Temp_storage"))
+  })
+  .catch((error) => {
+    debug("Error: ", error)
+    response.status(400).json(error)
   })
 })
 

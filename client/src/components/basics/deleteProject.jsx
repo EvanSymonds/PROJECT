@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/card"
 import Grid from "@material-ui/core/grid"
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from "./button"
 import Modal from "@material-ui/core/modal"
 import { useHistory } from "react-router-dom";
@@ -12,6 +13,7 @@ var jwt = require("jsonwebtoken")
 const DeleteProject = (props) => {
   const [isError, setIsError] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -46,10 +48,13 @@ const DeleteProject = (props) => {
   }
 
   const handleFullDelete = () => {
+    setLoading(true)
     axios.delete("/api/projects/" + props.project_id).then(() => {
+      setLoading(false)
       history.goBack()
     })
     .catch((error) => {
+      setLoading(false)
       console.log(error)
     })
   }
@@ -128,13 +133,31 @@ const DeleteProject = (props) => {
               <Grid
                 item
               >
-                <Button
-                  type="normal"
-                  variant="contained"
-                  buttonText="Delete"
-                  color="primary"
-                  onClick={handleFullDelete}
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: loading ? 40 : 0
+                  }}
+                >
+                  <Button
+                    type="normal"
+                    variant="contained"
+                    buttonText="Delete"
+                    color="primary"
+                    onClick={handleFullDelete}
+                  />
+                  {loading ? 
+                    <CircularProgress 
+                      color="primary"
+                      size={20}
+                      style={{
+                        marginLeft: 10
+                      }}
+                    /> : null}
+                </div>
               </Grid>
             </Grid>
           </Card>

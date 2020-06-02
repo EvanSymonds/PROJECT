@@ -41,7 +41,7 @@ const AppRouter = (props) => {
       const token = jwt.decode(JSON.parse(encrypted))
 
       const getSettings = async() => {
-        await axios.get("http://localhost:3001/user_settings/" + token.user_id).then((settings) => {
+        await axios.get("/api/user_settings/" + token.user_id).then((settings) => {
 
           const getThemeId = () => {
             switch (settings.data.rows[0].theme){

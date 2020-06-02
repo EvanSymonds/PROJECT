@@ -169,9 +169,32 @@ router.post("/invite", async (request, response) => {
       debug(error)
       response.status(400).json(error);
     } else {
-      
-      await role_api.inviteUser(request.body.project_id, request.body.user_id).then(() => {
-        response.status(200).send("User invited")
+
+      await role_api.getRolesByProject(request.body.project_id).then(async(roles) => {
+
+        let error = false
+
+        roles.forEach((role) => {
+          if (role.user_id === request.body.user_id) {
+            if (role.role_name === "INVITED") {
+              error = "User is already invited"
+            } else {
+              error = "User is already in project"
+            }
+          }
+        })
+
+        if (error !== false) {
+          response.status(400).json({detail: error})
+        } else {
+          await role_api.inviteUser(request.body.project_id, request.body.user_id).then(() => {
+            response.status(200).send("User invited")
+          })
+          .catch((error) => {
+            debug(error)
+            response.status(400).json(error)
+          })
+        }
       })
       .catch((error) => {
         debug(error)

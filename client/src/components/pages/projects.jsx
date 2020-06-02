@@ -7,6 +7,7 @@ import ProjectCard from "../basics/projectCard"
 import Grid from "@material-ui/core/grid"
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from "../basics/button"
+import Skeleton from "@material-ui/lab/Skeleton"
 import socketIOClient from "socket.io-client";
 import axios from "axios"
 
@@ -17,10 +18,11 @@ const Projects = () => {
   const [projects, setProjects] = useState([])
   const [invites, setInvites] = useState([])
   const [notificationOpen, setNotificationOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {renderProjectCards()}, [])
   useEffect(() => {
-    const socket = socketIOClient("/api");
+    const socket = socketIOClient("http://localhost:3001");
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
@@ -72,6 +74,7 @@ const Projects = () => {
   const history = useHistory();
 
   const handleNewProject = () => {
+    setLoading(true)
     const encrypted = window.localStorage.getItem("authToken")
     const token = jwt.decode(JSON.parse(encrypted))
 
@@ -127,6 +130,8 @@ const Projects = () => {
           axios.get("/api/projects/" + role.project_id).then((project) => {
 
           axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
+            setLoading(false)
+
             const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
             
             projectArray = [...projectArray, {
@@ -168,37 +173,71 @@ const Projects = () => {
           >
             <ProjectCard 
               project_id={-1}
+              type="normal"
               onClick={handleNewProject}
             />
           </Grid>
-          {invites.map((project, i) => 
-            <ProjectCard
-              type="invite"
-              key={i} 
-              role_id={project.role_id}
-              project_id={project.project_id} 
-              project_name={project.project_name} 
-              members={project.members}
-              memberList={project.memberList}
-              rerender={renderProjectCards}
-              isPublic={project.isPublic}
-              onClick={() => history.push(project.project_name + "/" + project.project_id)}
-            />
-          )}
-          {projects.map((project, i) => 
-            <Grid item key={i} >
-              <ProjectCard
-                type="normal"
-                key={i} 
-                project_id={project.project_id} 
-                project_name={project.project_name} 
-                members={project.members}
-                memberList={project.memberList}
-                isPublic={project.isPublic}
-                onClick={() => history.push(project.project_name + "/" + project.project_id)}
+          {loading ? 
+            [0,0,0].map((num, i) => 
+            <div
+              key={"Skeleton" + i}
+              style={{
+                marginLeft: 50
+              }}
+            >
+              <Skeleton
+                variant="rect"
+                width={308}
+                height={200}
+                animation="wave"
+                style={{ marginBottom: 5 }}
               />
-            </Grid>
-          )}
+              <Skeleton
+                variant="text"
+                width={180}
+              />
+              <Skeleton
+                variant="text"
+                width={180}
+              />
+              <Skeleton
+                variant="circle"
+                width={40}
+                height={40}
+              />
+            </div>)
+            :
+            <React.Fragment>
+              {invites.map((project, i) => 
+                <ProjectCard
+                  type="invite"
+                  key={i} 
+                  role_id={project.role_id}
+                  project_id={project.project_id} 
+                  project_name={project.project_name} 
+                  members={project.members}
+                  memberList={project.memberList}
+                  rerender={renderProjectCards}
+                  isPublic={project.isPublic}
+                  onClick={() => history.push(project.project_name + "/" + project.project_id)}
+                />
+              )}
+              {projects.map((project, i) => 
+                <Grid item key={i} >
+                  <ProjectCard
+                    type="normal"
+                    key={i} 
+                    project_id={project.project_id} 
+                    project_name={project.project_name} 
+                    members={project.members}
+                    memberList={project.memberList}
+                    isPublic={project.isPublic}
+                    onClick={() => history.push(project.project_name + "/" + project.project_id)}
+                  />
+                </Grid>
+              )}
+            </React.Fragment>
+          }
         </Grid>
       </div>
       <Snackbar

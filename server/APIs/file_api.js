@@ -96,6 +96,7 @@ const getFileById = (file_id) => {
       }
 
       var file = results.rows;
+      dbDebugger(file)
 
       pool.query("SELECT lo_get($1)", [file[0].file_data_id], async (error, results) => {
         if (error){
