@@ -88,6 +88,7 @@ const LeaveProject = (props) => {
       </Card>
       <Modal
         open={confirmOpen}
+        disableScrollLock
         onClose={() => setConfirmOpen(false)}
       >
         <div>

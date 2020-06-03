@@ -289,6 +289,7 @@ const Folder = (props) => {
             </ClickAwayListener>
             <Menu
               keepMounted
+              disableScrollLock
               open={state.mouseY !== null && canEditAuth()}
               onClose={handleClose}
               anchorReference="anchorPosition"

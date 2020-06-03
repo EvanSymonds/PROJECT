@@ -284,6 +284,7 @@ const Sidebar = (props) => {
           <Button className={classes.menuButton} type="icon" icon="Menu" color="primary" onClick={handleOpen}/>
           <Modal
             open={open}
+            disableScrollLock
             onClose={handleClose}
           >
             <Drawer

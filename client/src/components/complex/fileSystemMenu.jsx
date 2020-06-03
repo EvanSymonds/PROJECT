@@ -104,7 +104,7 @@ const FileSystemMenu = (props) => {
           >
             <Add fontSize="default" />
           </IconButton>
-          <Popper 
+          <Popper
             open={addOpen} 
             anchorEl={addAnchorRef.current} 
             placement="bottom-start"

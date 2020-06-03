@@ -148,6 +148,7 @@ const RoleUser = (props) => {
           </Grid>
           <Menu
             open={open}
+            disableScrollLock
             anchorEl={anchorEl}
             onClose={handleClose}
           >
@@ -166,6 +167,7 @@ const RoleUser = (props) => {
       : null}
       <Modal
         open={confirmOpen}
+        disableScrollLock
         onClose={() => setConfirmOpen(false)}
       >
         <div>

@@ -91,6 +91,7 @@ const ProfilePicture = (props) => {
         : null }
       </div>
       <Modal
+        disableScrollLock
         open={uploading}
         onClose={() => setUploading(false)}
       >

@@ -143,6 +143,7 @@ const SelectThumbnail = (props) => {
           </Grid>
         </CardContent>
         <Modal
+          disableScrollLock
           data-test="component-fileUpload"
           open={open}
           onClose={handleClose}

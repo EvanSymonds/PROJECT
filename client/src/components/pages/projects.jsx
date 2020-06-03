@@ -105,54 +105,56 @@ const Projects = () => {
     axios.get("/api/roles/user/" + token.user_id).then((roles) => {  
       let invitedArray = []
 
+      console.log(roles)
+
       if (roles.data.length === 0) {
         setLoading(false)
-        return
-      }
-
-      roles.data.forEach((role) => {
-        if (role.role_name === "INVITED") {
-          axios.get("/api/projects/" + role.project_id).then((project) => {
-            setInvites([...invitedArray, {
-              project_id: project.data[0].project_id,
-              project_name: project.data[0].project_name,
-              isPublic: project.data[0].is_public,
-              role_id: role.role_id
-            }])
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-        }
-      })
-
-      roles = roles.data.filter((role) => role.role_name !== "INVITED")
-
-      let projectArray = []
-
-      roles.forEach((role) => {
-        if (role.user_id !== "-1") {
-          axios.get("/api/projects/" + role.project_id).then((project) => {
-
-          axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
-            setLoading(false)
-
-            const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
-            
-            projectArray = [...projectArray, {
-              project_id: project.data[0].project_id,
-              project_name: project.data[0].project_name,
-              isPublic: project.data[0].is_public,
-              members: realUsers.length,
-              memberList: realUsers
-            }]
-
-            setProjects(projectArray)
-          })
-
+      } else {
+        roles.data.forEach((role) => {
+          if (role.role_name === "INVITED") {
+            axios.get("/api/projects/" + role.project_id).then((project) => {
+              setInvites([...invitedArray, {
+                project_id: project.data[0].project_id,
+                project_name: project.data[0].project_name,
+                isPublic: project.data[0].is_public,
+                role_id: role.role_id
+              }])
+              setLoading(false)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+          }
         })
-        }
-      })
+  
+        roles = roles.data.filter((role) => role.role_name !== "INVITED")
+  
+        let projectArray = []
+  
+        roles.forEach((role) => {
+          if (role.user_id !== "-1") {
+            axios.get("/api/projects/" + role.project_id).then((project) => {
+  
+            axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
+              setLoading(false)
+  
+              const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
+              
+              projectArray = [...projectArray, {
+                project_id: project.data[0].project_id,
+                project_name: project.data[0].project_name,
+                isPublic: project.data[0].is_public,
+                members: realUsers.length,
+                memberList: realUsers
+              }]
+  
+              setProjects(projectArray)
+            })
+  
+          })
+          }
+        })
+      }
 
     })
   }

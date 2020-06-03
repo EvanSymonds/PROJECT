@@ -31,8 +31,6 @@ const FolderPage = (props) => {
   }))
   const classes = useStyles()
 
-  console.log(skeletons)
-
   const onDeleteFile = (e) => {
     props.rerender()
   }
@@ -262,6 +260,7 @@ const FolderPage = (props) => {
         data-test="component-fileUpload"
         open={open}
         onClose={() => setOpen(false)}
+        disableScrollLock
       >
         <div>
           <FileUpload 

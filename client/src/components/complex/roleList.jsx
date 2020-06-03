@@ -256,12 +256,14 @@ const RoleList = (props) => {
         <Modal
           open={open}
           onClose={handleClose}
+          disableScrollLock
         >
           <div>
             <CreateRole project_id={props.project_id} onAddRole={onAddRole}/>
           </div>
         </Modal>
         <Modal
+          disableScrollLock
           open={addMemberOpen}
           onClose={() => setAddMemberOpen(false)}
         >

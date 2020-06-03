@@ -216,6 +216,7 @@ const File = (props) => {
                   <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
                   <Menu
                     anchorEl = {anchorEl}
+                    disableScrollLock
                     keepMounted
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
