@@ -40,7 +40,6 @@ const FolderPage = (props) => {
   }
 
   const handleFileUploaded = () => {
-    console.log("Complete")
     const skeletonCopy = [...skeletons]
     skeletonCopy.shift()
     setSkeletons(skeletonCopy)
@@ -270,7 +269,7 @@ const FolderPage = (props) => {
             credentialType="project_id"
             credential={props.project_id}
             folder_id={props.folder.folder_id}
-            maxFiles={4}
+            maxFiles={5}
             endpoint="/file_system/file"  
           />
         </div>
