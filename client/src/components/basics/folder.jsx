@@ -213,15 +213,11 @@ const Folder = (props) => {
     handleClose()
   }
 
-  const onEditAuth = () => {
-    setEditAuth(true)
-  }
-
-  const onChangeAuth = (new_auth) => {
+  const onChangeAuth = async(new_auth) => {
     let formData = new FormData()
     formData.append("new_auth", new_auth)
 
-    axios.post("/api/file_system/auth/" + props.folder_id, formData).then(() => {
+    await axios.post("/api/file_system/auth/" + props.folder_id, formData).then(() => {
       props.rerender()
     })
     .catch((error) => {
@@ -276,8 +272,11 @@ const Folder = (props) => {
                 {props.authorisation_level !== 0 ? <div
                 id="folder-element"
                 className={classes.authMarker}>
-                  <AuthorisationMarker markerId="folder-element"
-                  level={props.authorisation_level}/>
+                  <AuthorisationMarker
+                    markerId="folder-element"
+                    level={props.authorisation_level}
+                    changeAuth={onChangeAuth}
+                  />
                 </div> : null}
                 <div className={classes.centralCircle} id="folder-element">
                   <FolderIcon className={classes.folderIcon} id="folder-element"/>
@@ -307,14 +306,17 @@ const Folder = (props) => {
                 <Edit style={{ marginRight: 10 }}/>
                 Rename
               </MenuItem>
-              {props.authorisation_level > 0 ? <MenuItem onClick={onEditAuth} style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center"
-              }}>
+              <MenuItem 
+                onClick={props.authorisation_level > 0 ? () => setEditAuth(true) : props.onAddAuth}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
                 <Lock style={{ marginRight: 10 }}/>
-                Edit authorisation
-              </MenuItem> : null}
+                {props.authorisation_level > 0 ? "Edit authorisation" : "Add authorisation"}
+              </MenuItem>
               <MenuItem onClick={handleDelete} style={{
                 display: "flex",
                 flexDirection: "row",

@@ -1,17 +1,30 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles";
 import { useTheme } from '@material-ui/core/styles';
+import useDebounce from "../../hooks/useDebounce"
 import Card from "@material-ui/core/card"
 import Button from "../basics/button"
 import NoEncryptionIcon from '@material-ui/icons/NoEncryption';
 
 const AuthorisationMarker = (props) => {
+  const [authorisationLevel, setAuthorisationLevel] = useState(props.level)
   const theme = useTheme()
+
+  const debouncedAuthLevel = useDebounce(authorisationLevel, 400)
+
+  useEffect(
+    () => {
+      props.changeAuth(authorisationLevel)
+    },
+    [debouncedAuthLevel]
+  );
 
   const useStyles = makeStyles((theme) => ({
     image: {
       width: props.mode === "edit" ? 75 : 50,
       height: props.mode === "edit" ? 75 : 50,
+      msUserSelect: "none",
+      userSelect: "none",
     },
     editCard: {
       position: "absolute",
@@ -34,21 +47,21 @@ const AuthorisationMarker = (props) => {
 
     switch (theme.palette.type){
       case "light":
-        return "/static/images/authorisation-" + props.level + ".svg"
+        return "/static/images/authorisation-" + authorisationLevel + ".svg"
       case "dark":
-        return "/static/images/authorisation-" + props.level + "-dark.svg"
+        return "/static/images/authorisation-" + authorisationLevel + "-dark.svg"
     }
   }
 
   const onDecrease = () => {
-    if (props.level > 0) {
-      props.changeAuth(props.level - 1)
+    if (authorisationLevel > 0) {
+      setAuthorisationLevel(authorisationLevel => authorisationLevel - 1)
     }
   }
 
   const onIncrease = () => {
-    if (props.level < 9) {
-      props.changeAuth(props.level + 1)
+    if (authorisationLevel < 9) {
+      setAuthorisationLevel(authorisationLevel => authorisationLevel + 1)
     }
   }
 
@@ -62,9 +75,9 @@ const AuthorisationMarker = (props) => {
             type="icon"
             icon="ArrowLeft"
             onClick={onDecrease}
-            disabled={props.level === 0}
+            disabled={authorisationLevel === 0}
           />
-          {props.level === 0 ? <NoEncryptionIcon fontSize="large"/> : <img
+          {authorisationLevel === 0 ? <NoEncryptionIcon fontSize="large"/> : <img
             id={props.markerId}
             className={classes.image}
             src={getImageSource()}
@@ -73,7 +86,7 @@ const AuthorisationMarker = (props) => {
             type="icon"
             icon="ArrowRight"
             onClick={onIncrease}
-            disabled={props.level === 9}
+            disabled={authorisationLevel === 9}
           />
         </Card>
       )

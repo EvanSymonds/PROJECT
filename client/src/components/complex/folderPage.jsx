@@ -196,6 +196,7 @@ const FolderPage = (props) => {
         >
           <Folder
             listenForDrag={listenForDrag}
+            onAddAuth={onAddAuth}
             onDragStart={handleDragStart}
             onDragStop={handleDragStop}
             folder_name={folder.folder_name}
