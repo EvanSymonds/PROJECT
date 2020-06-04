@@ -1,6 +1,6 @@
 import React from "react"
 import { makeStyles } from "@material-ui/styles";
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import ClearIcon from '@material-ui/icons/Clear';
 
 const ColorPicker = (props) => {

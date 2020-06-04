@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import Card from "@material-ui/core/card";
 
 const Home = (props) => {
   const [scrollPos, setScrollPos] = useState(0)

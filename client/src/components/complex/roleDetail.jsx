@@ -1,5 +1,5 @@
 import React from "react"
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import RoleUser from "../basics/roleUser"
 
 const RoleDetail = (props) => {

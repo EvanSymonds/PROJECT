@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import Card from "@material-ui/core/card"
-import Paper from "@material-ui/core/paper"
+import Card from "@material-ui/core/Card"
+import Paper from "@material-ui/core/Paper"
 import InputBase from "@material-ui/core/InputBase"
 import Button from "../basics/button"
 import axios from "axios"

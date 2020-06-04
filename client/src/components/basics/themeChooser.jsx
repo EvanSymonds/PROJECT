@@ -2,7 +2,7 @@ import React,{ useState } from "react"
 import { connect } from "react-redux"
 import { selectTheme } from "../../actions/"
 import Radio from "@material-ui/core/Radio"
-import Paper from "@material-ui/core/paper"
+import Paper from "@material-ui/core/Paper"
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios"
 

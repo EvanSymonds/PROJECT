@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import CardMedia from "@material-ui/core/CardMedia"
 import CardContent from "@material-ui/core/CardContent"
 import Grid from "@material-ui/core/Grid"
 import Modal from "@material-ui/core/Modal"
 import Typography from "@material-ui/core/Typography"
-import Paper from "@material-ui/core/paper"
+import Paper from "@material-ui/core/Paper"
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import FileUpload from "../complex/fileUpload"
 import Button from "../basics/button"

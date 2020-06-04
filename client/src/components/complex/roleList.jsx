@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from "@material-ui/core/grid"
-import Card from "@material-ui/core/card"
-import Paper from "@material-ui/core/paper"
+import Grid from "@material-ui/core/Grid"
+import Card from "@material-ui/core/Card"
+import Paper from "@material-ui/core/Paper"
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Divider from "@material-ui/core/divider"
-import Modal from "@material-ui/core/modal"
+import Divider from "@material-ui/core/Divider"
+import Modal from "@material-ui/core/Modal"
 import Button from "../basics/button"
 import MuiButton from "@material-ui/core/Button"
 import InputBase from "@material-ui/core/InputBase"

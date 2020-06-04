@@ -1,8 +1,6 @@
 import React, { useState } from "react"
 import { makeStyles } from '@material-ui/core/styles';
-import ThemeChooser from "../basics/themeChooser"
 import UserDetails from "../basics/userDetails"
-import Divider from "@material-ui/core/divider"
 
 const UserSettings = (props) => {
 

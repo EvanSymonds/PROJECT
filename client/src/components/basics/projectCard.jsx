@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import Button from "./button"
 import CardMedia from '@material-ui/core/CardMedia';
-import Paper from "@material-ui/core/paper"
+import Paper from "@material-ui/core/Paper"
 import Typography from "@material-ui/core/Typography"
 import { useOverShadowStyles } from '@mui-treasury/styles/shadow/over';
 import { useBouncyShadowStyles } from '@mui-treasury/styles/shadow/bouncy';

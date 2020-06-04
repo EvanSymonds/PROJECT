@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from "react"
 import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
-import Card from "@material-ui/core/card"
-import Paper from "@material-ui/core/paper"
-import Grid from "@material-ui/core/grid"
+import Card from "@material-ui/core/Card"
+import Paper from "@material-ui/core/Paper"
+import Grid from "@material-ui/core/Grid"
 import FolderIcon from "@material-ui/icons/Folder"
-import Popper from "@material-ui/core/popper"
+import Popper from "@material-ui/core/Popper"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import RenameProject from "./renameProject"
 import Grow from '@material-ui/core/Grow';
 import ColorPicker from "./colorPicker"
-import Modal from "@material-ui/core/modal"
+import Modal from "@material-ui/core/Modal"
 import AuthorisationMarker from "../basics/authorisationMarker"
 import { Edit, Delete, Lock, FormatColorFill } from "@material-ui/icons"
 import axios from "axios"

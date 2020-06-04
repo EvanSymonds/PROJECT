@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles"
-import Card from "@material-ui/core/card"
-import TextField from "@material-ui/core/textField"
+import Card from "@material-ui/core/Card"
+import TextField from "@material-ui/core/TextField"
 import ProfilePicture from "./profilePicture"
 import axios from "axios"
 import Button from "./button"
-import MaterialButton from "@material-ui/core/button"
+import MaterialButton from "@material-ui/core/Button"
 
 const UserDetails = (props) => {
   const [user, setUser] = useState(null)

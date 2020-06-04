@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper"
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
 import ProjectCard from "../basics/projectCard"
-import Grid from "@material-ui/core/grid"
+import Grid from "@material-ui/core/Grid"
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from "../basics/button"
 import Skeleton from "@material-ui/lab/Skeleton"

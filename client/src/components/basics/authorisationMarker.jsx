@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles";
 import { useTheme } from '@material-ui/core/styles';
 import useDebounce from "../../hooks/useDebounce"
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import Button from "../basics/button"
 import NoEncryptionIcon from '@material-ui/icons/NoEncryption';
 

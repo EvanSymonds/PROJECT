@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/styles"
-import { Edit } from '@material-ui/icons/';
-import Modal from "@material-ui/core/modal"
+import { Edit, AccountCircle } from '@material-ui/icons/';
+import Modal from "@material-ui/core/Modal"
 import FileUpload from "../complex/fileUpload"
-import { AccountCircle } from "@material-ui/icons"
 import axios from "axios"
 
 const ProfilePicture = (props) => {

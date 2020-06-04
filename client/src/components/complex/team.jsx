@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
-import Grid from "@material-ui/core/grid"
+import Grid from "@material-ui/core/Grid"
 import RoleList from "../complex/roleList"
 import RoleDetail from "../complex/roleDetail"
 import RoleSettings from "../complex/roleSettings"
-import Divider from "@material-ui/core/divider"
+import Divider from "@material-ui/core/Divider"
 import axios from "axios"
 
 var jwt = require("jsonwebtoken")

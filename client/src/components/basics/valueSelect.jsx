@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from "@material-ui/core/ButtonBase"
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import { Add, Remove } from "@material-ui/icons"
 
 const ValueSelect = (props) => {

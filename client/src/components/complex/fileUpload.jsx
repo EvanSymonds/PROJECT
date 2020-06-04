@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 import axios from "axios"
 import Dropzone from "../basics/dropzone"
 import Button from "../basics/button"
-import Card from "@material-ui/core/card"
+import Card from "@material-ui/core/Card"
 import Grid from "@material-ui/core/Grid"
 import ProgressBar from "../basics/progressBar"
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import Tab from "@material-ui/core/tab"
-import Tabs from "@material-ui/core/tabs"
+import Tab from "@material-ui/core/Tab"
+import Tabs from "@material-ui/core/Tabs"
 import { makeStyles } from '@material-ui/core/styles';
 
 import { connect } from "react-redux"

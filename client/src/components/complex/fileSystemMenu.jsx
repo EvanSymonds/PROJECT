@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import { makeStyles } from "@material-ui/styles";
-import Card from "@material-ui/core/card"
-import Grid from "@material-ui/core/grid"
-import Divider from "@material-ui/core/divider"
+import Card from "@material-ui/core/Card"
+import Grid from "@material-ui/core/Grid"
+import Divider from "@material-ui/core/Divider"
 import Button from "../basics/button"
-import IconButton from "@material-ui/core/iconButton"
+import IconButton from "@material-ui/core/IconButton"
 import { Add, Description, Folder, FormatColorFill } from "@material-ui/icons"
 import Popper from '@material-ui/core/Popper';
 import ColorPicker from "../basics/colorPicker"

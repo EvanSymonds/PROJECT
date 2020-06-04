@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "../basics/button"
-import Grid from "@material-ui/core/grid"
+import Grid from "@material-ui/core/Grid"
 import ValueSelect from "../basics/valueSelect"
 
 const RoleSettings = (props) => {

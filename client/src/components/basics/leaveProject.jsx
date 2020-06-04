@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/styles";
-import Card from "@material-ui/core/card"
-import Grid from "@material-ui/core/grid"
+import Card from "@material-ui/core/Card"
+import Grid from "@material-ui/core/Grid"
 import Button from "./button"
-import Modal from "@material-ui/core/modal"
+import Modal from "@material-ui/core/Modal"
 import { useHistory } from "react-router-dom";
 import axios from "axios"
 

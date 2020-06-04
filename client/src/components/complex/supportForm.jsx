@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/styles";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from "@material-ui/core/card"
-import Paper from "@material-ui/core/paper"
+import Card from "@material-ui/core/Card"
+import Paper from "@material-ui/core/Paper"
 import InputBase from "@material-ui/core/InputBase"
-import Button from "@material-ui/core/button"
+import Button from "@material-ui/core/Button"
 
 const SupportForm = (props) => {
   const [name, setName] = useState("")

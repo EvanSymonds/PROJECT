@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
-import Grid from "@material-ui/core/grid"
-import Avatar from "@material-ui/core/avatar"
+import Grid from "@material-ui/core/Grid"
+import Avatar from "@material-ui/core/Avatar"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MuiButton from "@material-ui/core/button"
-import Modal from "@material-ui/core/modal"
-import Card from "@material-ui/core/card"
+import MuiButton from "@material-ui/core/Button"
+import Modal from "@material-ui/core/Modal"
+import Card from "@material-ui/core/Card"
 import Button from "./button"
 import ProfilePicture from "./profilePicture"
 import { makeStyles } from '@material-ui/core/styles';

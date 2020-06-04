@@ -5,7 +5,7 @@ import ProjectName from "../basics/projectName"
 import AuthSliders from "./authSliders"
 import DeleteProject from "../basics/deleteProject"
 import LeaveProject from "../basics/leaveProject"
-import Grid from "@material-ui/core/grid"
+import Grid from "@material-ui/core/Grid"
 
 import { connect } from "react-redux"
 import { changeSettingsAuth } from "../../actions"
