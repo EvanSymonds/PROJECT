@@ -17,7 +17,13 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import axios from "axios"
 
+const initialState = {
+  mouseX: null,
+  mouseY: null,
+};
+
 const File = (props) => {
+  const [state, setState] = useState(initialState);
   const [anchorEl, setAnchorEl] = useState (null)
   const [selected, setSelected] = useState(false)
   const [ref, position] = useDimensions();
@@ -71,6 +77,7 @@ const File = (props) => {
     };
   }, [handleMouseMove, handleMouseUp]);
 
+
   const onSelect = () => {
     setSelected(true)
   }
@@ -121,6 +128,15 @@ const File = (props) => {
     }
   }
 
+  const handleClick = (event) => {
+    event.preventDefault();
+    onSelect()
+    setState({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+  };
+
   const onMore = (e) => {
     setAnchorEl(e.currentTarget)
   }
@@ -153,6 +169,8 @@ const File = (props) => {
   }
 
   const handleClose = () => {
+    setState(initialState);
+    onDeselect()
     setAnchorEl(null)
   }
 
@@ -178,6 +196,7 @@ const File = (props) => {
             alignItems="center"
             className={classes.root}
             onClick={onSelect}
+            onContextMenu={handleClick}
           >
             <Grid item xs={1} style={{ marginTop: 2 }}>
               {props.type === "skeleton" ?
@@ -218,17 +237,23 @@ const File = (props) => {
                     anchorEl = {anchorEl}
                     disableScrollLock
                     keepMounted
-                    open={Boolean(anchorEl)}
+                    open={Boolean(anchorEl) || state.mouseY !== null}
                     onClose={handleClose}
                     getContentAnchorEl={null}
                     anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
+                      vertical: state.mouseY !== null ? "bottom" :'bottom',
+                      horizontal: state.mouseY !== null ? "right" : 'center',
                     }}
                     transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
+                      vertical: state.mouseY !== null ? "top" :'top',
+                      horizontal: state.mouseY !== null ? "left" : 'center',
                     }}
+                    anchorReference={state.mouseY !== null ? "anchorPosition" : "anchorEl"}
+                    anchorPosition={
+                      state.mouseY !== null && state.mouseX !== null
+                        ? { top: state.mouseY, left: state.mouseX }
+                        : undefined
+                    }
                   >
                     <MenuItem onClick={onDelete}>
                       <DeleteIcon fontSize="small" color="secondary"/>

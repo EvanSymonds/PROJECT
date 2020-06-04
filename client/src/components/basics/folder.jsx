@@ -27,7 +27,7 @@ const initialState = {
 };
 
 const Folder = (props) => {
-  const [state, setState] = React.useState(initialState);
+  const [state, setState] = useState(initialState);
   const [renameOpen, setRenameOpen] = useState(false)
   const [editAuth, setEditAuth] = useState(false)
   const [colorOpen, setColorOpen] = useState(false);
@@ -283,7 +283,7 @@ const Folder = (props) => {
                 className={classes.root}
                 onClick={onSelect}
                 onDoubleClick={handleDoubleClick}
-                onContextMenu={handleClick} 
+                onContextMenu={handleClick}
                 style={{ cursor: state.mouseY === null ? "pointer" : 'context-menu' }}
               >
                 {props.authorisation_level !== 0 ? <div
