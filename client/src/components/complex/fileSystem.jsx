@@ -8,7 +8,7 @@ const FileSystem = (props) => {
   const [folder, setFolder] = useState()
   const [ancestry, setAncestry] = useState(null)
 
-  useEffect(() => {getProjectFiles(props.project_id)}, [])
+  useEffect(() => {getProjectFiles(props.project_id); return () => setFolder([])}, [])
 
   const rerender = () => {
     getProjectFiles(props.project_id)
@@ -78,7 +78,7 @@ const FileSystem = (props) => {
   return (
     <div
       style={{
-        height: "100%"
+        height: "calc(100% - 87)"
       }}
     >
       {folder !== undefined && ancestry !== null ? <FolderPage 

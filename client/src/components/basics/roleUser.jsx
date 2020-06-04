@@ -112,6 +112,8 @@ const RoleUser = (props) => {
             {role.api_role}
           </div>
         </MenuItem>)
+      } else {
+        return null
       }
     })
   }

@@ -216,8 +216,6 @@ const RoleList = (props) => {
 
   }
 
-  console.log(props.mode)
-
   return (
     <Grid container style={{ height: "100%" }}>
       <Grid item style={{ width: "100%", height: "100%" }}>

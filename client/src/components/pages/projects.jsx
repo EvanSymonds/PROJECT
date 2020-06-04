@@ -105,8 +105,6 @@ const Projects = () => {
     axios.get("/api/roles/user/" + token.user_id).then((roles) => {  
       let invitedArray = []
 
-      console.log(roles)
-
       if (roles.data.length === 0) {
         setLoading(false)
       } else {

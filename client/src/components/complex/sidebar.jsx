@@ -98,14 +98,6 @@ const Sidebar = (props) => {
   const classes = useStyles();
   const history = useHistory()
 
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
   const handleResize = () => {
     if (window.innerWidth <= 1000) {
       setPermanent(false)
@@ -115,6 +107,14 @@ const Sidebar = (props) => {
       props.onResize()
     }
   }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   
   const handleOpen = () => {
     setOpen(true);
@@ -155,12 +155,12 @@ const Sidebar = (props) => {
           <div style={{
             margin: 10
           }}>
-            <Button type="normal" variant="text" buttonText="Sign up" color="primary" onClick={() => history.push("/signup")}/>
+            <Button type="normal" variant="outlined" buttonText="Sign up" color="primary" onClick={() => history.push("/signup")}/>
           </div>
           <div style={{
             margin: 10
           }}>
-            <Button type="normal" variant="outlined" buttonText="Login" color="primary" onClick={() => history.push("/login")}/>
+            <Button type="normal" variant="contained" buttonText="Login" color="primary" onClick={() => history.push("/login")}/>
           </div>
         </div>
       )

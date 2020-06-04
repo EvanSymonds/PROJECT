@@ -97,7 +97,8 @@ const RoleSettings = (props) => {
             <Grid item style={{ 
               display: "flex",
               justifyContent: "center",
-              padding: 10
+              padding: 10,
+              marginTop: 20,
             }}>
               <Button type="normal" variant="outlined" buttonText="Delete role" color="primary" onClick={handleDelete} />
             </Grid>

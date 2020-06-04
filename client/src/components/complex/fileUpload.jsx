@@ -70,7 +70,7 @@ const FileUpload = (props) => {
         setFiles((files) => [...files, e[i]])
       })
     } else {
-      setError("Maximum of 5 files")
+      setError(`Maximum of ${props.maxFiles} file${props.maxFiles > 1 ? "s" : ""}`)
     }
   }
 

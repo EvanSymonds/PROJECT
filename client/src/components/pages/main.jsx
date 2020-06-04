@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Home from "../complex/home"
 import Sidebar from "../complex/sidebar"
 import Paper from "@material-ui/core/paper"
 import { makeStyles } from '@material-ui/core/styles';
@@ -74,6 +75,7 @@ const Main = (props) => {
     <Paper square className={classes.background}>
       <Sidebar onResize={onResize}/>
       <div className={classes.page}>
+        <Home />
       </div>
       <Snackbar
         className={classes.snackbar}
