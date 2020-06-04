@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/styles";
 import Breadcrumbs from "../basics/breadcrumbs"
 import FileSystemMenu from "./fileSystemMenu"
 import Card from "@material-ui/core/Card"
-import Grid from "@material-ui/core/grid"
+import Grid from "@material-ui/core/Grid"
 import Divider from '@material-ui/core/Divider';
 import Modal from '@material-ui/core/Modal';
 import FileUpload from "../complex/fileUpload"
