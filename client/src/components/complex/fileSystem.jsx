@@ -76,7 +76,11 @@ const FileSystem = (props) => {
   }
 
   return (
-    <div>
+    <div
+      style={{
+        height: "100%"
+      }}
+    >
       {folder !== undefined && ancestry !== null ? <FolderPage 
         onReturn={handleReturn}
         ancestry={ancestry}

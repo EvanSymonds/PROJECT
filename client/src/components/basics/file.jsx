@@ -25,7 +25,6 @@ const initialState = {
 const File = (props) => {
   const [state, setState] = useState(initialState);
   const [anchorEl, setAnchorEl] = useState (null)
-  const [selected, setSelected] = useState(false)
   const [ref, position] = useDimensions();
   const [translate, setTranslate] = useState({
     isDragging: false,
@@ -79,17 +78,21 @@ const File = (props) => {
 
 
   const onSelect = () => {
-    setSelected(true)
+    props.selectFile(props.file_id)
   }
 
-  const onDeselect = () => {
-    setSelected(false)
+  const onDeselect = (event) => {
+    if (event !== undefined) {
+      if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "file-element" && event.target.parentNode.id !== "file-element") {
+        props.selectFile(null)
+      }
+    }
   } 
 
   const useStyles = makeStyles((theme) => ({
     root: {
       cursor: 'pointer',
-      backgroundColor: selected ? theme.palette.secondary.light : theme.palette.background.default,
+      backgroundColor: parseInt(props.selected) === parseInt(props.file_id) ? theme.palette.secondary.light : theme.palette.background.default,
       paddingLeft: 10,
     },
     text: {
@@ -116,19 +119,21 @@ const File = (props) => {
 
     switch (fileType){
       default:
-        return <DescriptionIcon fontSize="large" color="secondary" />
+        return <DescriptionIcon fontSize="large" color="secondary" id="file-element"/>
       case 0:
-        return <ImageIcon fontSize="large" color="secondary" />
+        return <ImageIcon fontSize="large" color="secondary" id="file-element"/>
       case 1:
-        return <DescriptionIcon fontSize="large" color="secondary" />
+        return <DescriptionIcon fontSize="large" color="secondary"id="file-element" />
       case 2:
-        return <LayersIcon fontSize="large" color="secondary"/>
+        return <LayersIcon fontSize="large" color="secondary" id="file-element"/>
       case 3:
-        return <TheatersIcon fontSize="large" color="secondary"/>
+        return <TheatersIcon fontSize="large" color="secondary" />
     }
   }
 
   const handleClick = (event) => {
+    props.selectFile(null)
+
     event.preventDefault();
     onSelect()
     setState({
@@ -177,6 +182,7 @@ const File = (props) => {
   return (
     <div
       ref={ref}
+      id="file-element"
       onDragStart={props.type === "normal" ? handleDragStart : null}
       style={{
         position: translate.isDragging && translate.translateX !== null ? "absolute" : null,
@@ -197,45 +203,70 @@ const File = (props) => {
             className={classes.root}
             onClick={onSelect}
             onContextMenu={handleClick}
+            id="file-element"
           >
-            <Grid item xs={1} style={{ marginTop: 2 }}>
+            <Grid
+              item
+              xs={1}
+              style={{ marginTop: 2 }}
+              id="file-element"
+            >
               {props.type === "skeleton" ?
-                <Skeleton variant="circle" width={40} height={40} />
+                <Skeleton
+                  variant="circle"
+                  width={40}
+                  height={40}
+                  id="file-element"
+                />
                 :
                 renderIcon()
               }
             </Grid>
-            <Grid item xs={8} style={{ marginTop: 2 }}>
+            <Grid
+              item
+              xs={8}
+              style={{ marginTop: 2 }}
+              id="file-element"
+            >
               {props.type === "skeleton" ?
-                <div style={{  width: "70%", marginTop: 2 }}>
+                <div style={{  width: "70%", marginTop: 2 }} id="file-element">
                   <Skeleton variant="text" />
                   <Skeleton variant="text" />
                 </div>
                 :
-                <Typography className={classes.text}>
+                <Typography className={classes.text} id="file-element">
                   {props.fileName}
                 </Typography>
               }
             </Grid>
-            <Grid item xs={2}>
+            <Grid
+              item
+              xs={2}
+              id="file-element"
+            >
               {props.type === "skeleton" ?
-                  <div style={{  width: "50%", marginTop: 2 }}>
+                  <div style={{  width: "50%", marginTop: 2 }} id="file-element">
                     <Skeleton variant="text" />
                     <Skeleton variant="text" />
                   </div>
                   :
-                  <Typography className={classes.text}>
+                  <Typography className={classes.text} id="file-element">
                     {props.fileType}
                   </Typography>
                 }
             </Grid>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={1}
+              id="file-element"
+            >
               {props.type === "normal" ?
                 <React.Fragment>
-                  <Button type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
+                  <Button id="file-element" type="icon" icon="More" color="secondary" onClick={onMore} aria-controls="simple-menu" aria-haspopup="true"/>
                   <Menu
                     anchorEl = {anchorEl}
                     disableScrollLock
+                    id="file-element"
                     keepMounted
                     open={Boolean(anchorEl) || state.mouseY !== null}
                     onClose={handleClose}
@@ -255,11 +286,11 @@ const File = (props) => {
                         : undefined
                     }
                   >
-                    <MenuItem onClick={onDelete}>
+                    <MenuItem onClick={onDelete} id="file-element">
                       <DeleteIcon fontSize="small" color="secondary"/>
                       Delete
                     </MenuItem>
-                    <MenuItem onClick={onDownload}>
+                    <MenuItem onClick={onDownload} id="file-element">
                       <GetAppIcon fontSize="small" color="secondary"/>
                       Download
                     </MenuItem>

@@ -7,19 +7,30 @@ import Grid from "@material-ui/core/grid"
 import Divider from '@material-ui/core/Divider';
 import Modal from '@material-ui/core/Modal';
 import FileUpload from "../complex/fileUpload"
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { Description, Folder } from "@material-ui/icons"
 import File from "../basics/file"
-import Folder from "../basics/folder"
+import FolderComponent from "../basics/folder"
 import axios from "axios"
 
+const initialState = {
+  mouseX: null,
+  mouseY: null,
+};
+
 const FolderPage = (props) => {
+  const [state, setState] = useState(initialState);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(null)
   const [listenForDrag, setListenForDrag] = useState(false)
   const [skeletons, setSkeletons] = useState([])
 
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "95%",
+      height: "100%",
       marginLeft: 10,
     },
     folderContainer: {
@@ -39,6 +50,11 @@ const FolderPage = (props) => {
     props.rerender()
   }
 
+  const selectFile = (file_id) => {
+    console.log(file_id)
+    setSelectedFile(file_id)
+  }
+
   const handleFileUploaded = () => {
     const skeletonCopy = [...skeletons]
     skeletonCopy.shift()
@@ -52,6 +68,8 @@ const FolderPage = (props) => {
   }
 
   const onCreateFolder = () => {
+    handleClose()
+
     let formData = new FormData()
     formData.append("project_id", props.project_id)
     formData.append("folder_id", props.folder.folder_id)
@@ -79,6 +97,7 @@ const FolderPage = (props) => {
 
   const handleOpen = () => {
     setOpen(true);
+    handleClose()
   };
 
   const handleFolderSelect = (folder_id) => {
@@ -114,6 +133,23 @@ const FolderPage = (props) => {
     setListenForDrag(false)
   }
 
+  const handleClick = (event) => {
+    event.preventDefault();
+
+    if (event !== undefined) {
+      if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "file-element" && event.target.parentNode.id !== "file-element") {
+        setState({
+          mouseX: event.clientX - 2,
+          mouseY: event.clientY - 4,
+        });
+      }
+    }
+  };
+
+  const handleClose = () => {
+    setState(initialState);
+  }
+
   const renderFiles = () => {
     return props.folder.files.map((file, i) => {
         if (props.folder.files.length === i + 1){
@@ -122,7 +158,9 @@ const FolderPage = (props) => {
               key={i}
               data-testid='component-file'
             >
-              <File 
+              <File
+                selected={selectedFile}
+                selectFile={selectFile}
                 type="normal"
                 key={i} 
                 fileIndex={i} 
@@ -145,6 +183,8 @@ const FolderPage = (props) => {
               >
                 <File 
                   type="normal"
+                  selected={selectedFile}
+                  selectFile={selectFile}
                   fileIndex={i}
                   fileType={file.file_type} 
                   fileName={file.file_name} 
@@ -196,7 +236,7 @@ const FolderPage = (props) => {
           item
           key={i}
         >
-          <Folder
+          <FolderComponent
             listenForDrag={listenForDrag}
             onAddAuth={onAddAuth}
             onColorChange={onColorChange}
@@ -237,7 +277,8 @@ const FolderPage = (props) => {
       <Card 
         className={classes.root}
         square
-        elevation={0}  
+        elevation={0}
+        onContextMenu={handleClick}
       >
 
         <Grid 
@@ -279,6 +320,41 @@ const FolderPage = (props) => {
           />
         </div>
       </Modal>
+      <Menu
+        keepMounted
+        disableScrollLock
+        open={state.mouseY !== null}
+        onClose={handleClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          state.mouseY !== null && state.mouseX !== null
+            ? { top: state.mouseY, left: state.mouseX }
+            : undefined
+        }
+      >
+        <MenuItem 
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+          onClick={handleOpen}
+        >
+          <Description style={{ marginRight: 10 }}/>
+          Add file
+        </MenuItem>
+        <MenuItem 
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+          onClick={onCreateFolder}
+        >
+          <Folder style={{ marginRight: 10 }}/>
+          Add folder
+        </MenuItem>
+      </Menu>
     </React.Fragment>
   
   )
