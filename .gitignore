@@ -2,7 +2,7 @@
 /node_modules
 
 # Client side node_modules folder
-/client/node_modules
+#/client/node_modules
 
 # Ignore temporary storage folder
 /server/Temp_storage
