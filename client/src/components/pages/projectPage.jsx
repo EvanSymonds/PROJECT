@@ -4,7 +4,7 @@ import Roadmap from "../complex/roadmap"
 import FileSystem from "../complex/fileSystem"
 import ProjectSettings from "../complex/projectSettings"
 import Sidebar from "../complex/sidebar"
-import Paper from "@material-ui/core/paper"
+import Paper from "@material-ui/core/Paper"
 import ProjectMenu from "../basics/projectMenu"
 import { makeStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
