@@ -19,7 +19,6 @@ var jwt = require("jsonwebtoken")
 
 const ProjectPage = (props) => {
   const [permanentSidebar, setPermanentSidebar] = useState(window.innerWidth > 1000 ? true : false)
-  const [width, setWidth] = React.useState(window.innerWidth);
   const [page, setPage] = useState(0)
   const [project_id] = useState(parseInt(props.match.params.project_id))
   const [notificationOpen, setNotificationOpen] = useState(false)
@@ -80,13 +79,14 @@ const ProjectPage = (props) => {
     },
     page: {
       marginLeft: permanentSidebar ? 250 : 0,
+      height: "calc(100% - 52px)"
     },
     background:{
       position: "absolute",
       top: 0,
       right: 0,
       width: "100%",
-      height: "calc(100% + 10px)"
+      height: page === 0 ? "calc(100% + 10px)" : "100%"
     },
     title: {
       marginLeft: permanentSidebar ? 250 : 0,
@@ -107,10 +107,8 @@ const ProjectPage = (props) => {
 
   const onResize = () => {
     if (window.innerWidth <= 1000){
-      setWidth(window.innerWidth)
       setPermanentSidebar(false)
     } else if (window.innerWidth > 1000) {
-      setWidth(window.innerWidth)
       setPermanentSidebar(true)
     }
   }

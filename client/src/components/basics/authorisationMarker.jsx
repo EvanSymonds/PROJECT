@@ -10,21 +10,16 @@ const AuthorisationMarker = (props) => {
   const [authorisationLevel, setAuthorisationLevel] = useState(props.level)
   const theme = useTheme()
 
-  const debouncedAuthLevel = useDebounce(authorisationLevel, 400)
+  const debouncedAuthLevel = useDebounce(authorisationLevel, 150)
 
-  useEffect(
-    () => {
-      props.changeAuth(authorisationLevel)
-    },
-    [debouncedAuthLevel]
-  );
+  useEffect(() => {
+      props.onChangeAuth(authorisationLevel)
+  },[debouncedAuthLevel])
 
   const useStyles = makeStyles((theme) => ({
     image: {
       width: props.mode === "edit" ? 75 : 50,
       height: props.mode === "edit" ? 75 : 50,
-      msUserSelect: "none",
-      userSelect: "none",
     },
     editCard: {
       position: "absolute",
@@ -47,9 +42,17 @@ const AuthorisationMarker = (props) => {
 
     switch (theme.palette.type){
       case "light":
-        return "/static/images/authorisation-" + authorisationLevel + ".svg"
+        if (props.mode === "edit") {
+          return "/static/images/authorisation-" + authorisationLevel + ".svg"
+        } else {
+          return "/static/images/authorisation-" + props.level + ".svg"
+        }
       case "dark":
-        return "/static/images/authorisation-" + authorisationLevel + "-dark.svg"
+        if (props.mode === "edit") {
+          return "/static/images/authorisation-" + authorisationLevel + "-dark.svg"
+        } else {
+          return "/static/images/authorisation-" + props.level + "-dark.svg"
+        }
     }
   }
 

@@ -216,11 +216,13 @@ const RoleList = (props) => {
 
   }
 
+  console.log(props.mode)
+
   return (
     <Grid container style={{ height: "100%" }}>
-      <Grid item style={{ width: "100%" }}>
+      <Grid item style={{ width: "100%", height: "100%" }}>
         <Card
-          style={{ height: window.innerHeight - (props.mode === "admin" ? 250 : 142) }}
+          style={{ height: props.mode === "admin" ? "calc(100% - 150px)" : "100%" }}
           square
           elevation={0}
           value={props.selected}

@@ -30,7 +30,7 @@ const ProjectSettings = (props) => {
     grid: {
       flexGrow: 1,
       width: "100%",
-      marginTop: 48
+      paddingTop: 48
     }
   }))
   const classes = useStyles()

@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import useDimensions from 'react-use-dimensions';
 import { makeStyles } from "@material-ui/styles";
 import Card from "@material-ui/core/card"
 import Paper from "@material-ui/core/paper"
 import Grid from "@material-ui/core/grid"
 import FolderIcon from "@material-ui/icons/Folder"
+import Popper from "@material-ui/core/popper"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import RenameProject from "../basics/renameProject"
+import RenameProject from "./renameProject"
+import Grow from '@material-ui/core/Grow';
+import ColorPicker from "./colorPicker"
 import Modal from "@material-ui/core/modal"
 import AuthorisationMarker from "../basics/authorisationMarker"
-import { Edit, Delete, Lock } from "@material-ui/icons"
+import { Edit, Delete, Lock, FormatColorFill } from "@material-ui/icons"
 import axios from "axios"
 import { connect } from "react-redux"
 import { changeSettingsAuth } from "../../actions"
@@ -27,6 +30,7 @@ const Folder = (props) => {
   const [state, setState] = React.useState(initialState);
   const [renameOpen, setRenameOpen] = useState(false)
   const [editAuth, setEditAuth] = useState(false)
+  const [colorOpen, setColorOpen] = useState(false);
   const [hover, setHover] = useState(false)
   const [ref, position] = useDimensions();
   const [translate, setTranslate] = useState({
@@ -34,6 +38,7 @@ const Folder = (props) => {
     translateX: null,
     translateY: null
   })
+  const colorAnchorRef = useRef(null);
 
   useEffect(() => {
     setTranslate({
@@ -170,12 +175,10 @@ const Folder = (props) => {
   }
 
   const onDeselect = (event) => {
-    if (event === undefined) {
-      props.selectFolder(null)
-      return
-    }
-    if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "toolbar-element" && event.target.parentNode.id !== "toolbar-element") {
-      props.selectFolder(null)
+    if (event !== undefined) {
+      if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "toolbar-element" && event.target.parentNode.id !== "toolbar-element") {
+        props.selectFolder(null)
+      }
     }
   }
 
@@ -197,6 +200,11 @@ const Folder = (props) => {
     props.handleEnterFolder(props.folder_id, props.authorisation_level)
     onDeselect()
   }
+
+  const handleEditAuthOpen = () => {
+    setEditAuth(true)
+    handleClose()
+  }
   
   const handleRename = () => {
     setRenameOpen(true)
@@ -213,11 +221,19 @@ const Folder = (props) => {
     handleClose()
   }
 
-  const onChangeAuth = async(new_auth) => {
+  const handleCloseColor = (event) => {
+    if (colorAnchorRef.current && colorAnchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setColorOpen(false);
+  };
+
+  const onChangeAuth = (new_auth) => {
     let formData = new FormData()
     formData.append("new_auth", new_auth)
 
-    await axios.post("/api/file_system/auth/" + props.folder_id, formData).then(() => {
+    axios.post("/api/file_system/auth/" + props.folder_id, formData).then(() => {
       props.rerender()
     })
     .catch((error) => {
@@ -262,6 +278,7 @@ const Folder = (props) => {
             >
               <Card
                 ref={ref}
+                ref={colorAnchorRef}
                 id="folder-element"
                 className={classes.root}
                 onClick={onSelect}
@@ -273,9 +290,9 @@ const Folder = (props) => {
                 id="folder-element"
                 className={classes.authMarker}>
                   <AuthorisationMarker
-                    markerId="folder-element"
                     level={props.authorisation_level}
-                    changeAuth={onChangeAuth}
+                    onChangeAuth={onChangeAuth}
+                    mode="view"
                   />
                 </div> : null}
                 <div className={classes.centralCircle} id="folder-element">
@@ -290,6 +307,7 @@ const Folder = (props) => {
               keepMounted
               disableScrollLock
               open={state.mouseY !== null && canEditAuth()}
+              id="folder-element"
               onClose={handleClose}
               anchorReference="anchorPosition"
               anchorPosition={
@@ -307,7 +325,7 @@ const Folder = (props) => {
                 Rename
               </MenuItem>
               <MenuItem 
-                onClick={props.authorisation_level > 0 ? () => setEditAuth(true) : props.onAddAuth}
+                onClick={props.authorisation_level > 0 ? handleEditAuthOpen : props.onAddAuth}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -325,6 +343,29 @@ const Folder = (props) => {
                 <Delete style={{ marginRight: 10 }}/>
                 Delete
               </MenuItem>
+              <MenuItem
+                onClick={() => { setColorOpen(true); handleClose() }}
+                id="folder-element"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
+                <FormatColorFill 
+                  fontSize="default"
+                  id="toolbar-element"
+                  style={{ marginRight: 10 }}
+                />
+                {props.selectedFolder !== null? <div style={{
+                  width: 24,
+                  height: 4,
+                  background: props.selectedFolder.folder_color,
+                  position: "absolute",
+                  bottom: 6,
+                }} /> : null}
+                Color
+              </MenuItem>
             </Menu>
             <Modal
               open={renameOpen}
@@ -341,15 +382,39 @@ const Folder = (props) => {
             <Modal
               open={editAuth}
               onClose={() => setEditAuth(false)}
+              disablePortal
             >
               <div>
                 <AuthorisationMarker
                   mode="edit"
                   level={props.authorisation_level}
-                  changeAuth={onChangeAuth}
+                  onChangeAuth={onChangeAuth}
                 />
               </div>
             </Modal>
+            <Popper 
+              open={colorOpen} 
+              anchorEl={colorAnchorRef.current}
+              id="folder-element"
+              placement="right"
+              role={undefined} 
+              transition 
+              disablePortal
+            >
+              {({ TransitionProps }) => (
+                <Grow
+                  {...TransitionProps}
+                >
+                  <Paper className={classes.popper}>
+                    <ClickAwayListener onClickAway={handleCloseColor}>
+                      <div>
+                        <ColorPicker colorChange={props.onColorChange}/>
+                      </div>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
           </div>
 
           :

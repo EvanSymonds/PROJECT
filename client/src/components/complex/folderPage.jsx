@@ -176,6 +176,8 @@ const FolderPage = (props) => {
   }
 
   const handleEnterFolder = (folder_id, authorisation_level) => {
+    setSelected(null)
+
     let folder_name
 
     props.folder.folders.forEach((childFolder) => {
@@ -197,6 +199,7 @@ const FolderPage = (props) => {
           <Folder
             listenForDrag={listenForDrag}
             onAddAuth={onAddAuth}
+            onColorChange={onColorChange}
             onDragStart={handleDragStart}
             onDragStop={handleDragStop}
             folder_name={folder.folder_name}
@@ -207,6 +210,7 @@ const FolderPage = (props) => {
             onDelete={onDeleteFolder}
             rerender={props.rerender}
             selectFolder={handleFolderSelect}
+            selectedFolder={selected}
             selected={selected === null ? false : selected.folder_id === folder.folder_id}
           />
         </Grid>

@@ -141,13 +141,10 @@ const Team = (props) => {
       style={{
         height: "100%",
         width: "100%",
-        marginTop: 48,
+        paddingTop: 48
       }}>
       <Grid item xs={3} style={{
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center"
       }}>
         <RoleList 
           selected={selected}
