@@ -1,5 +1,5 @@
 # Server side node_modules folders
-/server/node_modules
+/node_modules
 
 # Client side node_modules folder
 /client/node_modules
