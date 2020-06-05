@@ -1,0 +1,11 @@
+{
+  "name": "PROJECT - production",
+  "database": {
+    "user": "evan",
+    "host": "localhost",
+    "database": "project",
+    "port": 5432,
+    "db_password": ""
+  },
+  "jwtPrivateKey": ""
+}
