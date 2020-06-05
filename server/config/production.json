@@ -1,9 +1,9 @@
 {
-  "name": "PROJECT - production",
+  "name": "CrateLab - production",
   "database": {
     "user": "evan",
     "host": "localhost",
-    "database": "project",
+    "database": "CrateLab",
     "port": 5432,
     "db_password": ""
   },
