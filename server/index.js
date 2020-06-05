@@ -30,6 +30,7 @@ if(!config.get("jwtPrivateKey")) {
   process.exit(1)
 }
 
+app.use(express.static(__dirname + '/public'));
 app.use(fileupload({
   useTempFiles: false,
 }));
