@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/index.js",
-    "build": "set NODE_ENV=production&& node server/index.js",
+    "build": "NODE_ENV=production node server/index.js",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
