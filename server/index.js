@@ -89,3 +89,7 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log(`App running on port ${port}`);
 })
+
+app.listen(port, () => {
+  console.log(`App running on port ${port}`);
+})
