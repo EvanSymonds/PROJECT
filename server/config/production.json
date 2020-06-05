@@ -5,7 +5,7 @@
     "host": "localhost",
     "database": "CrateLab",
     "port": 5432,
-    "db_password": ""
+    "db_password": "DB_PASSWORD"
   },
   "jwtPrivateKey": ""
 }
