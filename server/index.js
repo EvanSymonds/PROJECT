@@ -32,11 +32,15 @@ if(!config.get("jwtPrivateKey")) {
 }
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "client", "build")))
+  app.use(express.static("build"));
 
-  app.get('/favicon.ico', (req, res) => {
-    res.sendFile("favicon.ico")
+  app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "..", "client",  "build", "index.html"));
   });
+
+  app.get("/favicon.ico", (req, res) => {
+    res.sendFile("favicon.ico");
+});
 }
 
 app.use(fileupload({
