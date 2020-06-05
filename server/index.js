@@ -30,7 +30,15 @@ if(!config.get("jwtPrivateKey")) {
   process.exit(1)
 }
 
-app.use(express.static(__dirname + '/public'));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("build"));
+
+
+   app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname,  "build", "index.html"));
+    });
+}
+
 app.use(fileupload({
   useTempFiles: false,
 }));
