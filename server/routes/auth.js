@@ -29,6 +29,8 @@ router.post("/", async(request, response) => {
       console.log("Failed validation")
       response.status(400).json(error);
     } else {
+      console.log("Passed validation")
+
       await user_api.getUserByCredential(request.body.credential).then(async (users) => {
         if (users.length === 0) {
           console.log("Cannot find a user with those credentials")
