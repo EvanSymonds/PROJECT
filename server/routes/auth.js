@@ -27,7 +27,7 @@ router.post("/", async(request, response) => {
     } else {
       await user_api.getUserByCredential(request.body.credential).then(async (users) => {
         if (users.length === 0) {
-          return response.status(401).send("Invalid username or password")
+          return response.status(401).json("Invalid username or password")
         } else {
 
           const checkForUser = async() => {
@@ -55,10 +55,10 @@ router.post("/", async(request, response) => {
             })
           }
           await checkForUser().then((results) => {
-            response.header("x-auth-token", results[0]).status(200).send(results[1])
+            response.header("x-auth-token", results[0]).status(200).json(results[1])
           })
           .catch((error) => {
-            response.status(400).send("Invalid username or password")
+            response.status(400).json("Invalid username or password")
           })
         }
       })
@@ -86,13 +86,13 @@ router.post("/signup", async(request, response) => {
       }else if (error.details[0].message === '"username" length must be less than or equal to 25 characters long') {
         response.status(400).json({detail: "Username must be less than 25 characters"})
       } else if (error.details[0].message === '"username" must only contain alpha-numeric characters') {
-        response.status(400).send({detail:"Username must only contain alphanumeric characters"})
+        response.status(400).json({detail:"Username must only contain alphanumeric characters"})
       }else if (error.details[0].message === '"password" length must be at least 3 characters long') {
-        response.status(400).send({detail:"Password must be more than 3 characters long"})
+        response.status(400).json({detail:"Password must be more than 3 characters long"})
       }else if (error.details[0].message === '"password" length must be less than or equal to 25 characters long') {
-        response.status(400).send({detail:"Password must be less than 25 characters"})
+        response.status(400).json({detail:"Password must be less than 25 characters"})
       } else if (error.details[0].message === '"password" must only contain alpha-numeric characters') {
-        response.status(400).send({detail:"Password must only contain alphanumeric characters"})
+        response.status(400).json({detail:"Password must only contain alphanumeric characters"})
       }
     } else {
       const username = request.body.username + "#" + randomize("0", 4);
@@ -103,7 +103,7 @@ router.post("/signup", async(request, response) => {
             const token = jwt.sign({ name: username, user_id: result.rows[0].user_id }, config.get("jwtPrivateKey"))
 
             await user_settings_api.createUserSettings(result.rows[0].user_id).then(() => {
-              response.header("x-auth-token", token).status(200).send(username)
+              response.header("x-auth-token", token).status(200).json(username)
             })
             .catch((error) => {
               debug(error)
@@ -140,11 +140,11 @@ router.post("/authlevel/", async(request, response) => {
           authLevel: role[0].authorisation_level
         }, config.get("jwtPrivateKey"))
 
-        response.header("x-auth-token", authToken).status(200).send("AUTHENTICATION LEVEL RECEIVED")
+        response.header("x-auth-token", authToken).status(200).json("AUTHENTICATION LEVEL RECEIVED")
       }
   
     } else {
-      response.status(400).send("User does not exist")
+      response.status(400).json("User does not exist")
     }
   })
   .catch((error) => {
