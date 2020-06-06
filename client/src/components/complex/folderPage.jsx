@@ -51,7 +51,6 @@ const FolderPage = (props) => {
   }
 
   const selectFile = (file_id) => {
-    console.log(file_id)
     setSelectedFile(file_id)
   }
 

@@ -1,4 +1,3 @@
-const bodyParser = require("body-parser");
 const fileupload = require("express-fileupload");
 const cors = require('cors')
 const path = require("path")
@@ -46,12 +45,6 @@ if (process.env.NODE_ENV === "production") {
 app.use(fileupload({
   useTempFiles: false,
 }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: true,
-    parameterLimit: 1000000,
-  })
-)
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', '*');
