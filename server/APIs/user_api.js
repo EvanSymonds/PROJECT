@@ -38,6 +38,7 @@ const getUserById = (user_id) => {
     pool.query("SELECT * FROM users WHERE user_id = $1", [user_id], (error, results) => {
       if (error){
         dbDebugger("Error: ", error);
+        console.log(error)
         reject(error);
       } else {
         dbDebugger("User retrieved");

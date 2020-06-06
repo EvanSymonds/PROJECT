@@ -70,12 +70,14 @@ router.post("/", async(request, response) => {
             response.header("x-auth-token", results[0]).status(200).json(results[1])
           })
           .catch((error) => {
+            console.log(error)
             response.status(400).json("Invalid username or password")
           })
         }
       })
       .catch((error) => {
         debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
