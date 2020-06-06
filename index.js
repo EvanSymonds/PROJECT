@@ -11,7 +11,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIO(server, {transports: ['websocket']});
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
