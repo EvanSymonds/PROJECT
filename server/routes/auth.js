@@ -23,6 +23,7 @@ router.post("/", async(request, response) => {
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
       debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       await user_api.getUserByCredential(request.body.credential).then(async (users) => {
