@@ -68,6 +68,7 @@ router.get("/allusers/:id", async (request, response) => {
 })
 
 router.get("/user/:id", async (request, response) => {
+  console.log("request.params.id")
   await role_api.getRolesByUser(parseInt(request.params.id)).then((roles) => {
     response.status(200).json(roles);
   })
