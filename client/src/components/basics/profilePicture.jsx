@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { makeStyles } from "@material-ui/styles"
+import { makeStyles } from "@material-ui/core/styles"
 import { Edit, AccountCircle } from '@material-ui/icons/';
 import Modal from "@material-ui/core/Modal"
 import FileUpload from "../complex/fileUpload"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import SelectThumbnail from "../basics/selectThumbnail"
 import ProjectName from "../basics/projectName"
 import AuthSliders from "./authSliders"

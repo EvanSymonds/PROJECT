@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import useDimensions from 'react-use-dimensions';
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios"
 
 const Breadcrumb = (props) => {

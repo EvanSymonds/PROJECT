@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { useTheme } from '@material-ui/core/styles';
 import useDebounce from "../../hooks/useDebounce"
 import Card from "@material-ui/core/Card"

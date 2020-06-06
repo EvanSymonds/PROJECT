@@ -108,6 +108,9 @@ const Projects = () => {
       if (roles.data.length === 0) {
         setLoading(false)
       } else {
+
+        console.log(roles)
+
         roles.data.forEach((role) => {
           if (role.role_name === "INVITED") {
             axios.get("/api/projects/" + role.project_id).then((project) => {

@@ -55,7 +55,6 @@ router.post("/", async(request, response) => {
             })
           }
           await checkForUser().then((results) => {
-            console.log(results)
             response.header("x-auth-token", results[0]).status(200).send(results[1])
           })
           .catch((error) => {

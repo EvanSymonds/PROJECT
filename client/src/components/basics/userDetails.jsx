@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { makeStyles } from "@material-ui/styles"
+import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 import TextField from "@material-ui/core/TextField"
 import ProfilePicture from "./profilePicture"

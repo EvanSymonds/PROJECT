@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useTheme } from '@material-ui/core/styles';
 import { useDropzone } from 'react-dropzone';
 import Button from "../basics/button";
-import { makeStyles, ThemeProvider } from "@material-ui/styles";
+import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import { useCallback } from "react";
 
 const DropzoneComponent = (props) => {
