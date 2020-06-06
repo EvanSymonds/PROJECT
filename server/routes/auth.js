@@ -15,19 +15,23 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.post("/", async(request, response) => {
+  console.log("Endpoint recieved")
   const schema = {
     credential: Joi.string().min(3).max(25).required(),
     password: Joi.string().alphanum().min(3).max(25).required()
   }
 
+  console.log("Schema created")
+
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
       debug(error)
-      console.log(error)
+      console.log("Failed validation")
       response.status(400).json(error);
     } else {
       await user_api.getUserByCredential(request.body.credential).then(async (users) => {
         if (users.length === 0) {
+          console.log("Cannot find a user with those credentials")
           return response.status(401).json("Invalid username or password")
         } else {
 
@@ -42,11 +46,13 @@ router.post("/", async(request, response) => {
 
                   if (validPassword) {
                     debug("Successfully logged in");
+                    console.log("Password correct")
       
                     token = jwt.sign({ name: user.username, user_id: user.user_id }, config.get("jwtPrivateKey"))
       
                     username = user.username
 
+                    console.log("Created token and username")
                     resolve([token, username])
                   } else {
                     reject()
