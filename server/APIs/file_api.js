@@ -5,6 +5,7 @@ const fsDebugger = require("debug")("app:fs");
 //Configuration
 const config = require("config");
 
+const path = require("path")
 
 //Pool allows express to communicate with PostgreSQL database
 const Pool = require("pg").Pool;
@@ -106,13 +107,9 @@ const getFileById = (file_id) => {
         }
         const data = (results.rows[0].lo_get);
 
-        const path = "./Temp_storage/" + file[0].file_name 
-        fs.writeFile(path, data, () => {
-          resolve({
-            file,
-            data,
-            path
-          })
+        const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
+        fs.writeFile(file_path, data, () => {
+          resolve(file)
         })
       })
     })

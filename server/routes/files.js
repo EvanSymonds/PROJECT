@@ -28,13 +28,13 @@ router.get("/:id", async (request, response) => {
   debug(request.params.id)
 
   await file_api.getFileById(parseInt(request.params.id)).then(async (file) => {
-    response.setHeader("Content-Disposition", "attachment; filename=" + file.file[0].file_name)
+    response.setHeader("Content-Disposition", "attachment; filename=" + file[0].file_name)
     response.set('Content-Type', 'text/csv');
     response.status(200)
     
-    const file_path = path.join(__dirname, "..", "Temp_storage", file.file[0].file_name)
+    const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
     fs.createReadStream(file_path).pipe(response)
-    fsExtra.emptyDir(path.join(__dirname, "..", "Temp_storage"))
+    fsExtra.emptyDir(path.join(__dirname, "..", "tmp"))
   })
   .catch((error) => {
     debug("Error: ", error)

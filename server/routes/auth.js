@@ -15,6 +15,8 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.post("/", async(request, response) => {
+  console.log("Endpoint reached")
+
   const schema = {
     credential: Joi.string().min(3).max(25).required(),
     password: Joi.string().alphanum().min(3).max(25).required()
@@ -47,6 +49,8 @@ router.post("/", async(request, response) => {
                     username = user.username
 
                     resolve([token, username])
+                  } else {
+                    reject()
                   }
                 })
 
