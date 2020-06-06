@@ -33,10 +33,6 @@ if(!config.get("jwtPrivateKey")) {
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client", "build")))
-  
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
 
   app.get("/favicon.ico", (req, res) => {
     res.sendFile("favicon.ico");
@@ -98,6 +94,12 @@ io.on("connection", (socket) => {
     console.log("Client disconnected")
   })
 })
+
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+}
 
 server.listen(port, () => {
   console.log(`App running on port ${port}`);
