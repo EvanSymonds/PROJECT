@@ -15,8 +15,6 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 router.post("/", async(request, response) => {
-  console.log("Endpoint reached")
-
   const schema = {
     credential: Joi.string().min(3).max(25).required(),
     password: Joi.string().alphanum().min(3).max(25).required()
@@ -59,6 +57,7 @@ router.post("/", async(request, response) => {
             })
           }
           await checkForUser().then((results) => {
+            console.log(results)
             response.header("x-auth-token", results[0]).status(200).json(results[1])
           })
           .catch((error) => {
