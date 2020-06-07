@@ -82,7 +82,7 @@ const File = (props) => {
   }
 
   const onDeselect = (event) => {
-    if (event !== undefined) {
+    if (event !== undefined && event.target.parentNode !== null) {
       if (event.target.id !== "folder-element" && event.target.parentNode.id !== "folder-element" && event.target.id !== "file-element" && event.target.parentNode.id !== "file-element") {
         props.selectFile(null)
       }
