@@ -39,12 +39,12 @@ router.get("/allusers/:id", async (request, response) => {
 
     roles.forEach( async(role) => {
       const getUser = (role) => {
-        return new Promise(async (resolve) => {
+        return new Promise(async (resolve, reject) => {
           return await user_api.getUserById(role.user_id).then((user) => {
             resolve(user)
           })
           .catch((error) => {
-            response.status(400).json(error)
+            reject()
           })
         })
       }
@@ -58,6 +58,9 @@ router.get("/allusers/:id", async (request, response) => {
           response.status(200).send(rolesWithUsers)
         }
       })
+      .catch((error) => [
+        response.status(400).json(error)
+      ])
 
     })
 
