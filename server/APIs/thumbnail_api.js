@@ -49,7 +49,6 @@ const getThumbnailByProject = (project_id) => {
             .catch((error) => {
               dbDebugger("Error: ", error);
               reject(error)
-              pool.end()
             })
             .then(() => pool.end())
         }
@@ -57,7 +56,6 @@ const getThumbnailByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
   })
 }

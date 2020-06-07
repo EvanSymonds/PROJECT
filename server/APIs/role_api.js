@@ -28,7 +28,6 @@ const getRoles = () => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -54,7 +53,6 @@ const getRolesByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -80,7 +78,6 @@ const getRolesByUser = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -106,7 +103,6 @@ const getRolesById = (role_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -138,13 +134,11 @@ const assignRole = (project_id, role_name, user_id) => {
           .catch((error) => {
             dbDebugger("Error: ", error)
             reject(error)
-            pool.end()
           })
       })
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -170,7 +164,6 @@ const inviteUser = (project_id, user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -205,20 +198,17 @@ const createRole = (project_id, role_name) => {
                 .catch((error) => {
                   dbDebugger("Error: ", error)
                   reject(error)
-                  pool.end()
                 })
             }
           })
           .catch((error) => {
             dbDebugger("Error: ", error)
             reject(error)
-            pool.end()
           })
       })
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -244,7 +234,6 @@ const renameRole = (role_id, new_name) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -285,7 +274,6 @@ const changeRole = (role_id, new_role, project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -311,7 +299,6 @@ const updateRoleAuth = (role_name, project_id, auth_level) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -336,7 +323,6 @@ const deleteRole = (role_name, project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -362,7 +348,6 @@ const deleteUserRole = (role_id, project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -386,7 +371,6 @@ const deleteRolesByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })

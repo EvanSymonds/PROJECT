@@ -26,7 +26,6 @@ const getSettingsByProject = async(project_id) => {
       .catch((error) => {
         dbDebugger(error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -50,7 +49,6 @@ const createProjectSettings = async (project_id) => {
       .catch((error) => {
         dbDebugger(error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -76,7 +74,6 @@ const changeSettingsAuth = async (project_id, new_value) => {
       .catch((error) => {
         dbDebugger(error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -100,7 +97,6 @@ const editFilesAuth = async (project_id, new_value) => {
       .catch((error) => {
         dbDebugger(error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -124,7 +120,6 @@ const deleteProjectSettings = async (project_id) => {
       .catch((error) => {
         dbDebugger(error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })

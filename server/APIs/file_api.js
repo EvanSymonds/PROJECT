@@ -49,7 +49,6 @@ const getFiles = () => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -75,7 +74,6 @@ const getFileInfoByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
       .then(() => pool.end)
   })
@@ -101,7 +99,6 @@ const getFileInfoById = (file_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
       .then(() => pool.end)
   })
@@ -135,14 +132,12 @@ const getFileById = (file_id) => {
           .catch((error) => {
             dbDebugger("Error: ", error);
             reject(error)
-            pool.end()
           })
           .then(() => pool.end())
       })
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
   })
 }
@@ -170,8 +165,6 @@ const storeFile = async (data, file_name, project_id) => {
       })
       .catch((error) => {
         dbDebugger("Error: ", error);
-        reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -197,7 +190,6 @@ const deleteFile = (file_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -223,7 +215,6 @@ const deleteFilesByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -248,7 +239,6 @@ function getFileData(file){
       .catch((error) =>{
         dbDebugger("Error: ", error)
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })

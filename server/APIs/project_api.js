@@ -28,7 +28,6 @@ const getProjects = () => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -54,7 +53,6 @@ const getProjectById = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -80,7 +78,6 @@ const createProject = (project_name, is_public) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -106,7 +103,6 @@ const updateProject = (project_id, project_name, is_public) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -132,7 +128,6 @@ const deleteProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })

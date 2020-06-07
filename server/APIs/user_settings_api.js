@@ -32,7 +32,6 @@ const getUserSettings = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -57,7 +56,6 @@ const createUserSettings = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -82,7 +80,6 @@ const updateUserSettings = (user_id, theme) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -107,7 +104,6 @@ const deleteUserSettings = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })

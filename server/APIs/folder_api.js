@@ -27,7 +27,6 @@ const getFoldersByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -51,7 +50,6 @@ const getFolderById = (folder_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -75,7 +73,6 @@ const createFolder = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -99,7 +96,6 @@ const renameFolder = (folder_id, new_name) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -123,7 +119,6 @@ const changeFolderAuth = (folder_id, new_auth) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -147,7 +142,6 @@ const changeFolderColor = (folder_id, folder_color) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -171,7 +165,6 @@ const deleteFolder = (folder_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -195,7 +188,6 @@ const deleteFoldersByProject = (project_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })

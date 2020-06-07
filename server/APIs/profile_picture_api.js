@@ -47,7 +47,6 @@ const getProfilePictureByUser = (user_id) => {
             .catch((error) => {
               dbDebugger("Error: ", error);
               reject(error)
-              pool.end()
             })
             .then(() => pool.end())
         }
@@ -81,7 +80,6 @@ const storeProfilePicture = async (data, user_id) => {
             .catch((error) => {
               dbDebugger("Error: ", error);
               reject(error)
-              pool.end()
             })
             .then(() => pool.end())
         } else {
@@ -93,7 +91,6 @@ const storeProfilePicture = async (data, user_id) => {
             .catch((error) => {
               dbDebugger("Error: ", error);
               reject(error)
-              pool.end()
             })
             .then(() => pool.end())
         }
@@ -101,7 +98,6 @@ const storeProfilePicture = async (data, user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
   })
 }
@@ -124,7 +120,6 @@ const deleteProfilePicture = async(user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
-        pool.end()
       })
       .then(() => pool.end())
   })

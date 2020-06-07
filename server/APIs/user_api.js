@@ -28,7 +28,6 @@ const getUsers = () => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -54,7 +53,6 @@ const getUserById = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -80,7 +78,6 @@ const getUserByCredential = (value) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -106,7 +103,6 @@ const createUser = (username, password, email) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -132,7 +128,6 @@ const updateUser = (user_id, username, password, email) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
@@ -157,7 +152,6 @@ const deleteUser = (user_id) => {
       .catch((error) => {
         dbDebugger("Error: ", error);
         reject(error);
-        pool.end()
       })
       .then(() => pool.end())
   })
