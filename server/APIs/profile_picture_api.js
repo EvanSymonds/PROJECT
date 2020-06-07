@@ -31,24 +31,25 @@ const getProfilePictureByUser = (user_id) => {
         if (profile_picture.length === 0) {
           reject("Profile picture not found")
         } else {
-          pool.query("SELECT lo_get($1)", [profile_picture[0].profile_picture_data_id], async (error, results) => {
-            if (error){
-              dbDebugger("Error: ", error);
-              reject(error)
-            } else {
-              dbDebugger("Profile picture data retrieved");
-            }
-            const data = (results.rows[0].lo_get);
-    
-            const path = "./Temp_storage/" + profile_picture[0].user_id
-            fs.writeFile(path, data, () => {
-              resolve({
-                profile_picture,
-                data,
-                path
+          pool.query("SELECT lo_get($1)", [profile_picture[0].profile_picture_data_id])
+            .then((results) => {
+              const data = (results.rows[0].lo_get);
+
+              const path = "./Temp_storage/" + profile_picture[0].user_id
+              fs.writeFile(path, data, () => {
+                resolve({
+                  profile_picture,
+                  data,
+                  path
+                })
               })
             })
-          })
+            .catch((error) => {
+              dbDebugger("Error: ", error);
+              reject(error)
+              pool.end()
+            })
+            .then(() => pool.end())
         }
       })
       .catch((error) => {
@@ -56,7 +57,6 @@ const getProfilePictureByUser = (user_id) => {
         reject(error)
         pool.end()
       })
-      .then(() => pool.end())
   })
 }
 
@@ -83,6 +83,7 @@ const storeProfilePicture = async (data, user_id) => {
               reject(error)
               pool.end()
             })
+            .then(() => pool.end())
         } else {
           pool.query("INSERT INTO profile_pictures (profile_picture_data_id, user_id) VALUES (lo_from_bytea(0, $1), $2)", [data, user_id])
             .then((results) => {
@@ -94,6 +95,7 @@ const storeProfilePicture = async (data, user_id) => {
               reject(error)
               pool.end()
             })
+            .then(() => pool.end())
         }
       })
       .catch((error) => {
@@ -101,7 +103,6 @@ const storeProfilePicture = async (data, user_id) => {
         reject(error)
         pool.end()
       })
-      .then(() => pool.end())
   })
 }
 

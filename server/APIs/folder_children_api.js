@@ -44,7 +44,7 @@ const getRelationsByChild = (child_id) => {
     });
 
     pool.query("SELECT * FROM folder_children WHERE child_id = $1", [child_id])
-      then((relations) => {
+      .then((relations) => {
         dbDebugger("Relations retrieved")
         resolve(relations)
       })
@@ -193,7 +193,7 @@ const deleteRelationsByProject = (project_id) => {
     });
 
     pool.query("DELETE FROM folder_children WHERE project_id = $1", [project_id])
-      .then((resuts) => {
+      .then((results) => {
         dbDebugger("Relation created")
         resolve(results)
       })

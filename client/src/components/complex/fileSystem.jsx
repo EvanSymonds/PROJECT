@@ -60,8 +60,6 @@ const FileSystem = (props) => {
 
     const url = "/api/file_system/" + project_id
     await axios.get(url).then((results) => {
-      console.log(results)
-
       if (results.status === 200) {
         setFolder(results.data)
         if (ancestry === null) {

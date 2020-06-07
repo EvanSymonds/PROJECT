@@ -33,24 +33,25 @@ const getThumbnailByProject = (project_id) => {
         if (thumbnail.length === 0) {
           reject("No thumbnail")
         } else {
-          pool.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id], async (error, results) => {
-            if (error){
-              dbDebugger("Error: ", error);
-              reject(error)
-            } else {
-              dbDebugger("Thumbnail data retrieved");
-            }
-            const data = (results.rows[0].lo_get);
+          pool.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id])
+            .then((results) => {
+              const data = (results.rows[0].lo_get);
     
-            const path = "./Temp_storage/" + thumbnail[0].project_id
-            fs.writeFile(path, data, () => {
-              resolve({
-                thumbnail,
-                data,
-                path
+              const path = "./Temp_storage/" + thumbnail[0].project_id
+              fs.writeFile(path, data, () => {
+                resolve({
+                  thumbnail,
+                  data,
+                  path
+                })
               })
             })
-          })
+            .catch((error) => {
+              dbDebugger("Error: ", error);
+              reject(error)
+              pool.end()
+            })
+            .then(() => pool.end())
         }
       })
       .catch((error) => {
@@ -58,7 +59,6 @@ const getThumbnailByProject = (project_id) => {
         reject(error)
         pool.end()
       })
-      .then(() => pool.end())
   })
 }
 
