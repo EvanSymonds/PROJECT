@@ -375,12 +375,12 @@ router.post("/update", async (request, response) => {
             let highestAuth = 0
 
             final_roles.forEach((final_role) => {
-              if (final_role.api_role.authorisation_level > highestAuth && final_role.api_role.authorisation_level !== 9) {
+              if (final_role.api_role.authorisation_level > highestAuth && (final_role.api_role_users.length > 1 || final_role.api_role === request.body.new_role)) {
                 highestAuth = final_role.api_role.authorisation_level
               }
             })
 
-            highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth && role.api_role_users.length > 1)
+            highestAuthRoles = final_roles.filter((role) => role.api_role.authorisation_level === highestAuth)
 
             //FIND THE NEXT ROLE IN LINE TO BE ADMIN
 

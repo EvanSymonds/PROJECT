@@ -55,16 +55,17 @@ const Folder = (props) => {
         translateX: ev.clientX,
         translateY: ev.clientY
       }));
-    }
-    if (props.listenForDrag !== false) {
-      if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
-        if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
-          setHover(true)
+    } else {
+      if (props.listenForDrag !== false) {
+        if (ev.clientX >= position.x && ev.clientX <= position.x + 170) {
+          if (ev.clientY >= position.y && ev.clientY <= position.y + 200) {
+            setHover(true)
+          } else {
+            setHover(false)
+          }
         } else {
           setHover(false)
         }
-      } else {
-        setHover(false)
       }
     }
   }
@@ -272,12 +273,11 @@ const Folder = (props) => {
         draggable
       >
         {!translate.isDragging ?
-          <div>
+          <div ref={ref} >
             <ClickAwayListener 
               onClickAway={onDeselect}
             >
               <Card
-                ref={ref}
                 ref={colorAnchorRef}
                 id="folder-element"
                 className={classes.root}
