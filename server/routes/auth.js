@@ -82,19 +82,19 @@ router.post("/signup", async(request, response) => {
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
       if (error.details[0].message === 'email" must be a valid email') {
-        response.status(400).json({detail: "Email is invalid"})
+        response.status(422).json({detail: "Email is invalid"})
       } else if (error.details[0].message === '"username" length must be at least 3 characters long') {
-        response.status(400).json({detail: "Username must be more than 3 characters long"})
+        response.status(422).json({detail: "Username must be more than 3 characters long"})
       }else if (error.details[0].message === '"username" length must be less than or equal to 25 characters long') {
-        response.status(400).json({detail: "Username must be less than 25 characters"})
+        response.status(422).json({detail: "Username must be less than 25 characters"})
       } else if (error.details[0].message === '"username" must only contain alpha-numeric characters') {
-        response.status(400).json({detail:"Username must only contain alphanumeric characters"})
+        response.status(422).json({detail:"Username must only contain alphanumeric characters"})
       }else if (error.details[0].message === '"password" length must be at least 3 characters long') {
-        response.status(400).json({detail:"Password must be more than 3 characters long"})
+        response.status(422).json({detail:"Password must be more than 3 characters long"})
       }else if (error.details[0].message === '"password" length must be less than or equal to 25 characters long') {
-        response.status(400).json({detail:"Password must be less than 25 characters"})
+        response.status(422).json({detail:"Password must be less than 25 characters"})
       } else if (error.details[0].message === '"password" must only contain alpha-numeric characters') {
-        response.status(400).json({detail:"Password must only contain alphanumeric characters"})
+        response.status(422).json({detail:"Password must only contain alphanumeric characters"})
       }
     } else {
       const username = request.body.username + "#" + randomize("0", 4);
@@ -113,7 +113,6 @@ router.post("/signup", async(request, response) => {
             })
           })
           .catch((error) => {
-            console.log(error)
             if (error.detail.substring(0,11) === "Key (email)") {
               response.status(409).json({detail:"Email already exists"})
             }

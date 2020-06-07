@@ -49,7 +49,7 @@ const createUserSettings = (user_id) => {
     });
 
     pool.query("INSERT INTO user_settings (user_id, theme) VALUES ($1, 'redGreyTheme')", [user_id])
-      .then((results) => {
+      .then((settings) => {
         dbDebugger("Settings created")
         resolve(settings)
       })
