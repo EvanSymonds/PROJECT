@@ -103,20 +103,15 @@ router.delete("/:id", async (request, response) => {
 
       await folder_api.deleteFoldersByProject(parseInt(request.params.id)).then(async() => {
 
-        await folder_children_api.deleteRelationsByProject(parseInt(request.params.id)).then(async() => {
-          await file_api.deleteFilesByProject(parseInt(request.params.id)).then(async(results) => {
-          
-            await role_api.deleteRolesByProject(parseInt(request.params.id)).then((results) => {
-              response.status(200).json(results)
-            })
-            .catch((error) => {
-              response.status(400).json(error)
-            })
-  
+        await file_api.deleteFilesByProject(parseInt(request.params.id)).then(async(results) => {
+        
+          await role_api.deleteRolesByProject(parseInt(request.params.id)).then((results) => {
+            response.status(200).json(results)
           })
           .catch((error) => {
-            response.status(400).json(error);
+            response.status(400).json(error)
           })
+
         })
         .catch((error) => {
           response.status(400).json(error);

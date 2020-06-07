@@ -135,12 +135,12 @@ const assignRole = (project_id, role_name, user_id) => {
             dbDebugger("Error: ", error)
             reject(error)
           })
+          .then(() => pool.end())
       })
       .catch((error) => {
         dbDebugger("Error: ", error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
@@ -199,6 +199,7 @@ const createRole = (project_id, role_name) => {
                   dbDebugger("Error: ", error)
                   reject(error)
                 })
+                .then(() => pool.end())
             }
           })
           .catch((error) => {
@@ -210,7 +211,6 @@ const createRole = (project_id, role_name) => {
         dbDebugger("Error: ", error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 

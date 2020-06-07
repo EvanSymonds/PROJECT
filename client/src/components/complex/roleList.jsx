@@ -164,10 +164,10 @@ const RoleList = (props) => {
     } else {
       setError("")
       axios.get("/api/users/credential/" + username + "#" + tag).then((api_users) => {
-      
+        console.log(api_users)
         if (api_users.data.length > 0) {
           api_users.data.forEach((user) => {
-            if (user.username === username + "#" + tag) {
+            if (user.username === username.toLowerCase() + "#" + tag) {
               let formData = new FormData()
               formData.append("project_id", props.project_id)
               formData.append("user_id", user.user_id)
@@ -202,6 +202,8 @@ const RoleList = (props) => {
                   console.log(error)
                 }
               })
+            } else {
+              setError("User doesn't exist")
             }
           })
         } else {
