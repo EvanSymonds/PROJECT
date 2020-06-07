@@ -1,11 +1,11 @@
 {
   "name": "CrateLab - development",
   "database": {
-    "user": "nixlqovphrdsbd",
-    "host": "ec2-34-202-88-122.compute-1.amazonaws.com",
-    "database": "d9fnh6u66ibmck",
+    "user": "evan",
+    "host": "localhost",
+    "database": "CrateLab",
     "port": 5432,
     "db_password": "DB_PASSWORD"
   },
-  "jwtPrivateKey": ""
+  "jwtPrivateKey": "jwtPrivateKey"
 }

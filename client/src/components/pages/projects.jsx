@@ -134,23 +134,25 @@ const Projects = () => {
           if (role.user_id !== "-1") {
             axios.get("/api/projects/" + role.project_id).then((project) => {
   
-            axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
-              setLoading(false)
+              console.log(project)
+
+              axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
+                setLoading(false)
+    
+                const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
+                
+                projectArray = [...projectArray, {
+                  project_id: project.data[0].project_id,
+                  project_name: project.data[0].project_name,
+                  isPublic: project.data[0].is_public,
+                  members: realUsers.length,
+                  memberList: realUsers
+                }]
+    
+                setProjects(projectArray)
+              })
   
-              const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
-              
-              projectArray = [...projectArray, {
-                project_id: project.data[0].project_id,
-                project_name: project.data[0].project_name,
-                isPublic: project.data[0].is_public,
-                members: realUsers.length,
-                memberList: realUsers
-              }]
-  
-              setProjects(projectArray)
             })
-  
-          })
           }
         })
       }

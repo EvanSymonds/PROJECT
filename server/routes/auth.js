@@ -37,7 +37,6 @@ router.post("/", async(request, response) => {
               users.forEach(async(user, i) => {
 
                 await bcrypt.compare(request.body.password, user.password).then((validPassword) => {
-                  debug(validPassword)
 
                   if (validPassword) {
                     debug("Successfully logged in");
@@ -48,7 +47,7 @@ router.post("/", async(request, response) => {
 
                     resolve([token, username])
                   } else {
-                    reject()
+                    response.status(401).json("Invalid username or password")
                   }
                 })
 
