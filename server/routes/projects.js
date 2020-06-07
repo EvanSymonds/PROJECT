@@ -3,6 +3,7 @@ const router = express.Router();
 const project_api = require("../APIs/project_api");
 const project_settings_api = require("../APIs/project_settings_api");
 const folder_api = require("../APIs/folder_api")
+const folder_children_api = require("../APIs/folder_children_api")
 const file_api = require("../APIs/file_api")
 const role_api = require("../APIs/role_api")
 const Joi = require("joi");
@@ -102,19 +103,25 @@ router.delete("/:id", async (request, response) => {
 
       await folder_api.deleteFoldersByProject(parseInt(request.params.id)).then(async() => {
 
-        await file_api.deleteFilesByProject(parseInt(request.params.id)).then(async(results) => {
+        await folder_children_api.deleteRelationsByProject(parseInt(request.params.id)).then(async() => {
+          await file_api.deleteFilesByProject(parseInt(request.params.id)).then(async(results) => {
           
-          await role_api.deleteRolesByProject(parseInt(request.params.id)).then((results) => {
-            response.status(200).json(results)
+            await role_api.deleteRolesByProject(parseInt(request.params.id)).then((results) => {
+              response.status(200).json(results)
+            })
+            .catch((error) => {
+              response.status(400).json(error)
+            })
+  
           })
           .catch((error) => {
-            response.status(400).json(error)
+            response.status(400).json(error);
           })
-
         })
         .catch((error) => {
           response.status(400).json(error);
         })
+
       })
       .catch((error) => {
         response.status(400).json(error);

@@ -78,7 +78,7 @@ const FileSystem = (props) => {
   return (
     <div
       style={{
-        height: "calc(100% - 87)"
+        height: "calc(100% - 87px)"
       }}
     >
       {folder !== undefined && ancestry !== null ? <FolderPage 

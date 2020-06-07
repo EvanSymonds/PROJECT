@@ -120,6 +120,20 @@ const deleteRelation = (folder_id, child_id, type) => {
   })
 }
 
+const deleteRelationsByProject = (project_id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("DELETE FROM folder_children WHERE project_id = $1", [project_id], (error, results) => {
+      if (error) {
+        dbDebugger("Error: ", error)
+        reject(error)
+      } else {
+        dbDebugger("Relation created")
+        resolve(results)
+      }
+    })
+  })
+}
+
 module.exports = {
   getRelationsByFolder,
   getRelationsByChild,
@@ -127,5 +141,6 @@ module.exports = {
   getFolderFiles,
   createRelation,
   updateRelation,
-  deleteRelation
+  deleteRelation,
+  deleteRelationsByProject
 }

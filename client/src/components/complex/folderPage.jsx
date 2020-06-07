@@ -30,14 +30,21 @@ const FolderPage = (props) => {
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "95%",
-      height: "100%",
+      height: "calc(100% - 87px)",
       marginLeft: 10,
+      display: props.folder.folders.length === 0 && props.folder.files.length === 0 ? "flex" : "inherit",
+      justifyContent: "center",
+      alignItems: "center",
     },
     folderContainer: {
       marginLeft: 30,
     },
     fileContainer: {
       marginTop: 30
+    },
+    emptyMessage: {
+      fontSize: 25,
+      color: theme.palette.secondary.dark
     }
   }))
   const classes = useStyles()
@@ -279,25 +286,34 @@ const FolderPage = (props) => {
         elevation={0}
         onContextMenu={handleClick}
       >
+        {props.folder.folders.length === 0 && props.folder.files.length === 0 ?
+          <div
+            className={classes.emptyMessage}
+          >
+            Click on the + to add files or folders
+          </div>
+          :
+          <React.Fragment>
+            <Grid 
+              className={classes.folderContainer}
+              container
+              direction="row"
+              spacing={6}
+            >
+              {renderFolders()}
+            </Grid>
 
-        <Grid 
-          className={classes.folderContainer}
-          container
-          direction="row"
-          spacing={6}
-        >
-          {renderFolders()}
-        </Grid>
-
-        <div className={classes.fileContainer}>
-          {skeletons.map((skeleton, i) => 
-            <File
-              type="skeleton"
-              key={i}
-            />
-          )}
-          {renderFiles()}
-        </div>
+            <div className={classes.fileContainer}>
+              {skeletons.map((skeleton, i) => 
+                <File
+                  type="skeleton"
+                  key={i}
+                />
+              )}
+              {renderFiles()}
+            </div>
+          </React.Fragment>
+        }
 
       </Card>
       <Modal

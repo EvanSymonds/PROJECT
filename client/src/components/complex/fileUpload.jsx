@@ -164,7 +164,7 @@ const FileUpload = (props) => {
         <Grid
           item
         >
-          <Dropzone onDrop={onDrop} disabled={maxFiles} />
+          <Dropzone onDrop={onDrop} disabled={files.length === maxFiles} />
         </Grid>
         <Grid
           item
