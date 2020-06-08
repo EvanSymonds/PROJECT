@@ -7,22 +7,7 @@ const config = require("config");
 
 
 //Pool allows express to communicate with PostgreSQL database
-const Pool = require("pg").Pool;
-const pool = new Pool({
-  max: config.get("database.connection_limit"),
-  user: config.get("database.user"),
-  host: config.get("database.host"),
-  database: config.get("database.database"),
-  password: config.get("database.db_password"),
-  port: config.get("database.port"),
-});
-pool.on('error', (error) => {
-  console.error('Unexpected error on idle client', error);
-  process.exit(-1);
-});
-pool.on('connect', (client) => {
-	console.log(`Nb of clients in pool : total = ${pool.totalCount} idle = ${pool.idleCount} active = ${pool.activeCount}`);
-});
+const pool = require("../database.js")
 
 //fs and fsExtra allow express to work with the temporary file and directory
 const fsExtra = require('fs-extra');
