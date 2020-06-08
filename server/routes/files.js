@@ -31,9 +31,9 @@ router.get("/:id", async (request, response) => {
     response.set('Content-Type', 'text/csv');
     response.status(200)
     
-    const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
+    const file_path = path.join(__dirname, "..", "tmp_storage", file[0].file_name)
     fs.createReadStream(file_path).pipe(response)
-    fsExtra.remove(path.join(__dirname, "..", "tmp"))
+    fsExtra.remove(path.join(__dirname, "..", "tmp_storage"))
   })
   .catch((error) => {
     debug("Error: ", error)

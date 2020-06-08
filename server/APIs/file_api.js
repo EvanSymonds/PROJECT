@@ -104,7 +104,7 @@ const getFileById = (file_id) => {
           .then(async(results) => {
             const data = (results.rows[0].lo_get);
   
-            const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
+            const file_path = path.join(__dirname, "..", "tmp_storage", file[0].file_name)
             fs.writeFile(file_path, data, () => {
               connection.release()
               resolve(file)
