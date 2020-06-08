@@ -9,7 +9,7 @@ const config = require("config");
 //Pool allows express to communicate with PostgreSQL database
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  poolSize: config.get("database.pool_size"),
+  max: config.get("database.connection_limit"),
   user: config.get("database.user"),
   host: config.get("database.host"),
   database: config.get("database.database"),
