@@ -26,6 +26,8 @@ router.get("/", async (request, response) => {
 
 router.get("/:id", async (request, response) => {
 
+  console.log(request.params.id)
+
   await file_api.getFileById(parseInt(request.params.id)).then(async (file) => {
     response.setHeader("Content-Disposition", "attachment; filename=" + file[0].file_name)
     response.set('Content-Type', 'text/csv');
@@ -38,7 +40,7 @@ router.get("/:id", async (request, response) => {
   })
   .catch((error) => {
     debug("Error: ", error)
-    response.status(400).json(error)
+    response.status(400).json({error: "Error in file transfer"})
   })
 })
 
