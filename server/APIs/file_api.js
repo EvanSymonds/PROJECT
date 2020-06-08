@@ -91,26 +91,18 @@ const getFileInfoById = (file_id) => {
 
 const getFileById = (file_id) => {
   //Gets a single file from the files table
-
-  console.log("API called")
-
+  
   return new Promise(async(resolve, reject) => {
     const connection = await pool.connect();
 
-    console.log("Connected to database")
-
     connection.query("SELECT * FROM files WHERE file_id = $1", [file_id])
       .then((results) => {
-
-        console.log(results)
 
         var file = results.rows;
 
         pool.query("SELECT lo_get($1)", [file[0].file_data_id])
           .then(async(results) => {
             const data = (results.rows[0].lo_get);
-
-            console.log("Data recieved")
   
             const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
             fs.writeFile(file_path, data, () => {
