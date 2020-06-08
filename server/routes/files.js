@@ -32,14 +32,17 @@ router.get("/:id", async (request, response) => {
     response.status(200)
     
     const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
-    console.log(file_path)
+    fs.readdir(path.join(__dirname, "..", "tmp"), (error, files) => {
+      files.forEach(file => {
+        console.log(file);
+      });
+    });
     fs.createReadStream(file_path).pipe(response)
     fsExtra.remove(path.join(__dirname, "..", "tmp"))
   })
   .catch((error) => {
     debug("Error: ", error)
-    console.log(error)
-    response.status(400).json({error: "Error in file transfer"})
+    response.status(400).json({error: error})
   })
 })
 
