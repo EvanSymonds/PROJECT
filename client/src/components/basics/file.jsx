@@ -164,7 +164,7 @@ const File = (props) => {
   }
 
   const onDownload = () => {
-    const url = "http://localhost:3001/api/files/" + parseInt(props.file_id)
+    const url = "/api/files/" + parseInt(props.file_id)
 
     const link = document.createElement('a')
     link.href = url
