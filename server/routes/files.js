@@ -32,8 +32,9 @@ router.get("/:id", async (request, response) => {
     response.status(200)
     
     const file_path = path.join(__dirname, "..", "tmp", file[0].file_name)
+    console.log(file_path)
     fs.createReadStream(file_path).pipe(response)
-    fsExtra.emptyDir(path.join(__dirname, "..", "tmp"))
+    fsExtra.remove(path.join(__dirname, "..", "tmp"))
   })
   .catch((error) => {
     debug("Error: ", error)
