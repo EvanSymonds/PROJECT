@@ -7,121 +7,105 @@ const config = require("config");
 
 //Pool allows express to communicate with PostgreSQL database
 const Pool = require("pg").Pool;
+const pool = new Pool({
+  user: config.get("database.user"),
+  host: config.get("database.host"),
+  database: config.get("database.database"),
+  password: config.get("database.db_password"),
+  port: config.get("database.port"),
+});
+pool.on('error', (error) => {
+  console.error('Unexpected error on idle client', error);
+  process.exit(-1);
+});
 
 const getSettingsByProject = async(project_id) => {
-  return new Promise((resolve, reject) => {
-    const pool = new Pool({
-      user: config.get("database.user"),
-      host: config.get("database.host"),
-      database: config.get("database.database"),
-      password: config.get("database.db_password"),
-      port: config.get("database.port"),
-    });
 
-    pool.query("SELECT * FROM project_settings WHERE project_id = $1", [project_id])
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
+
+    connection.query("SELECT * FROM project_settings WHERE project_id = $1", [project_id])
       .then((results) => {
         dbDebugger("Settings received")
+        connection.release()
         resolve(results)
       })
       .catch((error) => {
         dbDebugger(error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
 const createProjectSettings = async (project_id) => {
-  return new Promise((resolve, reject) => {
-    const pool = new Pool({
-      user: config.get("database.user"),
-      host: config.get("database.host"),
-      database: config.get("database.database"),
-      password: config.get("database.db_password"),
-      port: config.get("database.port"),
-    });
 
-    pool.query("INSERT INTO project_settings (project_id)VALUES ($1)", [project_id])
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
+
+    connection.query("INSERT INTO project_settings (project_id)VALUES ($1)", [project_id])
       .then((results) => {
         dbDebugger("Settings created")
+        connection.release()
         resolve(results)
       })
       .catch((error) => {
         dbDebugger(error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
 const changeSettingsAuth = async (project_id, new_value) => {
-  dbDebugger(project_id, new_value)
 
-  return new Promise((resolve, reject) => {
-    const pool = new Pool({
-      user: config.get("database.user"),
-      host: config.get("database.host"),
-      database: config.get("database.database"),
-      password: config.get("database.db_password"),
-      port: config.get("database.port"),
-    });
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
 
-    pool.query("UPDATE project_settings SET change_settings_auth = $2 WHERE project_id = $1", [project_id, new_value])
+    connection.query("UPDATE project_settings SET change_settings_auth = $2 WHERE project_id = $1", [project_id, new_value])
       .then((results) => {
         dbDebugger("Setting updated")
+        connection.release()
         resolve(results)
       })
       .catch((error) => {
         dbDebugger(error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
 const editFilesAuth = async (project_id, new_value) => {
-  return new Promise((resolve, reject) => {
-    const pool = new Pool({
-      user: config.get("database.user"),
-      host: config.get("database.host"),
-      database: config.get("database.database"),
-      password: config.get("database.db_password"),
-      port: config.get("database.port"),
-    });
 
-    pool.query("UPDATE project_settings SET edit_files_auth = $2 WHERE project_id = $1", [project_id, new_value])
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
+
+    connection.query("UPDATE project_settings SET edit_files_auth = $2 WHERE project_id = $1", [project_id, new_value])
       .then((results) => {
         dbDebugger("Setting updated")
+        connection.release()
         resolve(results)
       })
       .catch((error) => {
         dbDebugger(error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
 const deleteProjectSettings = async (project_id) => {
-  return new Promise((resolve, reject) => {
-    const pool = new Pool({
-      user: config.get("database.user"),
-      host: config.get("database.host"),
-      database: config.get("database.database"),
-      password: config.get("database.db_password"),
-      port: config.get("database.port"),
-    });
 
-    pool.query("DELETE FROM project_settings WHERE project_id = $1", [project_id])
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
+
+    connection.query("DELETE FROM project_settings WHERE project_id = $1", [project_id])
       .then((results) => {
         dbDebugger("Settings deleted")
+        connection.release()
         resolve(results)
       })
       .catch((error) => {
         dbDebugger(error)
         reject(error)
       })
-      .then(() => pool.end())
   })
 }
 
