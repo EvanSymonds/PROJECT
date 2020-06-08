@@ -26,6 +26,8 @@ router.get("/", async (request, response) => {
 
 router.get("/:id", async (request, response) => {
 
+  console.log("Endpoint reached")
+
   await file_api.getFileById(parseInt(request.params.id)).then(async (file) => {
     response.setHeader("Content-Disposition", "attachment; filename=" + file[0].file_name)
     response.set('Content-Type', 'text/csv');
