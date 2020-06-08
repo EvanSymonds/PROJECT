@@ -19,6 +19,12 @@ pool.on('error', (error) => {
   console.error('Unexpected error on idle client', error);
   process.exit(-1);
 });
+pool.on('connect', (client) => {
+	console.log(`Nb of clients in pool : total = ${pool.totalCount} idle = ${pool.idleCount} active = ${pool.activeCount}`);
+});
+pool.on('connect', (client) => {
+	console.log(`Nb of clients in pool : total = ${pool.totalCount} idle = ${pool.idleCount} active = ${pool.activeCount}`);
+});
 
 const getRoles = () => {
   //Gets all of the roles

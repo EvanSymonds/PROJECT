@@ -21,6 +21,9 @@ pool.on('error', (error) => {
   console.error('Unexpected error on idle client', error);
   process.exit(-1);
 });
+pool.on('connect', (client) => {
+	console.log(`Nb of clients in pool : total = ${pool.totalCount} idle = ${pool.idleCount} active = ${pool.activeCount}`);
+});
 
 //fs and fsExtra allow express to work with the temporary file and directory
 const fsExtra = require('fs-extra');
@@ -32,8 +35,11 @@ const getFiles = () => {
   return new Promise(async(resolve, reject) => {
     const connection = await pool.connect();
 
+    console.log(pool.totalCount())
+
     connection.query("SELECT * FROM files ORDER BY file_id ASC")
       .then(async(results) =>{
+
         dbDebugger("Files retrieved");
 
         var file;
