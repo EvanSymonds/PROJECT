@@ -1,6 +1,7 @@
 {
   "name": "CrateLab - development",
   "database": {
+    "pool_size": 15,
     "user": "evan",
     "host": "localhost",
     "database": "CrateLab",

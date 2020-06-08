@@ -10,7 +10,7 @@ const path = require("path")
 //Pool allows express to communicate with PostgreSQL database
 const Pool = require("pg").Pool;
 const pool = new Pool({
-  poolSize: 5,
+  poolSize: config.get("database.pool_size"),
   user: config.get("database.user"),
   host: config.get("database.host"),
   database: config.get("database.database"),
