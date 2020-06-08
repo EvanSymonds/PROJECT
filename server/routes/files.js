@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
-const fs = require("fs")
-const fsExtra = require("fs-extra")
+const { Readable } = require("stream")
 const file_api = require("../APIs/file_api")
 const path = require('path');
 
@@ -27,13 +26,18 @@ router.get("/", async (request, response) => {
 router.get("/:id", async (request, response) => {
 
   await file_api.getFileById(parseInt(request.params.id)).then(async (file) => {
-    response.setHeader("Content-Disposition", "attachment; filename=" + file[0].file_name)
+    response.setHeader("Content-Disposition", "attachment; filename=" + file.file_name)
     response.set('Content-Type', 'text/csv');
     response.status(200)
+
+    const dataStream = new Readable({
+      read() {}
+    })
+
+    dataStream.push(file.data)
+    dataStream.push(null)
     
-    const file_path = path.join(__dirname, "..", "tmp_storage", file[0].file_name)
-    fs.createReadStream(file_path).pipe(response)
-    fsExtra.remove(path.join(__dirname, "..", "tmp_storage"))
+    dataStream.pipe(response)
   })
   .catch((error) => {
     debug("Error: ", error)

@@ -91,7 +91,7 @@ const getFileInfoById = (file_id) => {
 
 const getFileById = (file_id) => {
   //Gets a single file from the files table
-  
+
   return new Promise(async(resolve, reject) => {
     const connection = await pool.connect();
 
@@ -104,11 +104,7 @@ const getFileById = (file_id) => {
           .then(async(results) => {
             const data = (results.rows[0].lo_get);
   
-            const file_path = path.join(__dirname, "..", "tmp_storage", file[0].file_name)
-            fs.writeFile(file_path, data, () => {
-              connection.release()
-              resolve(file)
-            })
+            resolve({file_name: file[0].file_name, data: data})
           })
           .catch((error) => {
             dbDebugger("Error: ", error);
