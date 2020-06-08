@@ -1,6 +1,6 @@
 import { combineReducers } from "redux"
 
-const selectedThemeReducer = (selectedTheme = {name: "redGreyTheme", id: 0}, action) => {
+const selectedThemeReducer = (selectedTheme = {name: "darkModeTheme", id: 1}, action) => {
   if (action.type === "THEME_SELECTED") {
     return action.payload
   }

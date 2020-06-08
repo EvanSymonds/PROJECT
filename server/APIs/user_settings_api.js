@@ -35,7 +35,7 @@ const createUserSettings = (user_id) => {
 
   return new Promise(async(resolve, reject) => {
     const connection = await pool.connect();
-    connection.query("INSERT INTO user_settings (user_id, theme) VALUES ($1, 'redGreyTheme')", [user_id])
+    connection.query("INSERT INTO user_settings (user_id, theme) VALUES ($1, 'darkModeTheme')", [user_id])
       .then((settings) => {
         dbDebugger("Settings created")
         connection.release()

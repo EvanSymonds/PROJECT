@@ -49,8 +49,6 @@ const AppRouter = (props) => {
                 return 0
               case "darkModeTheme":
                 return 1
-              case "orangeBlackTheme":
-                return 2
             }
           }
 
@@ -58,7 +56,6 @@ const AppRouter = (props) => {
             name: settings.data.rows[0].theme,
             id: getThemeId()
           }
-
 
           props.selectTheme(theme)
         })

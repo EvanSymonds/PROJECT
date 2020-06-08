@@ -12,12 +12,12 @@ const ThemeChooser = (props) => {
 
   const themes = [
     {
-      url: "/static/images/red-grey-icon.png",
-      name: "redGreyTheme"
-    },
-    {
       url: "/static/images/dark-mode-icon.png",
       name: "darkModeTheme"
+    },
+    {
+      url: "/static/images/red-grey-icon.png",
+      name: "redGreyTheme"
     }
   ]
 
