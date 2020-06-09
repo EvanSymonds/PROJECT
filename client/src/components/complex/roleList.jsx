@@ -174,7 +174,7 @@ const RoleList = (props) => {
   
               axios.post("/api/roles/invite", formData).then(() => {
                 setLoading(false)
-                const socket = socketIOClient("http://cratelab.herokapp.com:3001")
+                const socket = socketIOClient("http://cratelab.herokapp.com")
                 socket.emit("INVITE_SENT", user.user_id)
                 socket.on("PROJECT_INVITE", (data) => {
                   if (window.localStorage.getItem("authToken")) {

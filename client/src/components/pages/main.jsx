@@ -15,7 +15,7 @@ const Main = (props) => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://cratelab.herokapp.com:3001")
+    const socket = socketIOClient("http://cratelab.herokapp.com")
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
