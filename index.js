@@ -11,7 +11,12 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  log: false,
+  agent: false,
+  origins: '*:*',
+  transports: ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling', 'polling']
+});
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -38,9 +43,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile("favicon.ico");
 });
 }
-
-app.use(cors());
-app.options('*', cors());
+app.use(cors({ origin: '*' }));
 app.use(fileupload({
   useTempFiles: false,
 }));
