@@ -22,7 +22,7 @@ const Projects = () => {
 
   useEffect(() => {renderProjectCards()}, [])
   useEffect(() => {
-    const socket = socketIOClient("http://localhost:3001", {transports: ['websocket']})
+    const socket = socketIOClient("http://cratelab.herokapp.com:3001", {transports: ['websocket']})
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
