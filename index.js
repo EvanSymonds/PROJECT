@@ -11,7 +11,7 @@ const port = process.env.PORT || 3001;
 const app = express();
 
 const server = http.createServer(app);
-const io = socketIo(server, {transports: ['websocket']});
+const io = socketIo(server);
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -87,6 +87,7 @@ io.on("connection", (socket) => {
   console.log("New connection")
 
   socket.on("INVITE_SENT", (user_id) => {
+    console.log(user_id)
     socket.emit("PROJECT_INVITE", parseInt(user_id))
   })
 

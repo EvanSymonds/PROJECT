@@ -24,7 +24,7 @@ const ProjectPage = (props) => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://cratelab.herokapp.com:3001", {transports: ['websocket']})
+    const socket = socketIOClient("http://cratelab.herokapp.com:3001")
     socket.on("PROJECT_INVITE", (data) => {
       if (window.localStorage.getItem("authToken")) {
         const encrypted = window.localStorage.getItem("authToken")
