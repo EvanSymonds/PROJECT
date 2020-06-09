@@ -39,6 +39,8 @@ if (process.env.NODE_ENV === "production") {
 });
 }
 
+app.use(cors());
+app.options('*', cors());
 app.use(fileupload({
   useTempFiles: false,
 }));
