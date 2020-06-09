@@ -162,8 +162,6 @@ router.post("/add", async(request, response) => {
 })
 
 router.post("/invite", async (request, response) => {
-  debug("Endpoint called")
-
   const schema = {
     project_id: Joi.number().integer().max(100000000).required(),
     user_id: Joi.number().integer().max(100000000).required(),
@@ -174,8 +172,6 @@ router.post("/invite", async (request, response) => {
       debug(error)
       response.status(400).json(error);
     } else {
-
-      debug("Finding current roles")
 
       await role_api.getRolesByProject(request.body.project_id).then(async(roles) => {
 
@@ -194,7 +190,6 @@ router.post("/invite", async (request, response) => {
         if (error !== false) {
           response.status(400).json({detail: error})
         } else {
-          debug("Inviting")
           await role_api.inviteUser(request.body.project_id, request.body.user_id).then(() => {
             response.status(200).send("User invited")
           })
