@@ -16,6 +16,7 @@ router.get("/", async (request, response) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -26,6 +27,7 @@ router.get("/project/:id", async (request, response) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -44,6 +46,7 @@ router.get("/allusers/:id", async (request, response) => {
             resolve(user)
           })
           .catch((error) => {
+            console.log(error)
             reject()
           })
         })
@@ -58,14 +61,16 @@ router.get("/allusers/:id", async (request, response) => {
           response.status(200).send(rolesWithUsers)
         }
       })
-      .catch((error) => [
+      .catch((error) => {
+        console.log(error)
         response.status(400).json(error)
-      ])
+      })
 
     })
 
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -75,6 +80,7 @@ router.get("/user/:id", async (request, response) => {
     response.status(200).json(roles);
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -88,12 +94,14 @@ router.post("/", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
+      console.log(error)
       response.status(400).json(error);
     } else {
       await role_api.assignRole(request.body.project_id, request.body.role_name, request.body.user_id).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error);
       })
     }
@@ -108,13 +116,14 @@ router.post("/new", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       await role_api.createRole(request.body.project_id, request.body.role_name).then((results) => {
         response.status(200).json(results);
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error);
       })
     }
@@ -129,7 +138,7 @@ router.post("/add", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       
@@ -147,13 +156,13 @@ router.post("/add", async(request, response) => {
           response.status(200).json(results)
         })
         .catch((error) => {
-          debug(error)
+          console.log(error)
           response.status(400).json(error)
         })
 
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -169,7 +178,7 @@ router.post("/invite", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
 
@@ -194,13 +203,13 @@ router.post("/invite", async (request, response) => {
             response.status(200).send("User invited")
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
         }
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -218,7 +227,7 @@ router.post("/invite/accept", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       
@@ -240,18 +249,18 @@ router.post("/invite/accept", async (request, response) => {
             response.status(200).json(results)
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
 
         })
         .catch((error) => {
-          debug(error)
+          console.log(error)
           response.status(400).json(error)
         })
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -267,14 +276,14 @@ router.post("/invite/decline", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       await role_api.deleteUserRole(request.body.role_id, request.body.project_id).then(() => {
         response.status(200).send("Invite declined")
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -287,7 +296,7 @@ router.post("/invite/viewed/:id", async (request, response) => {
     response.status(200).send("Invite viewed")
   })
   .catch((error) => {
-    debug(error)
+    console.log(error)
     response.status(400).json(error)
   })
 })
@@ -297,7 +306,7 @@ router.get("/invites", async (request, response) => {
     response.status(200).json(invites)
   })
   .catch((error) => {
-    debug(error)
+    console.log(error)
     response.status(400).json(error)
   })
 })
@@ -311,6 +320,7 @@ router.post("/auth/update", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
+      console.log(error)
       response.status(400).json(error)
     } else {
 
@@ -318,6 +328,7 @@ router.post("/auth/update", async(request, response) => {
         response.status(200).send("Updated role")
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -334,7 +345,7 @@ router.post("/update", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error)
     } else {
       //MAKE ROLES WITH USERS
@@ -434,6 +445,7 @@ router.post("/update", async (request, response) => {
         response.status(200).json(results)
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error)
       })
 
@@ -446,13 +458,13 @@ router.post("/update", async (request, response) => {
 router.delete("/", async (request, response) => {
   await role_api.getRolesByProject(request.body.project_id).then(async (roles) => {
     if (roles.length === 1) {
-      debug("Cannot delete all roles in a project")
+      console.log("Cannot delete all roles in a project")
       response.send("Cannot delete all roles in a project")
     } else {
       const targetRoles = roles.filter((role) => role.role_name === request.body.role_name)
 
       if (targetRoles.length > 1) {
-        debug("There are still users in this role")
+        console.log("There are still users in this role")
         response.send("There are still users in this role")
       } else {
 
@@ -469,12 +481,14 @@ router.delete("/", async (request, response) => {
           response.status(200).json(results);
         })
         .catch((error) => {
+          console.log(error)
           response.status(400).json(error);
         })
       }
     }
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error)
   })
 })
@@ -486,7 +500,7 @@ router.post("/delete/:id", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error)
     } else {
       //MAKE ROLES WITH USERS
@@ -503,13 +517,13 @@ router.post("/delete/:id", async(request, response) => {
               response.status(200).json("Project deleted")
             })
             .catch((error) => {
-              debug(error)
+              console.log(error)
               response.status(400).json(error)
             })
 
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
         } else {
@@ -603,6 +617,7 @@ router.post("/delete/:id", async(request, response) => {
             response.status(200).json(results)
           })
           .catch((error) => {
+            console.log(error)
             response.status(400).json(error)
           })
 
