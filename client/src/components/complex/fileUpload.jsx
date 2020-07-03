@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid"
 import ProgressBar from "../basics/progressBar"
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Typography from "@material-ui/core/Typography"
+import imageCompression from 'browser-image-compression';
 
 const FileUpload = (props) => {
   const [files, setFiles] = useState([])
@@ -90,6 +91,35 @@ const FileUpload = (props) => {
     return new Promise( async(resolve, reject) => {
 
       files.forEach(async (file, i) => {
+
+        let compressedFile = file
+
+        if (props.endpoint === "thumbnails") {
+          const options = {
+            maxSizeMB: 0.5,
+            maxWidthOrHeight: 350,
+            useWebWorker: true
+          }
+
+          try {
+            compressedFile = await imageCompression(compressedFile, options);
+          } catch (error) {
+            console.log(error);
+          }
+        } else if (props.endpoint === "profile_pictures") {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 60,
+            useWebWorker: true
+          }
+
+          try {
+            compressedFile = await imageCompression(compressedFile, options);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
         setSuccessfullyUploaded([...successfullyUploaded, false])
 
         const config = {
@@ -113,14 +143,13 @@ const FileUpload = (props) => {
         }
     
         let formData = new FormData()
-        formData.append("file", file)
+        formData.append("file", compressedFile)
         formData.append(props.credentialType, credential)
         if (props.folder_id !== undefined) {
           formData.append("folder_id", props.folder_id)
         }
 
         const url = "/api" + props.endpoint
-
 
         await axios.post(url, formData, config).then((response, error) => {
           if (error) {
