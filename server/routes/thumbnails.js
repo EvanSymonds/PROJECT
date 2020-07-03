@@ -15,13 +15,13 @@ router.get("/:id", async (request, response) => {
     response.send(thumbnail)
   })
   .catch((error) => {
-    debug(error)
-      if (error === "No thumbnail") {
-        response.status(400).send("No thumbnail")
-      } else {
-        debug("Error: ", error)
-        response.status(400).json(error)
-      }
+    console.log(error)
+    if (error === "No thumbnail") {
+      response.status(400).send("No thumbnail")
+    } else {
+      debug("Error: ", error)
+      response.status(400).json(error)
+    }
   })
 })
 
@@ -35,12 +35,12 @@ router.post("/", async (request, response) => {
   } else {
     Joi.validate(request.body, schema, async (error) => {
       if (error) {
-        debug(error)
+        console.log(error)
         response.status(400).json(error);
       } else {
         await thumbnail_api.storeThumbnail(request.files.file.data, request.body.project_id).then((results, error) => {
           if (error) {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           } else {
             response.status(200).json(results)
@@ -58,12 +58,12 @@ router.post("/update", async (request, response) => {
   } else {
     await thumbnail_api.deleteThumbnail(request.body.project_id).then(async (results, error) => {
       if (error) {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       } else {
         await thumbnail_api.storeThumbnail(request.files.file.data, request.body.project_id).then((results, error) => {
           if (error) {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           } else {
             response.status(200).json(results)
@@ -77,6 +77,7 @@ router.post("/update", async (request, response) => {
 router.delete("/project/:id", (async (request, response) => {
   await thumbnail_api.deleteThumbnail(parseInt(request.params.id)).then((results, error) => {
     if (error) {
+      console.log(error)
       response.status(400).json(error)
     } else {
       response.status(200).json(results)

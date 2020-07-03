@@ -77,6 +77,16 @@ app.use("/api/thumbnails", thumbnails);
 app.use("/api/profile_pictures", profile_pictures);
 app.use("/api/user_settings", user_settings);
 
+if (process.env.NODE_ENV === "production") {
+  app.get(path.join(__dirname, "client", "build", "index.html"), (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  });
+
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+  })
+}
+
 app.listen(port, () => {
   console.log(`App running on port ${port}`);
 })
