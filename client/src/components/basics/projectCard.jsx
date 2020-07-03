@@ -35,8 +35,12 @@ const ProjectCard = (props) => {
         setThumbnail(((base64Flag + imageStr).toString()))
       })
       .catch((error) => {
-        if (error.response.data === "No thumbnail"){
-          setThumbnail(null)
+        if (error.response !== undefined) {
+          if (error.response.data === "No thumbnail"){
+            setThumbnail(null)
+          }
+        } else {
+          console.log(error)
         }
       })
     }

@@ -29,15 +29,11 @@ const getProfilePictureByUser = (user_id) => {
             .then((results) => {
               const data = (results.rows[0].lo_get);
 
-              const path = "./Temp_storage/" + profile_picture[0].user_id
-              fs.writeFile(path, data, () => {
-                connection.release()
+              connection.release()
                 resolve({
                   profile_picture,
                   data,
-                  path
                 })
-              })
             })
             .catch((error) => {
               dbDebugger("Error: ", error);

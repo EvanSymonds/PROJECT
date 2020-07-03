@@ -29,16 +29,12 @@ const getThumbnailByProject = (project_id) => {
         } else {
           connection.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id])
             .then((results) => {
+              connection.release()
               const data = (results.rows[0].lo_get);
     
-              const path = "./Temp_storage/" + thumbnail[0].project_id
-              fs.writeFile(path, data, () => {
-                connection.release()
-                resolve({
-                  thumbnail,
-                  data,
-                  path
-                })
+              resolve({
+                thumbnail,
+                data,
               })
             })
             .catch((error) => {

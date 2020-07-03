@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
 const thumbnail_api = require("../APIs/thumbnail_api")
+const { Readable } = require("stream")
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");
@@ -12,6 +13,9 @@ const config = require("config");
 router.get("/:id", async (request, response) => {
   await thumbnail_api.getThumbnailByProject(parseInt(request.params.id)).then((thumbnail) => {
     debug("Thumbnail retrieved")
+    response.set('Content-Type', 'image/png');
+    response.status(200)
+
     response.send(thumbnail)
   })
   .catch((error) => {

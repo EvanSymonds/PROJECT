@@ -3,7 +3,6 @@ const router = express.Router();
 const Joi = require("joi");
 const { Readable } = require("stream")
 const file_api = require("../APIs/file_api")
-const path = require('path');
 
 //Setting up debugging channels
 const debug = require("debug")("app:debug");

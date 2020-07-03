@@ -14,6 +14,9 @@ const config = require("config");
 router.get("/user/:id", async (request, response) => {
   await profile_picture_api.getProfilePictureByUser(parseInt(request.params.id)).then((profile_picture) => {
     debug("Profile picture retrieved")
+    response.set('Content-Type', 'image/png');
+    response.status(200)
+
     response.send(profile_picture)
   })
   .catch((error) => {
