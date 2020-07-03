@@ -19,6 +19,7 @@ router.get("/", async (request, response) => {
     response.status(200).json(projects);
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -28,6 +29,7 @@ router.get("/:id", async (request, response) => {
     response.status(200).json(project);
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -49,28 +51,29 @@ router.post("/create/:id", async (request, response) => {
 
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
 
         })
         .catch((error) => {
-          debug(error)
+          console.log(error)
           response.status(400).json(error)
         })
 
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     })
     .catch((error) => {
-      debug(error)
+      console.log(error)
       response.status(400).json(error)
     })
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
@@ -90,6 +93,7 @@ router.post("/:id", async (request, response) => {
         response.status(200).json(results);
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error);
       })
     }
@@ -114,19 +118,23 @@ router.delete("/:id", async (request, response) => {
 
         })
         .catch((error) => {
+          console.log(error)
           response.status(400).json(error);
         })
 
       })
       .catch((error) => {
+        console.log(error)
         response.status(400).json(error);
       })
     })
     .catch((error) => {
+      console.log(error)
       response.status(400).json(error);
     })
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error);
   })
 })
