@@ -17,17 +17,22 @@ const Settings = () => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://cratelab.herokapp.com")
-    socket.on("PROJECT_INVITE", (data) => {
-      if (window.localStorage.getItem("authToken")) {
-        const encrypted = window.localStorage.getItem("authToken")
-        const token = jwt.decode(JSON.parse(encrypted))
-
-        if (parseInt(token.user_id) === data) {
-          setNotificationOpen(true)
-        }
-      }
-    });
+    const interval = setInterval(() => {
+      axios.get("/api/roles/invites").then((invites) => {
+        invites.forEach((invite) => {
+          if (window.localStorage.getItem("authToken")) {
+            const encrypted = window.localStorage.getItem("authToken")
+            const token = jwt.decode(JSON.parse(encrypted))
+    
+            if (parseInt(token.user_id) === invite.user_id) {
+              setNotificationOpen(true)
+              renderProjectCards()
+            }
+          }
+        })
+      })
+    }, 5000);
+    return () => clearInterval(interval);
   }, [])
 
   useEffect(() => {

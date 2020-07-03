@@ -174,20 +174,6 @@ const RoleList = (props) => {
   
               axios.post("/api/roles/invite", formData).then(() => {
                 setLoading(false)
-                const socket = socketIOClient("http://cratelab.herokapp.com")
-                socket.emit("INVITE_SENT", user.user_id)
-                socket.on("PROJECT_INVITE", (data) => {
-                  if (window.localStorage.getItem("authToken")) {
-                    const encrypted = window.localStorage.getItem("authToken")
-                    const token = jwt.decode(JSON.parse(encrypted))
-            
-                    console.log("Someone invited")
-            
-                    if (parseInt(token.user_id) === parseInt(data)) {
-                      props.setNotificationOpen(true)
-                    }
-                  }
-                });
   
                 setUsername("")
                 setTag("")

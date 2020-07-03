@@ -22,19 +22,22 @@ const Projects = () => {
 
   useEffect(() => {renderProjectCards()}, [])
   useEffect(() => {
-    const socket = socketIOClient("http://cratelab.herokapp.com")
-    socket.on("PROJECT_INVITE", (data) => {
-      console.log(data)
-      if (window.localStorage.getItem("authToken")) {
-        const encrypted = window.localStorage.getItem("authToken")
-        const token = jwt.decode(JSON.parse(encrypted))
-
-        if (parseInt(token.user_id) === data) {
-          setNotificationOpen(true)
-          renderProjectCards()
-        }
-      }
-    });
+    const interval = setInterval(() => {
+      axios.get("/api/roles/invites").then((invites) => {
+        invites.forEach((invite) => {
+          if (window.localStorage.getItem("authToken")) {
+            const encrypted = window.localStorage.getItem("authToken")
+            const token = jwt.decode(JSON.parse(encrypted))
+    
+            if (parseInt(token.user_id) === invite.user_id) {
+              setNotificationOpen(true)
+              renderProjectCards()
+            }
+          }
+        })
+      })
+    }, 5000);
+    return () => clearInterval(interval);
   }, [])
 
   const useStyles = makeStyles((theme) => ({
@@ -111,7 +114,7 @@ const Projects = () => {
       } else {
 
         roles.data.forEach((role) => {
-          if (role.role_name === "INVITED") {
+          if (role.role_name === "INVITED" || role.role_name === "INVITED-VIEWED") {
             axios.get("/api/projects/" + role.project_id).then((project) => {
               setInvites([...invitedArray, {
                 project_id: project.data[0].project_id,
@@ -127,7 +130,7 @@ const Projects = () => {
           }
         })
   
-        roles = roles.data.filter((role) => role.role_name !== "INVITED")
+        roles = roles.data.filter((role) => role.role_name !== "INVITED" && role.role_name !== "INVITED-VIEWED")
   
         let projectArray = []
   
@@ -139,7 +142,7 @@ const Projects = () => {
                 axios.get("/api/roles/project/" + project.data[0].project_id).then((users) => {
                   setLoading(false)
       
-                  const realUsers = users.data.filter((user) => user.user_id !== "-1" && user.role_name !== "INVITED")
+                  const realUsers = users.data.filter((user) => user.user_id !== "-1" && role.role_name !== "INVITED" && role.role_name !== "INVITED-VIEWED")
                   
                   projectArray = [...projectArray, {
                     project_id: project.data[0].project_id,

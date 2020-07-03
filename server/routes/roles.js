@@ -282,6 +282,37 @@ router.post("/invite/decline", async (request, response) => {
   })
 })
 
+router.post("/invite/viewed", async (request, response) => {
+  const schema = {
+    role_id: Joi.number().integer().max(100000000).required(),
+  }
+
+  Joi.validate(request.body, schema, async (error) => {
+    if (error) {
+      debug(error)
+      response.status(400).json(error);
+    } else {
+      await role_api.renameRole(request.body.role_id, "INVITED-VIEWED").then(() => {
+        response.status(200).send("Invite viewed")
+      })
+      .catch((error) => {
+        debug(error)
+        response.status(400).json(error)
+      })
+    }
+  })
+})
+
+router.get("/invites", async (request, response) => {
+  await role_api.getRolesById(-1).then((roles) => {
+    const invites = roles.filter((role) => role.role_name === "INVITED")
+    response.status(200).json(invites)
+  })
+  .catch((error) => {
+    response.status(400).json(error)
+  })
+})
+
 router.post("/auth/update", async(request, response) => {
   const schema = {
     role_name: Joi.string().min(3).max(25).required(),

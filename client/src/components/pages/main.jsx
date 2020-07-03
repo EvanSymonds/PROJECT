@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from "../basics/button"
-import socketIOClient from "socket.io-client";
 
 var jwt = require("jsonwebtoken")
 
@@ -15,17 +14,22 @@ const Main = (props) => {
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   useEffect(() => {
-    const socket = socketIOClient("http://cratelab.herokapp.com")
-    socket.on("PROJECT_INVITE", (data) => {
-      if (window.localStorage.getItem("authToken")) {
-        const encrypted = window.localStorage.getItem("authToken")
-        const token = jwt.decode(JSON.parse(encrypted))
-
-        if (parseInt(token.user_id) === data) {
-          setNotificationOpen(true)
-        }
-      }
-    });
+    const interval = setInterval(() => {
+      axios.get("/api/roles/invites").then((invites) => {
+        invites.forEach((invite) => {
+          if (window.localStorage.getItem("authToken")) {
+            const encrypted = window.localStorage.getItem("authToken")
+            const token = jwt.decode(JSON.parse(encrypted))
+    
+            if (parseInt(token.user_id) === invite.user_id) {
+              setNotificationOpen(true)
+              renderProjectCards()
+            }
+          }
+        })
+      })
+    }, 5000);
+    return () => clearInterval(interval);
   }, [])
 
   const useStyles = makeStyles((theme) => ({

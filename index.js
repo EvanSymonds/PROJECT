@@ -4,19 +4,9 @@ const cors = require('cors')
 const path = require("path")
 
 const express = require("express");
-const http = require('http')
-const socketIo = require('socket.io')
 
 const port = process.env.PORT || 3001;
 const app = express();
-
-const server = http.createServer(app);
-const io = socketIo(server, {
-  log: false,
-  agent: false,
-  origins: '*:*',
-  transports: ['websocket', 'htmlfile', 'xhr-polling', 'jsonp-polling', 'polling']
-});
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -87,30 +77,6 @@ app.use("/api/thumbnails", thumbnails);
 app.use("/api/profile_pictures", profile_pictures);
 app.use("/api/user_settings", user_settings);
 
-
-io.on("connection", (socket) => {
-  console.log("New connection")
-
-  socket.on("INVITE_SENT", (user_id) => {
-    console.log(user_id)
-    socket.emit("PROJECT_INVITE", parseInt(user_id))
-  })
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected")
-  })
-})
-
-if (process.env.NODE_ENV === "production") {
-  app.get(path.join(__dirname, "client", "build", "index.html"), (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
-
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  })
-}
-
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`App running on port ${port}`);
 })
