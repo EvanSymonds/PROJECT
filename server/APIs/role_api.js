@@ -6,7 +6,8 @@ const debug = require("debug")("app:debug");
 const config = require("config");
 
 //Pool allows express to communicate with PostgreSQL database
-const pool = require("../database.js")
+const pool = require("../database.js");
+const { resolve } = require("path");
 
 const getRoles = () => {
   //Gets all of the roles
@@ -72,6 +73,25 @@ const getRolesById = (role_id) => {
     const connection = await pool.connect();
 
     connection.query("SELECT * FROM project_roles WHERE role_id = $1 ORDER BY authorisation_level DESC", [role_id])
+      .then((roles) => {
+        dbDebugger("Retrieved all roles")
+        connection.release()
+        resolve(roles.rows)
+      })
+      .catch((error) => {
+        dbDebugger("Error: ", error)
+        reject(error)
+      })
+  })
+}
+
+const getRolesByName = (role_name) => {
+  //Gets all the roles with a certain name
+
+  return new Promise(async(resolve, reject) => {
+    const connection = await pool.connect();
+
+    connection.query("SELECT * FROM project_roles WHERE role_name = $1 ORDER BY authorisation_level DESC", [role_name])
       .then((roles) => {
         dbDebugger("Retrieved all roles")
         connection.release()
@@ -301,6 +321,7 @@ module.exports = {
   getRolesByProject,
   getRolesByUser,
   getRolesById,
+  getRolesByName,
   assignRole,
   createRole,
   inviteUser,

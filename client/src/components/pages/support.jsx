@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from "../basics/button"
-import socketIOClient from "socket.io-client";
+import axios from "axios"
 
 var jwt = require("jsonwebtoken")
 
@@ -17,14 +17,14 @@ const Support = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       axios.get("/api/roles/invites").then((invites) => {
-        invites.forEach((invite) => {
+        invites.data.forEach((invite) => {
           if (window.localStorage.getItem("authToken")) {
             const encrypted = window.localStorage.getItem("authToken")
             const token = jwt.decode(JSON.parse(encrypted))
     
-            if (parseInt(token.user_id) === invite.user_id) {
+            if (parseInt(token.user_id) === parseInt(invite.user_id)) {
               setNotificationOpen(true)
-              renderProjectCards()
+              axios.post("/api/roles/invite/viewed/" + invite.role_id)
             }
           }
         })
