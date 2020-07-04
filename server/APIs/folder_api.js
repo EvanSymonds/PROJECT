@@ -84,7 +84,7 @@ const renameFolder = (folder_id, new_name) => {
       .connect()
       .then((client) => {
         client
-          .query.query("UPDATE folders SET folder_name = $2 where folder_id = $1", [folder_id, new_name])
+          .query("UPDATE folders SET folder_name = $2 where folder_id = $1", [folder_id, new_name])
           .then((results) => {
             dbDebugger("Folder renamed")
             client.release()
