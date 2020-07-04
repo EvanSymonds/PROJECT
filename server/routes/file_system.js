@@ -82,6 +82,7 @@ router.get("/:id", async(request, response) => {
 
   })
   .catch((error) => {
+    console.log(error)
     response.status(400).json(error)
   })
 })
@@ -105,12 +106,12 @@ router.post("/file", async (request, response) => {
             response.status(200).json(results)
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
         })
         .catch((error) => {
-          debug(error)
+          console.log(error)
           response.status(400).json(error)
         })
       }
@@ -135,12 +136,12 @@ router.post("/folder", async(request, response) => {
           response.status(200).json(results)
         })
         .catch((error) => {
-          debug(error)
+          console.log(error)
           response.status(400).json(error)
         })
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
@@ -155,14 +156,14 @@ router.post("/:id", async (request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       await folder_children_api.updateRelation(parseInt(request.params.id), parseInt(request.body.child_id), request.body.type).then((results) => {
         response.status(200).json(results)
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
@@ -176,14 +177,14 @@ router.post("/auth/:id", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       folder_api.changeFolderAuth(parseInt(request.params.id), request.body.new_auth).then((results) => {
         response.status(200).json(results)
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
@@ -201,14 +202,14 @@ router.post("/color/:id", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug("ERROR: ", error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       folder_api.changeFolderColor(parseInt(request.params.id), request.body.color).then((results) => {
         response.status(200).json(results)
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
@@ -223,7 +224,7 @@ router.post("/delete/:id", async(request, response) => {
 
   Joi.validate(request.body, schema, async (error) => {
     if (error) {
-      debug(error)
+      console.log(error)
       response.status(400).json(error);
     } else {
       await folder_children_api.deleteRelation(request.body.folder_id, parseInt(request.params.id), request.body.type).then(async(results) => {
@@ -233,7 +234,7 @@ router.post("/delete/:id", async(request, response) => {
             response.status(200).json(results)
           })
           .catch((error) => {
-            debug(error)
+            console.log(error)
             response.status(400).json(error)
           })
         } else {
@@ -272,7 +273,7 @@ router.post("/delete/:id", async(request, response) => {
         }
       })
       .catch((error) => {
-        debug(error)
+        console.log(error)
         response.status(400).json(error)
       })
     }
