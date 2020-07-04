@@ -16,34 +16,44 @@ const fs = require('fs');
 const getProfilePictureByUser = (user_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM profile_pictures WHERE user_id = $1", [user_id])
+          .then((results) => {
+            var profile_picture = results.rows;
+    
+            if (profile_picture.length === 0) {
+              client.release()
+              resolve(null)
+            } else {
 
-    connection.query("SELECT * FROM profile_pictures WHERE user_id = $1", [user_id])
-      .then((results) => {
-        var profile_picture = results.rows;
-
-        if (profile_picture.length === 0) {
-          reject("Profile picture not found")
-        } else {
-          connection.query("SELECT lo_get($1)", [profile_picture[0].profile_picture_data_id])
-            .then((results) => {
-              const data = (results.rows[0].lo_get);
-
-              connection.release()
-                resolve({
-                  profile_picture,
-                  data,
+              client
+                .query("SELECT lo_get($1)", [profile_picture[0].profile_picture_data_id])
+                .then((results) => {
+                  const data = (results.rows[0].lo_get);
+    
+                  client.release()
+                  resolve({
+                    profile_picture,
+                    data,
+                  })
                 })
-            })
-            .catch((error) => {
-              dbDebugger("Error: ", error);
-              reject(error)
-            })
-        }
-      })
-      .catch((error) => {
-        dbDebugger("Error: ", error);
-        reject(error)
+                .catch((error) => {
+                  console.log(error)
+                  client.release()
+                  reject(error)
+                })
+
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -51,37 +61,46 @@ const getProfilePictureByUser = (user_id) => {
 const storeProfilePicture = async (data, user_id) => {
 
   return new Promise( async (resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM profile_pictures WHERE user_id = $1", [user_id])
-      .then((results) => {
-        if (results.rows.length > 0) {
-          connection.query("UPDATE profile_pictures SET profile_picture_data_id = (lo_from_bytea(0, $1)) WHERE user_id = $2", [data, user_id])
-            .then((results) => {
-              dbDebugger("Profile picture uploaded to database")
-              connection.release()
-              resolve(results)
-            })
-            .catch((error) => {
-              dbDebugger("Error: ", error);
-              reject(error)
-            })
-        } else {
-          connection.query("INSERT INTO profile_pictures (profile_picture_data_id, user_id) VALUES (lo_from_bytea(0, $1), $2)", [data, user_id])
-            .then((results) => {
-              dbDebugger("Profile picture uploaded to database")
-              connection.release()
-              resolve(results)
-            })
-            .catch((error) => {
-              dbDebugger("Error: ", error);
-              reject(error)
-            })
-        }
-      })
-      .catch((error) => {
-        dbDebugger("Error: ", error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM profile_pictures WHERE user_id = $1", [user_id])
+          .then((results) => {
+            if (results.rows.length > 0) {
+              client
+                .query("UPDATE profile_pictures SET profile_picture_data_id = (lo_from_bytea(0, $1)) WHERE user_id = $2", [data, user_id])
+                  .then((results) => {
+                    dbDebugger("Profile picture uploaded to database")
+                    client.release()
+                    resolve(results)
+                  })
+                  .catch((error) => {
+                    dbDebugger("Error: ", error);
+                    client.release()
+                    reject(error)
+                  })
+            } else {
+              client
+                .query("INSERT INTO profile_pictures (profile_picture_data_id, user_id) VALUES (lo_from_bytea(0, $1), $2)", [data, user_id])
+                .then((results) => {
+                  dbDebugger("Profile picture uploaded to database")
+                  client.release()
+                  resolve(results)
+                })
+                .catch((error) => {
+                  dbDebugger("Error: ", error);
+                  client.release()
+                  reject(error)
+                })
+            }
+          })
+          .catch((error) => {
+            dbDebugger("Error: ", error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -89,17 +108,22 @@ const storeProfilePicture = async (data, user_id) => {
 const deleteProfilePicture = async(user_id) => {
 
   return new Promise( async (resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("DELETE FROM profile_pictures WHERE user_id = $1", [user_id])
-      .then((results) => {
-        dbDebugger("Profile picture deleted")
-        connection.release()
-        resolve(results)
-      })
-      .catch((error) => {
-        dbDebugger("Error: ", error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("DELETE FROM profile_pictures WHERE user_id = $1", [user_id])
+          .then((results) => {
+            dbDebugger("Profile picture deleted")
+            client.release()
+            resolve(results)
+          })
+          .catch((error) => {
+            dbDebugger("Error: ", error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }

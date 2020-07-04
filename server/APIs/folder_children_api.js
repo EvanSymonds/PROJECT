@@ -11,17 +11,22 @@ const pool = require("../database.js")
 const getRelationsByFolder = (folder_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM folder_children WHERE folder_id = $1", [folder_id])
-      .then((relations) => {
-        dbDebugger("Relations retrieved")
-        connection.release()
-        resolve(relations)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM folder_children WHERE folder_id = $1", [folder_id])
+          .then((relations) => {
+            dbDebugger("Relations retrieved")
+            client.release()
+            resolve(relations)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -29,17 +34,22 @@ const getRelationsByFolder = (folder_id) => {
 const getRelationsByChild = (child_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM folder_children WHERE child_id = $1", [child_id])
-      .then((relations) => {
-        dbDebugger("Relations retrieved")
-        connection.release()
-        resolve(relations)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM folder_children WHERE child_id = $1", [child_id])
+          .then((relations) => {
+            dbDebugger("Relations retrieved")
+            client.release()
+            resolve(relations)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -47,17 +57,22 @@ const getRelationsByChild = (child_id) => {
 const getFolderFolders = (folder_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM folder_children WHERE folder_id = $1 AND child_type = 'folder'", [folder_id])
-      .then((relations) => {
-        dbDebugger("Relations retrieved")
-        connection.release()
-        resolve(relations)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM folder_children WHERE folder_id = $1 AND child_type = 'folder'", [folder_id])
+          .then((relations) => {
+            dbDebugger("Relations retrieved")
+            client.release()
+            resolve(relations)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -65,17 +80,22 @@ const getFolderFolders = (folder_id) => {
 const getFolderFiles = (folder_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM folder_children WHERE folder_id = $1 AND child_type = 'file'", [folder_id])
-      .then((relations) => {
-        dbDebugger("Relations retrieved")
-        connection.release()
-        resolve(relations)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM folder_children WHERE folder_id = $1 AND child_type = 'file'", [folder_id])
+          .then((relations) => {
+            dbDebugger("Relations retrieved")
+            client.release()
+            resolve(relations)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -83,22 +103,26 @@ const getFolderFiles = (folder_id) => {
 const createRelation = (folder_id, child_id, type) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
     if (type !== "folder" && type !== "file") {
       dbDebugger("Error: type is invalid. Must be 'folder' or 'file'")
       reject("Error: type is invalid. Must be 'folder' or 'file'")
     }
 
-    connection.query("INSERT INTO folder_children (folder_id, child_id, child_type) VALUES ($1, $2, $3)", [folder_id, child_id, type])
-      .then((results) => {
-        dbDebugger("Relation created")
-        connection.release()
-        resolve(results)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("INSERT INTO folder_children (folder_id, child_id, child_type) VALUES ($1, $2, $3)", [folder_id, child_id, type])
+          .then((results) => {
+            dbDebugger("Relation created")
+            client.release()
+            resolve(results)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -106,35 +130,45 @@ const createRelation = (folder_id, child_id, type) => {
 const updateRelation = (folder_id, child_id, type) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("UPDATE folder_children SET folder_id = $1 WHERE child_id = $2 AND child_type = $3", [folder_id, child_id, type])
-      .then((results) => {
-        dbDebugger("Relation updated")
-        connection.release()
-        resolve(results)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
-      })
+    
+    pool
+      .connect()
+        .then((client) => {
+          client
+            .query("UPDATE folder_children SET folder_id = $1 WHERE child_id = $2 AND child_type = $3", [folder_id, child_id, type])
+            .then((results) => {
+              dbDebugger("Relation updated")
+              client.release()
+              resolve(results)
+            })
+            .catch((error) => {
+              console.log(error)
+              client.release()
+              reject(error)
+            })
+        })
   })
 }
 
 const deleteRelation = (folder_id, child_id, type) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("DELETE FROM folder_children WHERE folder_id = $1 AND child_id = $2 AND child_type = $3", [folder_id, child_id, type])
-      .then((results) => {
-        dbDebugger("Relation created")
-        connection.release()
-        resolve(results)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("DELETE FROM folder_children WHERE folder_id = $1 AND child_id = $2 AND child_type = $3", [folder_id, child_id, type])
+          .then((results) => {
+            dbDebugger("Relation created")
+            client.release()
+            resolve(results)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }
@@ -142,17 +176,22 @@ const deleteRelation = (folder_id, child_id, type) => {
 const deleteRelationsByProject = (project_id) => {
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("DELETE FROM folder_children WHERE project_id = $1", [project_id])
-      .then((results) => {
-        dbDebugger("Relation created")
-        connection.release()
-        resolve(results)
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("DELETE FROM folder_children WHERE project_id = $1", [project_id])
+          .then((results) => {
+            dbDebugger("Relation created")
+            client.release()
+            resolve(results)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }

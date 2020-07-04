@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
-const fs = require("fs")
-const fsExtra = require("fs-extra")
 const profile_picture_api = require("../APIs/profile_picture_api")
 
 //Setting up debugging channels
@@ -14,10 +12,15 @@ const config = require("config");
 router.get("/user/:id", async (request, response) => {
   await profile_picture_api.getProfilePictureByUser(parseInt(request.params.id)).then((profile_picture) => {
     debug("Profile picture retrieved")
-    response.set('Content-Type', 'image/png');
-    response.status(200)
 
-    response.send(profile_picture)
+    if (profile_picture === null) {
+      response.status(200).send(null)
+    } else {
+      response.set('Content-Type', 'image/png');
+      response.status(200)
+  
+      response.send(profile_picture)
+    } 
   })
   .catch((error) => {
     debug("Error: ", error)

@@ -14,21 +14,28 @@ const fsExtra = require('fs-extra');
 const fs = require('fs');
 
 const getUserSettings = (user_id) => {
+  return new Promise( async(resolve, reject) => {
 
-  return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM user_settings WHERE user_id = $1", [user_id])
-      .then((settings) => {
-        dbDebugger("Settings recieved")
-        connection.release()
-        resolve(settings)
+    console.log("Pre connection")
+    pool
+      .connect()
+      .then((client) => {
+        console.log("Connected")
+        client
+          .query("SELECT * FROM user_settings WHERE user_id = $1", [user_id])
+          .then((settings) => {
+            dbDebugger("Settings recieved")
+            client.release()
+            resolve(settings)
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
-      .catch((error) => {
-        dbDebugger("Error: ", error)
-        reject(error)
-      })
-  })
+    
+    })
 }
 
 const createUserSettings = (user_id) => {
@@ -38,11 +45,10 @@ const createUserSettings = (user_id) => {
     connection.query("INSERT INTO user_settings (user_id, theme) VALUES ($1, 'darkModeTheme')", [user_id])
       .then((settings) => {
         dbDebugger("Settings created")
-        connection.release()
         resolve(settings)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -56,11 +62,10 @@ const updateUserSettings = (user_id, theme) => {
     connection.query("UPDATE user_settings SET theme=$2 WHERE user_id=$1", [user_id, theme])
       .then((results) => {
         dbDebugger("Settings updated")
-        connection.release()
         resolve(settings)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -74,11 +79,10 @@ const deleteUserSettings = (user_id) => {
     connection.query("DELETE FROM user_settings WHERE user_id = $1", [user_id])
       .then((results) => {
         dbDebugger("Settings deleted")
-        connection.release()
         resolve(settings)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })

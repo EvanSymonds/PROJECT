@@ -9,7 +9,15 @@ const pool = new Pool({
   password: config.get("database.db_password"),
   port: config.get("database.port"),
 });
+pool.on("connect", () => {
+  console.log("Client connected")
+  console.log(pool.totalCount)
+})
+pool.on("remove", () => {
+  console.log("Client removed")
+})
 pool.on('error', (error) => {
+  console.log(error)
   console.error('Unexpected error on idle client', error);
   process.exit(-1);
 });

@@ -25,7 +25,7 @@ const getThumbnailByProject = (project_id) => {
         var thumbnail = results.rows;
 
         if (thumbnail.length === 0) {
-          reject("No thumbnail")
+          resolve(null)
         } else {
           connection.query("SELECT lo_get($1)", [thumbnail[0].thumbnail_data_id])
             .then((results) => {

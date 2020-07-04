@@ -42,12 +42,15 @@ const ProfilePicture = (props) => {
     };
 
     axios.get("/api/profile_pictures/user/" + props.user_id).then((data) => {
-      const base64Flag = 'data:image/png;base64,'
-      const imageStr = arrayBufferToBase64(data.data.data.data)
-      setProfilePicture(((base64Flag + imageStr).toString()))
+      if (data.data === "") {
+        setProfilePicture("")
+      } else {
+        const base64Flag = 'data:image/png;base64,'
+        const imageStr = arrayBufferToBase64(data.data.data.data)
+        setProfilePicture(((base64Flag + imageStr).toString()))
+      }
     })
     .catch((error) => {
-      setProfilePicture("")
       console.log(error)
     })
   }, [props.user_id])

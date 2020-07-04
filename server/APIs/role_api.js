@@ -32,17 +32,22 @@ const getRolesByProject = (project_id) => {
   //Gets all of the roles from a project
 
   return new Promise(async(resolve, reject) => {
-    const connection = await pool.connect();
-
-    connection.query("SELECT * FROM project_roles WHERE project_id = $1 ORDER BY authorisation_level DESC", [project_id])
-      .then((roles) => {
-        dbDebugger("Retrieved all roles");
-        connection.release()
-        resolve(roles.rows);
-      })
-      .catch((error) => {
-        console.log(error)
-        reject(error)
+    
+    pool
+      .connect()
+      .then((client) => {
+        client
+          .query("SELECT * FROM project_roles WHERE project_id = $1 ORDER BY authorisation_level DESC", [project_id])
+          .then((roles) => {
+            dbDebugger("Retrieved all roles");
+            client.release()
+            resolve(roles.rows);
+          })
+          .catch((error) => {
+            console.log(error)
+            client.release()
+            reject(error)
+          })
       })
   })
 }

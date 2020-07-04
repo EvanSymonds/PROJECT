@@ -7,6 +7,7 @@ const express = require("express");
 
 const port = process.env.PORT || 3001;
 const app = express();
+var errorHandler = require('errorhandler')
 
 //Configeration
 if (process.env.NODE_ENV !== 'production') {
@@ -77,6 +78,8 @@ app.use("/api/thumbnails", thumbnails);
 app.use("/api/profile_pictures", profile_pictures);
 app.use("/api/user_settings", user_settings);
 
+app.use(errorHandler({ dumpExceptions: true, showStack: true })); 
+
 if (process.env.NODE_ENV === "production") {
   app.get(path.join(__dirname, "client", "build", "index.html"), (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
@@ -86,6 +89,12 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
   })
 }
+
+process.on('uncaughtException', function (exception) {
+  console.log(exception); // to see your exception details in the console
+  // if you are on production, maybe you can send the exception details to your
+  // email as well ?
+});
 
 app.listen(port, () => {
   console.log(`App running on port ${port}`);

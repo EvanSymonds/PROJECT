@@ -13,19 +13,20 @@ const config = require("config");
 router.get("/:id", async (request, response) => {
   await thumbnail_api.getThumbnailByProject(parseInt(request.params.id)).then((thumbnail) => {
     debug("Thumbnail retrieved")
-    response.set('Content-Type', 'image/png');
-    response.status(200)
 
-    response.send(thumbnail)
+    if (thumbnail === null) {
+      response.status(200).send(null)
+    } else {
+      response.set('Content-Type', 'image/png');
+      response.status(200)
+
+      response.send(thumbnail)
+    }
   })
   .catch((error) => {
     console.log(error)
-    if (error === "No thumbnail") {
-      response.status(400).send("No thumbnail")
-    } else {
-      debug("Error: ", error)
-      response.status(400).json(error)
-    }
+    debug("Error: ", error)
+    response.status(400).json(error)
   })
 })
 
