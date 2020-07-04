@@ -20,7 +20,7 @@ const getFoldersByProject = (project_id) => {
         resolve(folders)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -38,7 +38,7 @@ const getFolderById = (folder_id) => {
         resolve(folders)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -56,7 +56,7 @@ const createFolder = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -74,7 +74,7 @@ const renameFolder = (folder_id, new_name) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -92,7 +92,7 @@ const changeFolderAuth = (folder_id, new_auth) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -110,7 +110,7 @@ const changeFolderColor = (folder_id, folder_color) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -128,7 +128,7 @@ const deleteFolder = (folder_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -146,7 +146,7 @@ const deleteFoldersByProject = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })

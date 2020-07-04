@@ -22,7 +22,7 @@ const getRoles = () => {
         resolve(roles.rows);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -41,7 +41,7 @@ const getRolesByProject = (project_id) => {
         resolve(roles.rows);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -60,7 +60,7 @@ const getRolesByUser = (user_id) => {
         resolve(roles.rows)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -79,7 +79,7 @@ const getRolesById = (role_id) => {
         resolve(roles.rows)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -98,7 +98,7 @@ const getRolesByName = (role_name) => {
         resolve(roles.rows)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -123,12 +123,12 @@ const assignRole = (project_id, role_name, user_id) => {
             resolve(results);
           })
           .catch((error) => {
-            dbDebugger("Error: ", error)
+            console.log(error)
             reject(error)
           })
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -147,7 +147,7 @@ const inviteUser = (project_id, user_id) => {
         resolve(results);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -175,18 +175,18 @@ const createRole = (project_id, role_name) => {
                   resolve(results);
                 })
                 .catch((error) => {
-                  dbDebugger("Error: ", error)
+                  console.log(error)
                   reject(error)
                 })
             }
           })
           .catch((error) => {
-            dbDebugger("Error: ", error)
+            console.log(error)
             reject(error)
           })
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -205,7 +205,7 @@ const renameRole = (role_id, new_name) => {
         resolve(results);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -230,12 +230,12 @@ const changeRole = (role_id, new_role, project_id) => {
             resolve(results)
           })
           .catch((error) => {
-            dbDebugger("Error: ", error)
+            console.log(error)
             reject(error)
           })
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -254,7 +254,7 @@ const updateRoleAuth = (role_name, project_id, auth_level) => {
         resolve(results);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -273,7 +273,7 @@ const deleteRole = (role_name, project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -292,7 +292,7 @@ const deleteUserRole = (role_id, project_id) => {
         resolve(results);
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -310,7 +310,7 @@ const deleteRolesByProject = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })

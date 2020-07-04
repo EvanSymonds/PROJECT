@@ -20,7 +20,7 @@ const getRelationsByFolder = (folder_id) => {
         resolve(relations)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -38,7 +38,7 @@ const getRelationsByChild = (child_id) => {
         resolve(relations)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -56,7 +56,7 @@ const getFolderFolders = (folder_id) => {
         resolve(relations)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -74,7 +74,7 @@ const getFolderFiles = (folder_id) => {
         resolve(relations)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -97,7 +97,7 @@ const createRelation = (folder_id, child_id, type) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -115,7 +115,7 @@ const updateRelation = (folder_id, child_id, type) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -133,7 +133,7 @@ const deleteRelation = (folder_id, child_id, type) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })
@@ -151,7 +151,7 @@ const deleteRelationsByProject = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error)
       })
   })

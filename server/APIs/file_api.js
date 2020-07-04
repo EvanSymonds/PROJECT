@@ -45,7 +45,7 @@ const getFiles = () => {
         resolve(files)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -64,7 +64,7 @@ const getFileInfoByProject = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -83,7 +83,7 @@ const getFileInfoById = (file_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -107,12 +107,12 @@ const getFileById = (file_id) => {
             resolve({file_name: file[0].file_name, data: data})
           })
           .catch((error) => {
-            dbDebugger("Error: ", error);
+            console.log(error)
             reject(error)
           })
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -135,7 +135,7 @@ const storeFile = async (data, file_name, project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -154,7 +154,7 @@ const deleteFile = (file_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -173,7 +173,7 @@ const deleteFilesByProject = (project_id) => {
         resolve(results)
       })
       .catch((error) => {
-        dbDebugger("Error: ", error);
+        console.log(error)
         reject(error)
       })
   })
@@ -191,7 +191,7 @@ function getFileData(file){
         resolve(fileData.rows[0].lo_get);
       })
       .catch((error) =>{
-        dbDebugger("Error: ", error)
+        console.log(error)
         reject(error);
       })
   })
