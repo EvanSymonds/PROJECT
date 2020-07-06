@@ -158,6 +158,7 @@ const File = (props) => {
         console.log(error)
       } else {
         setAnchorEl(null)
+        handleClose()
         props.updateParent(`props.fileIndex`)
       }
     })

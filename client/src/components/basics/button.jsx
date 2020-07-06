@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import MaterialButton from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import { makeStyles } from "@material-ui/core/styles";
-import { CloudUpload, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropUp, ArrowDropDown, ArrowLeft, ArrowRight, Folder, FormatColorFill, FormatColorText, Add, Close, Done } from "@material-ui/icons"
+import { CloudUpload, Save, Delete, AttachFile, GetApp, MoreHoriz, Lock, AccountCircle, Menu, Settings, Edit, ArrowDropUp, ArrowDropDown, ArrowLeft, ArrowRight, Folder, FormatColorFill, FormatColorText, Add, Close, Done } from "@material-ui/icons"
 
 export const returnIcon = (icon, size) => {
   switch (icon) {
     case "CloudUpload":
       return <CloudUpload fontSize={size}/>
+    case "Save":
+      return <Save fontSize={size}/>
     case "Delete":
       return <Delete fontSize={size}/>
     case "AttachFile":
