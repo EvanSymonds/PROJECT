@@ -6,40 +6,66 @@ const Home = (props) => {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 100
     },
-    slidoverRight: {
-      width: 1000,
-      height: 600,
-      borderTopLeftRadius: 50,
-      borderBottomLeftRadius: 50,
+    title: {
+      fontSize: 150,
     },
-    slidoverLeft: {
-      width: 1000,
-      height: 800,
-      borderTopRightRadius: 50,
-      borderBottomRightRadius: 50,
+    subtitle: {
+      fontSize: 75,
+      marginLeft: 10,
+      color: theme.palette.secondary.main
+    },
+    version: {
+      fontSize: 20,
+      transform: "rotate(-15deg)",
+      position: "relative",
+      width: 150,
+      left: 700
     }
   }));
   const classes = useStyles();
 
-  useEffect(() => {
-    getScrollPos()
-    window.addEventListener("scroll", getScrollPos)
-    
-    return () => window.removeEventListener("scroll", getScrollPos)
-  }, [])
-
-  const getScrollPos = () => {
-
-    setScrollPos(document.body.scrollTop || document.documentElement.scrollTop)
-
-  }
-
-
   return (
 
-    <div>
+    <div
+      className={classes.root}
+    >
+
+      <img
+        src="/static/images/HomeArt.png"
+      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: 400,
+          marginLeft: 40,
+          marginBottom: 50
+        }}
+      >
+        <div
+          className={classes.title}
+        >
+          CrateLab
+        </div>
+        <div
+          className={classes.subtitle}
+        >
+          One place for projects
+        </div>
+        <div
+          className={classes.version}
+        >
+          (Pre-alpha 0.1)
+        </div>
+      </div>
+
     </div>
 
   )

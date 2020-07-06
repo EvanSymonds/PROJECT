@@ -175,7 +175,7 @@ const Projects = () => {
         <Grid 
           container
           style={{
-            marginLeft: 30,
+            marginLeft: 20,
             marginTop: 20,
             width: "calc(100% - 50px)",
           }}
