@@ -74,6 +74,11 @@ const ProjectName = (props) => {
         axios.post("/api/projects/" + props.project_id, {
           project_name: projectName,
           is_public: results.data[0].is_public
+        }).then(() => {
+          let url = window.location.href.split("/")
+          url[url.length - 2] = projectName
+
+          window.location.assign(url.join("/"))
         })
       }
     })

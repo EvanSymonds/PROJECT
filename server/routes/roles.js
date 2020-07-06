@@ -35,7 +35,7 @@ router.get("/project/:id", async (request, response) => {
 router.get("/allusers/:id", async (request, response) => {
   await role_api.getRolesByProject(parseInt(request.params.id)).then(async(roles) => {
 
-    roles = roles.filter((role) => role.role_name !== "INVITED")
+    roles = roles.filter((role) => role.role_name !== "INVITED" && role.role_name !== "INVITED-VIEWED")
 
     let rolesWithUsers = []
 
@@ -188,7 +188,7 @@ router.post("/invite", async (request, response) => {
 
         roles.forEach((role) => {
           if (role.user_id === request.body.user_id) {
-            if (role.role_name === "INVITED") {
+            if (role.role_name === "INVITED" || role.role_name === "INVITED-VIEWED") {
               error = "User is already invited"
             } else {
               error = "User is already in project"

@@ -9,7 +9,7 @@ import Popper from "@material-ui/core/Popper"
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import RenameProject from "./renameProject"
+import RenameFolder from "./renameFolder"
 import Grow from '@material-ui/core/Grow';
 import ColorPicker from "./colorPicker"
 import Modal from "@material-ui/core/Modal"
@@ -372,7 +372,7 @@ const Folder = (props) => {
               onClose={() => setRenameOpen(false)}
             >
               <div>
-                <RenameProject 
+                <RenameFolder 
                   close={handleRenameClose}
                   defaultValue={props.folder_name}
                   folder_id={props.folder_id}  

@@ -5,8 +5,8 @@ import Button from "@material-ui/core/Button"
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios"
 
-const RenameProject = (props) => {
-  const [projectName, setProjectName] = useState(props.defaultValue)
+const RenameFolder = (props) => {
+  const [folderName, setFolderName] = useState(props.defaultValue)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -22,14 +22,14 @@ const RenameProject = (props) => {
   const classes = useStyles()
 
   const onChange = (event) => {
-    setProjectName(event.target.value)
+    setFolderName(event.target.value)
   }
 
   const onSubmit = (event) => {
     event.preventDefault()
 
     let formData = new FormData()
-    formData.append("new_name", projectName)
+    formData.append("new_name", folderName)
 
     axios.post("/api/folders/" + props.folder_id, formData).then(() => {
       props.close()
@@ -55,10 +55,10 @@ const RenameProject = (props) => {
           marginBottom: 40
         }}>
           <TextField 
-            label="Project name"
+            label="Folder name"
             variant="filled"
             color="primary"
-            value={projectName}
+            value={folderName}
             onChange={onChange}
           />
         </div>
@@ -76,4 +76,4 @@ const RenameProject = (props) => {
 
 }
 
-export default RenameProject
+export default RenameFolder

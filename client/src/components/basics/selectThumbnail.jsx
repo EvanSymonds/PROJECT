@@ -25,16 +25,16 @@ const SelectThumbnail = (props) => {
     };
 
     axios.get("/api/thumbnails/" + props.project_id).then((data) => {
-      const base64Flag = 'data:image/png;base64,'
-      const imageStr = arrayBufferToBase64(data.data.data.data)
-      const image = (base64Flag + imageStr).toString()
-
-      setThumbnail(image)
+      if (data.data === "") {
+        setThumbnail(null)
+      } else {
+        const base64Flag = 'data:image/png;base64,'
+        const imageStr = arrayBufferToBase64(data.data.data.data)
+        setThumbnail(((base64Flag + imageStr).toString()))
+      }
     })
     .catch((error) => {
-      if (error.response.data === "No thumbnail"){
-        setThumbnail(null)
-      }
+      console.log(error)
     })
   }, [])
 

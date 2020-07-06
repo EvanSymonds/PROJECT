@@ -112,7 +112,6 @@ const FileUpload = (props) => {
             maxWidthOrHeight: 60,
             useWebWorker: true
           }
-
           try {
             compressedFile = await imageCompression(compressedFile, options);
           } catch (error) {
