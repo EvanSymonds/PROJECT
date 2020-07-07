@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper"
 import ImageOutlinedIcon from '@material-ui/icons/ImageOutlined';
 import FileUpload from "../complex/fileUpload"
 import Button from "../basics/button"
+import Skeleton from "@material-ui/lab/Skeleton"
 import axios from "axios"
 
 const SelectThumbnail = (props) => {
@@ -97,6 +98,13 @@ const SelectThumbnail = (props) => {
         >
           <ImageOutlinedIcon style={{ fontSize: 70 }}/>
         </Paper>
+      )
+    } else if (thumbnail === "") {
+      return (
+        <Skeleton
+          className={classes.placeholder}
+          variant="rect"
+        />
       )
     } else {
       return (

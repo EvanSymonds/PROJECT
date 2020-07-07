@@ -10,22 +10,33 @@ const Home = (props) => {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      marginTop: 100
+      marginTop: "10%"
+    },
+    container: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "40%",
+      height: "100%",
+      marginLeft: "3%",
+    },
+    crates: {
+      width: "20%"
     },
     title: {
-      fontSize: 150,
+      fontSize: "8vw",
     },
     subtitle: {
-      fontSize: 75,
+      fontSize: "3vw",
       marginLeft: 10,
       color: theme.palette.secondary.main
     },
     version: {
-      fontSize: 20,
+      fontSize: "1.5vw",
       transform: "rotate(-15deg)",
       position: "relative",
-      width: 150,
-      left: 700
+      width: "30%",
+      left: "80%"
     }
   }));
   const classes = useStyles();
@@ -37,17 +48,11 @@ const Home = (props) => {
     >
 
       <img
+        className={classes.crates}
         src="/static/images/HomeArt.png"
       />
       <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          height: 400,
-          marginLeft: 40,
-          marginBottom: 50
-        }}
+        className={classes.container}
       >
         <div
           className={classes.title}

@@ -13,6 +13,7 @@ import { useBouncyShadowStyles } from '@mui-treasury/styles/shadow/bouncy';
 import Avatar from '@material-ui/core/Avatar';
 import ProfilePicture from "./profilePicture"
 import AvatarGroup from '@material-ui/lab/AvatarGroup';
+import Skeleton from "@material-ui/lab/Skeleton"
 import { Lock, Public, AddRounded, ImageOutlined } from "@material-ui/icons"
 import Grid from "@material-ui/core/Grid"
 import axios from "axios"
@@ -127,6 +128,16 @@ const ProjectCard = (props) => {
         opacity: 0.5,
       },
     },
+    thumbnailSkeleton: {
+      width: "100%",
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: "auto",
+      marginBotton: "auto",
+      height: 200,
+      paddingBottom: '60%',
+      borderRadius: theme.spacing(4),
+    },
     addIcon: {
       fontSize: 120,
       color: theme.palette.secondary.dark
@@ -185,6 +196,13 @@ const ProjectCard = (props) => {
             className={classes.addIcon}
           />
         </Paper>
+      )
+    } else if (thumbnail === "") {
+      return (
+        <Skeleton
+          variant="rect"
+          className={classes.thumbnailSkeleton}
+        />
       )
     } else {
       return (
