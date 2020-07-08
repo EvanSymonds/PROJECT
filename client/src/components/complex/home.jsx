@@ -67,7 +67,7 @@ const Home = (props) => {
         <div
           className={classes.version}
         >
-          (Pre-alpha 0.1)
+          (Pre-alpha 0.1.0)
         </div>
       </div>
 
