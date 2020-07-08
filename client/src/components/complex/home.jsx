@@ -35,7 +35,7 @@ const Home = (props) => {
       fontSize: "1.5vw",
       transform: "rotate(-15deg)",
       position: "relative",
-      width: "30%",
+      width: "33%",
       left: "80%"
     }
   }));
